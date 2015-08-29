@@ -1,16 +1,29 @@
-<table class="sleep-table">
-	<thead>
-		<tr>
-			<th>Date</th>
-			<th>Sleep time</th>
-		</tr>
-	</thread>
-	<tbody>
-		<% for (var i=0; i<items.length; i++) { %>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<html lang="en">
+<head>
+  <title>Jolly Up Website</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+</head>
+<body>
+	<table class="table table-striped">
+		<thead>
 			<tr>
-				<td><%= items[i].date %></td>
-				<td><%= items[i].title %></td>
+				<th>Date</th>
+				<th>Sleep time</th>
 			</tr>
-		<% } %>
-	</tbody>
-</table>
+		</thread>
+		<tbody>
+			<% for (var i=0; i<items.length; i++) { %>
+				<tr>
+					<td><%= items[i].date %></td>
+					<td><%= items[i].title %></td>
+					<td><%= items[i].time_created %></td>
+					<td><%= items[i].time_completed %></td>
+				</tr>
+			<% } %> 
+		</tbody>
+	</table>
+</body>

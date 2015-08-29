@@ -64,14 +64,20 @@ passport.use('jawbone', new JawboneStrategy({
 			console.log('Error recieving Jawbone UP data');
 		} else {
 			var jawboneData = JSON.parse(body).data;
-		for (var i = 0; i < jawboneData.length; i++) {
-			var date = jawboneData.items[i].date.toString();
-			var year = date.slice(0,4);
-			var month = date.slice(4,6);
-			var day = date.slice(6,8);
+			for (var i = 0; i < jawboneData.items.length; i++) {
+				var date = jawboneData.items[i].date.toString(),
+					year = date.slice(0,4),
+					month = date.slice(4,6),
+					day = date.slice(6,8),
+					timeCreated = jawboneData.items[i].time_created,
+					timeCompleted = jawboneData.items[i].time_completed;
 
-			jawbonedata.items[i].date = day + '/' + month + '/' + year;
-			jawbonedata.items[i].title = jawboneData.items[i].title.replace('for ', '');
+				var d = new Date(0); // The 0 there is the key, which sets the date to the epoch
+				d.setUTCSeconds(timeCreated);
+
+				jawboneData.items[i].date = day + '/' + month + '/' + year;		//these are also not being changed 
+				jawboneData.items[i].title = jawboneData.items[i].title.replace('for ', '');
+				jawboneData.items[i].time_created = d;
 			}
 		return done(null, jawboneData, console.log('Jawbone Up data ready to be displayed.'));
 		}
@@ -87,5 +93,4 @@ var server = https.createServer(sslOptions, app);
 server.listen(port, host, function() {
 	var host = server.address().address;
 	console.log('Up server listening on %s:%s', host, port);
-	console.log('this server is poopy and doesn\'t work');
 });
