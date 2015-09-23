@@ -6,25 +6,22 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="/dashboardStyle.css" rel="stylesheet" type="text/css">
-  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script> 
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
   <script type="text/javascript" src="/jquery/jquery-1.11.3.min.js"></script>
-  <!--<script type="text/javascript" src="/jquery/jquery-ui-1.11.4/jquery-ui.min.js"></script>-->
+  <script type="text/javascript" src="/jquery/jquery-ui-1.11.4/jquery-ui.min.js"></script>
   <script type='text/javascript'>
-  	/*$("ul.connectedSortable").sortable({
-    	connectWith: '.connectedSortable',
-        placeholder: 'ui-state-highlight',
-        forcePlaceholderSize: true
-    }).disableSelection();*/
+    $(document).ready(function(){
+      	$("ul.connectedSortable").sortable({
+        	connectWith: '.connectedSortable',
+            placeholder: 'ui-state-highlight',
+            forcePlaceholderSize: true
+        }).disableSelection();
 
+    	$('.box1, .box9, .box2,.box10, .box4, .box6, .box12, .box8').append('<div style="height:120px;"></div>');
 
-	$('li').each(function() {
-	    $(this).text($(this).attr('class'));
-	});
-
-	$('.box1, .box9, .box2,.box10, .box4, .box6, .box12, .box8').append('<div style="height:120px;"></div>');
-
-	$('.box3, .box5, .box11, .box7').append('<div style="height:267px;"></div>');
-	console.log($("body").html());
+    	$('.box3, .box5, .box11, .box7').append('<div style="height:267px;"></div>');
+      
+    });
   </script>
 </head>
 <body>
