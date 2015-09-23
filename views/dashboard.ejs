@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<html lang="en">
+<head>
+  <title>Jolly Up Website</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="/dashboardStyle.css" rel="stylesheet" type="text/css">
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script> 
+  <script type="text/javascript" src="/jquery/jquery-1.11.3.min.js"></script>
+  <!--<script type="text/javascript" src="/jquery/jquery-ui-1.11.4/jquery-ui.min.js"></script>-->
+  <script type='text/javascript'>
+  	/*$("ul.connectedSortable").sortable({
+    	connectWith: '.connectedSortable',
+        placeholder: 'ui-state-highlight',
+        forcePlaceholderSize: true
+    }).disableSelection();*/
+
+
+	$('li').each(function() {
+	    $(this).text($(this).attr('class'));
+	});
+
+	$('.box1, .box9, .box2,.box10, .box4, .box6, .box12, .box8').append('<div style="height:120px;"></div>');
+
+	$('.box3, .box5, .box11, .box7').append('<div style="height:267px;"></div>');
+	console.log($("body").html());
+  </script>
+</head>
+<body>
+	<nav class="navbar navbar-default">
+  		<div class="container-fluid">
+    		<div class="navbar-header">
+      			<a class="navbar-brand" href="#">Jawbone Data Website</a>
+    		</div>
+    		<div>
+      			<ul class="nav navbar-nav">
+        			<li class="active"><a href="dashboard">Dashboard</a></li>
+        			<li><a href="/sleepdata">Sleep Data List</a></li>
+        			<li><a href="#">Page 2</a></li>
+        			<li><a href="#">Page 3</a></li>
+      			</ul>
+    		</div>
+  		</div>
+	</nav>
+	<div> Dashboard Page
+	</div>
+		<div class="boxContainer">
+			<ul id="column1" class="connectedSortable">
+        		<li class="box1"></li>
+        		<li class="box2"></li>
+        		<li class="box3"></li>
+    		</ul>
+    		<ul id="column2" class="connectedSortable">
+		        <li class="box4"></li>
+		        <li class="box5"></li>
+		        <li class="box6"></li>
+		    </ul>
+		    <ul id="column3" class="connectedSortable">
+		        <li class="box7"></li>
+		        <li class="box8"></li>
+		        <li class="box9"></li>
+		    </ul>
+		    <ul id="column4" class="connectedSortable">
+		        <li class="box10"></li>
+		        <li class="box11"></li>
+		        <li class="box12"></li>
+		    </ul>
+		</div>
+</body>

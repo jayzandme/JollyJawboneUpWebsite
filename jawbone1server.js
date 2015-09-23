@@ -4,14 +4,18 @@ var passport = require('passport');
 var JawboneStrategy = require('passport-oauth').OAuth2Strategy;
 var ejs = require('ejs');
 var bodyParser = require('body-parser');
-var fs = require('fs')
+var fs = require('fs');
+
+//var jsdom=require('jsdom');
+//var $=require('jquery')(require("jsdom").jsdom().parentWindow);
 
 var host = 'localhost'
 var port = 5000;
 var app = express()
 
 app.use(bodyParser.json());
-app.use(express.static(__dirname + '/public'));
+app.use(express.static(__dirname + '/css'));
+app.use('/jquery', express.static(__dirname + '/jquery'));
 app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views');
 app.use(passport.initialize());
@@ -45,6 +49,10 @@ app.get('/', function(req, res) {
 	res.render('index');
 });
 
+app.get('/dashboard', function(req, res) {
+	res.render('dashboard');
+});
+
 passport.use('jawbone', new JawboneStrategy({
 	clientID: jawboneAuth.clientID,
 	clientSecret: jawboneAuth.clientSecret,
@@ -58,7 +66,7 @@ passport.use('jawbone', new JawboneStrategy({
 		client_secret: jawboneAuth.clientSecret
 	},
 	up = require('jawbone-up')(options);
-	
+	console.log("hello1");
 	up.sleeps.get({}, function(err, body) {
 		if (err) {
 			console.log('Error recieving Jawbone UP data');
@@ -70,19 +78,43 @@ passport.use('jawbone', new JawboneStrategy({
 					month = date.slice(4,6),
 					day = date.slice(6,8),
 					timeCreated = jawboneData.items[i].time_created,
-					timeCompleted = jawboneData.items[i].time_completed;
+					timeCompleted = jawboneData.items[i].time_completed,
+					timeCreatedDate,
+					timeCompletedDate,
+					timeCreatedFixed,
+					timeCompletedFixed;
 
-				var d = new Date(0); // The 0 there is the key, which sets the date to the epoch
-				d.setUTCSeconds(timeCreated);
 
-				jawboneData.items[i].date = day + '/' + month + '/' + year;		//these are also not being changed 
+				timeCreatedDate = new Date(timeCreated * 1000); // The 0 there is the key, which sets the date to the epochc
+				timeCompletedDate = new Date(timeCompleted * 1000);
+				timeCreatedFixed = getClockTime(timeCreatedDate);
+				timeCompletedFixed = getClockTime(timeCompletedDate);
+
+				jawboneData.items[i].date = month + '/' + day + '/' + year;		
 				jawboneData.items[i].title = jawboneData.items[i].title.replace('for ', '');
-				jawboneData.items[i].time_created = d;
+				jawboneData.items[i].time_created = timeCreatedFixed;
+				jawboneData.items[i].time_completed = timeCompletedFixed;
 			}
 		return done(null, jawboneData, console.log('Jawbone Up data ready to be displayed.'));
 		}
 	});
 }));
+
+function getClockTime(date){
+   var now    = new Date(date);
+   var hour   = now.getHours();
+   var minute = now.getMinutes();
+   var second = now.getSeconds();
+   var ap = "AM";
+   if (hour   > 11) { ap = "PM";             }
+   if (hour   > 12) { hour = hour - 12;      }
+   if (hour   == 0) { hour = 12;             }
+   if (hour   < 10) { hour   = "0" + hour;   }
+   if (minute < 10) { minute = "0" + minute; }
+   if (second < 10) { second = "0" + second; }
+   var timeString = hour + ':' + minute + ':' + second + " " + ap;
+   return timeString;
+}
 
 var sslOptions= {
 	key: fs.readFileSync('./server.key'),
