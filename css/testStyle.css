@@ -1,0 +1,40 @@
+.boxContainer {
+    margin:0px;
+    width:900px;
+    height:auto;
+}
+
+#column1, #column2, #column3, #column4 { 
+    margin:9px 9px 9px 0px;
+    float:left;
+    height:auto;
+    width:120px;
+}
+
+#column1 li, #column2 li, #column3 li, #column4 li { 
+    height:auto;
+    width:120px;
+}
+
+.box2, .box4, .box9 {
+    margin:0px 0px 9px 0px;
+    background-color:#409da5;
+    height = 120px;
+}
+
+.box10, .box1, .box5 {
+    margin:0px 0px 9px 0px;
+    background-color:#da8515;
+    height = 60px;
+}
+.box8, .box11, .box3 {
+    margin:0px 0px 9px 0px;
+    background-color:#4849a6;
+    height = 100px;
+}
+.box6, .box7, .box12 {
+    margin:0px 0px 9px 0px;
+    background-color:#cd432d;
+    height=267px;
+}
+

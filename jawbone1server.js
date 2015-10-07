@@ -6,16 +6,14 @@ var ejs = require('ejs');
 var bodyParser = require('body-parser');
 var fs = require('fs');
 
-//var jsdom=require('jsdom');
-//var $=require('jquery')(require("jsdom").jsdom().parentWindow);
-
 var host = 'localhost'
 var port = 5000;
 var app = express()
 
 app.use(bodyParser.json());
 app.use(express.static(__dirname + '/css'));
-app.use('/jquery', express.static(__dirname + '/jquery'));
+app.use('/bower_components',  express.static(__dirname + '/bower_components'));
+//app.use('/jquery', express.static(__dirname + '/jquery'));
 app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views');
 app.use(passport.initialize());
@@ -25,8 +23,9 @@ var jawboneAuth = {
 	clientSecret: '5734ad41f828bc7a6196342d2640cca3c3cb9193',
 	authorizationURL: 'https://jawbone.com/auth/oauth2/auth',
 	tokenURL: 'https://jawbone.com/auth/oauth2/token',
-	callbackURL: 'https://localhost:5000/sleepdata'
+	callbackURL: 'https://localhost:5000/dashboard'
 };
+
 
 app.get('/login/jawbone', 
 	passport.authorize('jawbone', {
@@ -35,12 +34,16 @@ app.get('/login/jawbone',
 	})
 );
 
-app.get('/sleepdata',
+var testHold = {testingSleeps: null,
+	testingMoves: null};
+
+app.get('/dashboard',
 	passport.authorize('jawbone', {
 		scope: ['basic_read', 'sleep_read'],
 		failureRedirect: '/'
 	}), function(req, res) {
-		res.render('userdata', req.account);
+		//res.render('dashboard', req.account);
+		res.render('dashboard', testHold)
 	}
 );
 
@@ -49,8 +52,20 @@ app.get('/', function(req, res) {
 	res.render('index');
 });
 
-app.get('/dashboard', function(req, res) {
-	res.render('dashboard');
+app.get('/levels', function(req, res){
+	res.render('levels');
+});
+
+app.get('/achievements', function(req,res){
+	res.render('achievements');
+});
+
+app.get('/teamPage', function(req, res){
+	res.render('teamPage');
+});
+
+app.get('/weeklyChallenges', function(req,res){
+	res.render('weeklyChallenges');
 });
 
 passport.use('jawbone', new JawboneStrategy({
@@ -67,10 +82,14 @@ passport.use('jawbone', new JawboneStrategy({
 	},
 	up = require('jawbone-up')(options);
 	console.log("hello1");
+
+	var jawboneData;
+
 	up.sleeps.get({}, function(err, body) {
 		if (err) {
-			console.log('Error recieving Jawbone UP data');
-		} else {
+			console.log('Error recieving Jawbone UP  sleep data');
+		} 
+		else {
 			var jawboneData = JSON.parse(body).data;
 			for (var i = 0; i < jawboneData.items.length; i++) {
 				var date = jawboneData.items[i].date.toString(),
@@ -95,9 +114,10 @@ passport.use('jawbone', new JawboneStrategy({
 				jawboneData.items[i].time_created = timeCreatedFixed;
 				jawboneData.items[i].time_completed = timeCompletedFixed;
 			}
-		return done(null, jawboneData, console.log('Jawbone Up data ready to be displayed.'));
+		return done(null, jawboneData, console.log('Jawbone Up sleep data ready to be displayed.'));
 		}
 	});
+
 }));
 
 function getClockTime(date){
