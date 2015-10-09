@@ -1,9 +1,9 @@
 {
-	"name": "jollyUpWebsite",
-	"version": "1.0.0",
-	"dependencies": {
-		"bootstrap": "latest",
-		"jquery": "latest",
-		"jquery-ui": "latest"
-	}
-}
+    "name": "jollyUpWebsite",
+    "version": "1.0.0",
+    "dependencies": {
+        "bootstrap": "latest",
+        "jquery": "latest",
+        "jquery-ui": "latest"
+    } 
+} 
