@@ -91,7 +91,7 @@ passport.use('jawbone', new JawboneStrategy({
 		} 
 		else {
 			var jawboneData = JSON.parse(body).data;
-			for (var i = 0; i < jawboneData.items.length; i++) {
+			/*for (var i = 0; i < jawboneData.items.length; i++) {
 				var date = jawboneData.items[i].date.toString(),
 					year = date.slice(0,4),
 					month = date.slice(4,6),
@@ -114,6 +114,7 @@ passport.use('jawbone', new JawboneStrategy({
 				jawboneData.items[i].time_created = timeCreatedFixed;
 				jawboneData.items[i].time_completed = timeCompletedFixed;
 			}
+			*/
 		return done(null, jawboneData, console.log('Jawbone Up sleep data ready to be displayed.'));
 		}
 	});
