@@ -10,7 +10,10 @@ var mongoose = require('mongoose');
 //mongoose.connect('mongodb://localhost/myappdatabase');
 
 var MongoDB = mongoose.connect('mongodb://localhost:27017/myappdatabase').connection;
-MongoDB.on('error', function(err) { console.log(err.message); });
+MongoDB.on('error', function(err) { 
+    console.log(err.message); 
+});
+
 MongoDB.once('open', function() {
   console.log("mongodb connection open");
 });
@@ -68,24 +71,17 @@ var jawboneAuth = {
 
 app.get('/login/jawbone', function (req, res) {
 
-    res.redirect('https://' + up.getToken());
+    res.redirect('https://' + up.getCode());
     res.end;
 
 });
 
-/*
-app.get('/login/jawbone', 
-	passport.authorize('jawbone', {
-		scope: ['basic_read', 'sleep_read'],
-		failureRedirect: '/'
-	})
-);
-*/
-
 app.get('/token', function (req, res) {
 
     // store the token in the database
-    console.log(req.query.code);
+    // console.log(req.query.code);
+    console.log('getting token');
+    token = up.getToken(req.query.code);
     // display the dashboard page
     res.redirect('/dashboard');
 });
