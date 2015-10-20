@@ -6,9 +6,10 @@ var ejs = require('ejs');
 var bodyParser = require('body-parser');
 var fs = require('fs');
 var up = require ('./upAPI.js');
+var queries = require('./queries.js');
 var mongoose = require('mongoose');
-//mongoose.connect('mongodb://localhost/myappdatabase');
 
+/*
 var MongoDB = mongoose.connect('mongodb://localhost:27017/myappdatabase').connection;
 MongoDB.on('error', function(err) { 
     console.log(err.message); 
@@ -17,7 +18,7 @@ MongoDB.on('error', function(err) {
 MongoDB.once('open', function() {
   console.log("mongodb connection open");
 });
-
+*/
 var Sleeps = require('./databaseSchema/sleeps.js')
 
 //deletes everything in this schema
@@ -38,12 +39,13 @@ Sleeps.find({}, function(err, sleeps){
 	console.log(sleeps)
 })*/
 
+/*
 Sleeps.find({userID: 1}, function(err, sleeps){
 	if(err) throw err;
-	//console.log("lines");
-	//console.log(sleeps);
+	console.log("lines");
+	console.log(sleeps);
 })
-
+*/
 // make this available to our users in our Node applications
 //module.exports = User;
 
@@ -86,28 +88,10 @@ app.get('/token', function (req, res) {
     // console.log(req.query.code);
     up.getToken(req.query.code, function(token) {    
         
-        console.log('getting token with ' + token);
         up.getSleeps(token, function(data) { 
             var jawboneData = JSON.parse(data).data;
-            console.log(jawboneData);
             for (var i = 0; i < jawboneData.items.length; i++) {
-                var test = new Sleeps({
-                  userID: 1,
-                  xid: 'test',
-                  date: jawboneData.items[i].date,
-                  time_created: jawboneData.items[i].time_created,
-                  time_completed: jawboneData.items[i].time_completed,
-                  title: jawboneData.items[i].title,
-                  awakenings: jawboneData.items[i].awakenings,
-                  light: jawboneData.items[i].light,
-                  awake: jawboneData.items[i].awake,
-                  duration: jawboneData.items[i].duration
-                });
-
-                test.save(function(err, thor) {
-                  if (err) return console.error(err);
-                  console.dir(test);
-                });
+                queries.insertSleep(jawboneData.items[i])
                 var date = jawboneData.items[i].date.toString(),
                     year = date.slice(0,4),
                     month = date.slice(4,6),
@@ -130,11 +114,11 @@ app.get('/token', function (req, res) {
                 jawboneData.items[i].time_created = timeCreatedFixed;
                 jawboneData.items[i].time_completed = timeCompletedFixed;
             }
-            console.log(jawboneData);
-            console.log(jawboneData.items[3].details);
         });
-        // display the dashboard page
 
+        queries.getSleeps(1);
+        
+        // display the dashboard page
         res.redirect('/dashboard');
     });
 });

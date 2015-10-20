@@ -12,26 +12,39 @@ database.once('open', function() {
     console.log('mongodb connection open');
 });
 
-insertSleep = function(data) {
+insertSleep = function(sleep) {
 
    var newSleep = new sleeps({
         userID: 1,
         xid: 'test',
-        date: data.date,
-        time_created: data.time_created,
-        time_completed: data.time_completed,
-        title: data.title,
-        awakenings: data.awakenings,
-        light: data.light,
-        awake: data.awake,
-        duration: data.duration
+        date: sleep.date,
+        time_created: sleep.time_created,
+        time_completed: sleep.time_completed,
+        title: sleep.title,
+        awakenings: sleep.awakenings,
+        light: sleep.light,
+        awake: sleep.awake,
+        duration: sleep.duration
    });
 
    newSleep.save(function (err, thor) {
         if (err) {
             return console.error(err);
         }
-        console.dir(test);
-   }
+   });
 
 };
+
+getSleeps = function(userID) {
+    sleeps.find({userID: userID}, function(err, sleeps) {
+        if (err) {
+            throw err;
+        }
+        else {
+            console.log(sleeps);
+        }
+    });
+}
+
+module.exports.insertSleep = insertSleep;
+module.exports.getSleeps = getSleeps;
