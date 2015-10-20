@@ -16,7 +16,7 @@ insertSleep = function(sleep) {
 
    var newSleep = new sleeps({
         userID: 1,
-        xid: 'test',
+        xid: sleep.xid,
         date: sleep.date,
         time_created: sleep.time_created,
         time_completed: sleep.time_completed,

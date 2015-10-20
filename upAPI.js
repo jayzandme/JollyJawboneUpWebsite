@@ -43,12 +43,12 @@ getToken = function(code, callback) {
 
 }
 
-getSleeps = function(code, callback) {
+getSleeps = function(token, callback) {
 
     var options = {
         host: 'jawbone.com',
         path: '/nudge/api/v.1.1/users/@me/sleeps',
-        headers: {'Authorization': 'Bearer ' + code}
+        headers: {'Authorization': 'Bearer ' + token}
     }
 
     https.request(options, function(response) {
@@ -60,7 +60,47 @@ getSleeps = function(code, callback) {
         });
 
         response.on('end', function() {
-            callback(body);
+            var parsedJSON = JSON.parse(body).data;
+            if (parsedJSON.links && parsedJSON.links.next) {
+                console.log(parsedJSON.links.next);
+                getSleepsPage(token, parsedJSON.links.next, callback);
+            }
+            else {
+                callback(body);
+            }
+        });
+    }).end();
+
+}
+
+getSleepsPage = function(token, url, callback) {
+
+    console.log('getting page...');
+    var options = {
+        host: 'jawbone.com',
+        path: url,
+        headers: {'Authorization': 'Bearer ' + token}
+    };
+
+    https.request(options, function(response){
+        
+        var body = '';
+
+        response.on('data', function (chunk) {
+            body += chunk;
+        });
+
+        response.on('end', function(){
+            var parsedJSON = JSON.parse(body).data;
+
+            if (parsedJSON.links && parsedJSON.links.next) {
+                getSleepsPage(token, parsedJSON.links.next, function(data){
+                    callback(body + data);
+                });
+            }
+            else{
+                callback(body);
+            }
         });
     }).end();
 

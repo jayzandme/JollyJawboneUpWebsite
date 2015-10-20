@@ -87,9 +87,11 @@ app.get('/token', function (req, res) {
     // store the token in the database
     // console.log(req.query.code);
     up.getToken(req.query.code, function(token) {    
+        console.log("user logging in with token\n" + token);
         
         up.getSleeps(token, function(data) { 
             var jawboneData = JSON.parse(data).data;
+            console.log(jawboneData);
             for (var i = 0; i < jawboneData.items.length; i++) {
                 queries.insertSleep(jawboneData.items[i])
                 var date = jawboneData.items[i].date.toString(),
@@ -116,7 +118,7 @@ app.get('/token', function (req, res) {
             }
         });
 
-        queries.getSleeps(1);
+        //queries.getSleeps(1);
         
         // display the dashboard page
         res.redirect('/dashboard');
