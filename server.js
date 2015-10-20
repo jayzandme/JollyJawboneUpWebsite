@@ -40,7 +40,7 @@ Sleeps.find({}, function(err, sleeps){
 Sleeps.find({userID: 1}, function(err, sleeps){
 	if(err) throw err;
 	//console.log("lines");
-	//console.log(sleeps);
+	console.log(sleeps);
 })
 
 // make this available to our users in our Node applications
