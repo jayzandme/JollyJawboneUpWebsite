@@ -47,6 +47,10 @@ Sleeps.find({userID: 1}, function(err, sleeps){
 // make this available to our users in our Node applications
 //module.exports = User;
 
+// the token is stored locally for now, it will have to be stored in th database
+// eventually
+var token;
+
 var host = 'localhost'
 var port = 5000;
 var app = express()
@@ -80,10 +84,59 @@ app.get('/token', function (req, res) {
 
     // store the token in the database
     // console.log(req.query.code);
-    console.log('getting token');
-    token = up.getToken(req.query.code);
-    // display the dashboard page
-    res.redirect('/dashboard');
+    up.getToken(req.query.code, function(token) {    
+        
+        console.log('getting token with ' + token);
+        up.getSleeps(token, function(data) { 
+            var jawboneData = JSON.parse(data).data;
+            console.log(jawboneData);
+            for (var i = 0; i < jawboneData.items.length; i++) {
+                var test = new Sleeps({
+                  userID: 1,
+                  xid: 'test',
+                  date: jawboneData.items[i].date,
+                  time_created: jawboneData.items[i].time_created,
+                  time_completed: jawboneData.items[i].time_completed,
+                  title: jawboneData.items[i].title,
+                  awakenings: jawboneData.items[i].awakenings,
+                  light: jawboneData.items[i].light,
+                  awake: jawboneData.items[i].awake,
+                  duration: jawboneData.items[i].duration
+                });
+
+                test.save(function(err, thor) {
+                  if (err) return console.error(err);
+                  console.dir(test);
+                });
+                var date = jawboneData.items[i].date.toString(),
+                    year = date.slice(0,4),
+                    month = date.slice(4,6),
+                    day = date.slice(6,8),
+                    timeCreated = jawboneData.items[i].time_created,
+                    timeCompleted = jawboneData.items[i].time_completed,
+                    timeCreatedDate,
+                    timeCompletedDate,
+                    timeCreatedFixed,
+                    timeCompletedFixed;
+
+
+                timeCreatedDate = new Date(timeCreated * 1000); // The 0 there is the key, which sets the date to the epochc
+                timeCompletedDate = new Date(timeCompleted * 1000);
+                timeCreatedFixed = getClockTime(timeCreatedDate);
+                timeCompletedFixed = getClockTime(timeCompletedDate);
+
+                jawboneData.items[i].date = month + '/' + day + '/' + year;		
+                jawboneData.items[i].title = jawboneData.items[i].title.replace('for ', '');
+                jawboneData.items[i].time_created = timeCreatedFixed;
+                jawboneData.items[i].time_completed = timeCompletedFixed;
+            }
+            console.log(jawboneData);
+            console.log(jawboneData.items[3].details);
+        });
+        // display the dashboard page
+
+        res.redirect('/dashboard');
+    });
 });
 
 var testHold = {testingSleeps: null,
@@ -115,78 +168,6 @@ app.get('/teamPage', function(req, res){
 app.get('/weeklyChallenges', function(req,res){
 	res.render('weeklyChallenges');
 });
-
-passport.use('jawbone', new JawboneStrategy({
-	clientID: jawboneAuth.clientID,
-	clientSecret: jawboneAuth.clientSecret,
-	authorizationURL: jawboneAuth.authorizationURL,
-	tokenURL: jawboneAuth.tokenURL,
-	callbackURL: jawboneAuth.callbackURL
-}, function(token, refreshToken, profile, done) {
-	var options = {
-		access_token: token,
-		client_id: jawboneAuth.clientID,
-		client_secret: jawboneAuth.clientSecret
-	},
-	up = require('jawbone-up')(options);
-	console.log("hello1");
-
-	var jawboneData;
-
-	up.sleeps.get({}, function(err, body) {
-		if (err) {
-			console.log('Error recieving Jawbone UP  sleep data');
-		} 
-		else {
-			var jawboneData = JSON.parse(body).data;
-			for (var i = 0; i < jawboneData.items.length; i++) {
-				var test = new Sleeps({
-				  userID: 1,
-				  xid: 'test',
-				  date: jawboneData.items[i].date,
-				  time_created: jawboneData.items[i].time_created,
-				  time_completed: jawboneData.items[i].time_completed,
-				  title: jawboneData.items[i].title,
-				  awakenings: jawboneData.items[i].awakenings,
-				  light: jawboneData.items[i].light,
-				  awake: jawboneData.items[i].awake,
-				  duration: jawboneData.items[i].duration
-				});
-
-				test.save(function(err, thor) {
-				  if (err) return console.error(err);
-				  console.dir(test);
-				});
-				var date = jawboneData.items[i].date.toString(),
-					year = date.slice(0,4),
-					month = date.slice(4,6),
-					day = date.slice(6,8),
-					timeCreated = jawboneData.items[i].time_created,
-					timeCompleted = jawboneData.items[i].time_completed,
-					timeCreatedDate,
-					timeCompletedDate,
-					timeCreatedFixed,
-					timeCompletedFixed;
-
-
-				timeCreatedDate = new Date(timeCreated * 1000); // The 0 there is the key, which sets the date to the epochc
-				timeCompletedDate = new Date(timeCompleted * 1000);
-				timeCreatedFixed = getClockTime(timeCreatedDate);
-				timeCompletedFixed = getClockTime(timeCompletedDate);
-
-				jawboneData.items[i].date = month + '/' + day + '/' + year;		
-				jawboneData.items[i].title = jawboneData.items[i].title.replace('for ', '');
-				jawboneData.items[i].time_created = timeCreatedFixed;
-				jawboneData.items[i].time_completed = timeCompletedFixed;
-			}
-			console.log(jawboneData);
-			console.log(jawboneData.items[3].details);
-			
-		return done(null, jawboneData, console.log('Jawbone Up sleep data ready to be displayed.'));
-		}
-	});
-
-}));
 
 function getClockTime(date){
    var now    = new Date(date);

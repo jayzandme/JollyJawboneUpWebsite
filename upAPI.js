@@ -16,7 +16,7 @@ getCode = function() {
     return (options.host + options.path)
 }
 
-getToken = function(code) {
+getToken = function(code, callback) {
 
     var options = {
         host: 'jawbone.com',
@@ -37,15 +37,39 @@ getToken = function(code) {
         response.on('end', function() {
             parsedJSON = JSON.parse(body);
             console.log(parsedJSON.access_token);
-            return body.access_token
+            callback(parsedJSON.access_token);
         });
     }).end();
 
 }
 
-getSleeps = function(token) {
+getSleeps = function(code, callback) {
+
+    var options = {
+        host: 'jawbone.com',
+        path: '/nudge/api/v.1.1/users/@me/sleeps',
+        headers: {'Authorization': 'Bearer ' + code}
+    }
+
+    console.log(options.headers);
+    console.log(options.host + options.path);
+    https.request(options, function(response) {
+
+        var body = '';
+
+        response.on('data', function(chunk) {
+            body += chunk;
+        });
+
+        response.on('end', function() {
+            console.log('got response');
+            console.log(body);
+            callback(body);
+        });
+    }).end();
 
 }
 
 module.exports.getToken = getToken
 module.exports.getCode = getCode;
+module.exports.getSleeps = getSleeps;
