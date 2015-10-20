@@ -15,7 +15,9 @@ MongoDB.once('open', function() {
   console.log("mongodb connection open");
 });
 
-var Sleeps = require('./databaseSchema/sleeps.js')
+var Sleeps = require('./databaseSchema/sleeps.js');
+
+var User = require('./databaseSchema/user.js');
 
 //deletes everything in this schema
 /*Sleeps.remove(function(err, p){
