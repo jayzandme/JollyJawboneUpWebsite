@@ -6,6 +6,44 @@ var ejs = require('ejs');
 var bodyParser = require('body-parser');
 var fs = require('fs');
 var up = require ('./upAPI.js');
+var mongoose = require('mongoose');
+//mongoose.connect('mongodb://localhost/myappdatabase');
+
+var MongoDB = mongoose.connect('mongodb://localhost:27017/myappdatabase').connection;
+MongoDB.on('error', function(err) { console.log(err.message); });
+MongoDB.once('open', function() {
+  console.log("mongodb connection open");
+});
+
+var Sleeps = require('./databaseSchema/sleeps.js')
+
+//deletes everything in this schema
+/*Sleeps.remove(function(err, p){
+	if (err)
+		throw err
+	else
+		console.log('Documents deleted: ' + p);
+});
+
+test2.save(function(err, thor) {
+  if (err) return console.error(err);
+  console.dir(test2);
+});
+
+Sleeps.find({}, function(err, sleeps){
+	if (err) throw err;
+	console.log(sleeps)
+})*/
+
+Sleeps.find({userID: 1}, function(err, sleeps){
+	if(err) throw err;
+	//console.log("lines");
+	//console.log(sleeps);
+})
+
+// make this available to our users in our Node applications
+//module.exports = User;
+
 var host = 'localhost'
 var port = 5000;
 var app = express()
@@ -28,40 +66,34 @@ var jawboneAuth = {
 	callbackURL: 'https://localhost:5000/dashboard'
 };
 
-// This will get the token at the redirect url /token
-/*
 app.get('/login/jawbone', function (req, res) {
 
-    console.log(up.getToken());
     res.redirect('https://' + up.getToken());
     res.end;
 
-}
-*/
+});
 
+/*
 app.get('/login/jawbone', 
 	passport.authorize('jawbone', {
 		scope: ['basic_read', 'sleep_read'],
 		failureRedirect: '/'
 	})
 );
+*/
 
 app.get('/token', function (req, res) {
 
     // store the token in the database
-
-    // display the dashboard page
     console.log(req.query.code);
+    // display the dashboard page
+    res.redirect('/dashboard');
 });
 
 var testHold = {testingSleeps: null,
 	testingMoves: null};
 
-app.get('/dashboard',
-	passport.authorize('jawbone', {
-		scope: ['basic_read', 'sleep_read'],
-		failureRedirect: '/'
-	}), function(req, res) {
+app.get('/dashboard', function(req, res) {
 		//res.render('dashboard', req.account);
 		res.render('dashboard', testHold)
 	}
@@ -111,7 +143,24 @@ passport.use('jawbone', new JawboneStrategy({
 		} 
 		else {
 			var jawboneData = JSON.parse(body).data;
-			/*for (var i = 0; i < jawboneData.items.length; i++) {
+			for (var i = 0; i < jawboneData.items.length; i++) {
+				var test = new Sleeps({
+				  userID: 1,
+				  xid: 'test',
+				  date: jawboneData.items[i].date,
+				  time_created: jawboneData.items[i].time_created,
+				  time_completed: jawboneData.items[i].time_completed,
+				  title: jawboneData.items[i].title,
+				  awakenings: jawboneData.items[i].awakenings,
+				  light: jawboneData.items[i].light,
+				  awake: jawboneData.items[i].awake,
+				  duration: jawboneData.items[i].duration
+				});
+
+				test.save(function(err, thor) {
+				  if (err) return console.error(err);
+				  console.dir(test);
+				});
 				var date = jawboneData.items[i].date.toString(),
 					year = date.slice(0,4),
 					month = date.slice(4,6),
@@ -134,7 +183,9 @@ passport.use('jawbone', new JawboneStrategy({
 				jawboneData.items[i].time_created = timeCreatedFixed;
 				jawboneData.items[i].time_completed = timeCompletedFixed;
 			}
-			*/
+			console.log(jawboneData);
+			console.log(jawboneData.items[3].details);
+			
 		return done(null, jawboneData, console.log('Jawbone Up sleep data ready to be displayed.'));
 		}
 	});
