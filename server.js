@@ -18,25 +18,11 @@ MongoDB.once('open', function() {
 var Sleeps = require('./databaseSchema/sleeps.js')
 
 //deletes everything in this schema
-Sleeps.remove(function(err, p){
+/*Sleeps.remove(function(err, p){
 	if (err)
 		throw err
 	else
 		console.log('Documents deleted: ' + p);
-});
-
-var test2 = new Sleeps({
-  userID: 2,
-  date: 20150812,
-  timeFallAsleep: "11:53:23pm",
-  timeWokenUp: "7:23:43am",
-  awakenings: 5,
-  remSleepTime: 3.2,
-  lightSleepTime: 1.2,
-  deepSleepTime: 2.1,
-  timeSpentAwake: 0.5,
-  duration: 83,
-  image: "url"
 });
 
 test2.save(function(err, thor) {
@@ -47,7 +33,7 @@ test2.save(function(err, thor) {
 Sleeps.find({}, function(err, sleeps){
 	if (err) throw err;
 	console.log(sleeps)
-})
+})*/
 
 Sleeps.find({userID: 1}, function(err, sleeps){
 	if(err) throw err;
@@ -144,7 +130,24 @@ passport.use('jawbone', new JawboneStrategy({
 		} 
 		else {
 			var jawboneData = JSON.parse(body).data;
-			/*for (var i = 0; i < jawboneData.items.length; i++) {
+			for (var i = 0; i < jawboneData.items.length; i++) {
+				var test = new Sleeps({
+				  userID: 1,
+				  xid: 'test',
+				  date: jawboneData.items[i].date,
+				  time_created: jawboneData.items[i].time_created,
+				  time_completed: jawboneData.items[i].time_completed,
+				  title: jawboneData.items[i].title,
+				  awakenings: jawboneData.items[i].awakenings,
+				  light: jawboneData.items[i].light,
+				  awake: jawboneData.items[i].awake,
+				  duration: jawboneData.items[i].duration
+				});
+
+				test.save(function(err, thor) {
+				  if (err) return console.error(err);
+				  console.dir(test);
+				});
 				var date = jawboneData.items[i].date.toString(),
 					year = date.slice(0,4),
 					month = date.slice(4,6),
@@ -167,7 +170,9 @@ passport.use('jawbone', new JawboneStrategy({
 				jawboneData.items[i].time_created = timeCreatedFixed;
 				jawboneData.items[i].time_completed = timeCompletedFixed;
 			}
-			*/
+			console.log(jawboneData);
+			console.log(jawboneData.items[3].details);
+			
 		return done(null, jawboneData, console.log('Jawbone Up sleep data ready to be displayed.'));
 		}
 	});
