@@ -5,7 +5,7 @@ var JawboneStrategy = require('passport-oauth').OAuth2Strategy;
 var ejs = require('ejs');
 var bodyParser = require('body-parser');
 var fs = require('fs');
-
+var up = require ('./upAPI.js');
 var mongoose = require('mongoose');
 //mongoose.connect('mongodb://localhost/myappdatabase');
 
@@ -39,13 +39,12 @@ Sleeps.find({}, function(err, sleeps){
 
 Sleeps.find({userID: 1}, function(err, sleeps){
 	if(err) throw err;
-	console.log("lines");
-	console.log(sleeps);
+	//console.log("lines");
+	//console.log(sleeps);
 })
 
 // make this available to our users in our Node applications
 //module.exports = User;
-
 
 var host = 'localhost'
 var port = 5000;
@@ -59,6 +58,8 @@ app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views');
 app.use(passport.initialize());
 
+var userToken = ''
+
 var jawboneAuth = {
 	clientID: 'bbtI3tvNMBs',
 	clientSecret: '5734ad41f828bc7a6196342d2640cca3c3cb9193',
@@ -67,22 +68,34 @@ var jawboneAuth = {
 	callbackURL: 'https://localhost:5000/dashboard'
 };
 
+app.get('/login/jawbone', function (req, res) {
 
+    res.redirect('https://' + up.getToken());
+    res.end;
+
+});
+
+/*
 app.get('/login/jawbone', 
 	passport.authorize('jawbone', {
 		scope: ['basic_read', 'sleep_read'],
 		failureRedirect: '/'
 	})
 );
+*/
+
+app.get('/token', function (req, res) {
+
+    // store the token in the database
+    console.log(req.query.code);
+    // display the dashboard page
+    res.redirect('/dashboard');
+});
 
 var testHold = {testingSleeps: null,
 	testingMoves: null};
 
-app.get('/dashboard',
-	passport.authorize('jawbone', {
-		scope: ['basic_read', 'sleep_read'],
-		failureRedirect: '/'
-	}), function(req, res) {
+app.get('/dashboard', function(req, res) {
 		//res.render('dashboard', req.account);
 		res.render('dashboard', testHold)
 	}

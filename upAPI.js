@@ -1,24 +1,19 @@
 var http = require('http');
 
-var jawboneAuth = {
-    clientSecret: '5734ad41f828bc7a6196342d2640cca3c3cb9193',
-    authorizationURL: 'https://jawbone.com/auth/oauth2/auth',
-    tokenURL: 'https://jawbone.com/auth/oauth2/token',  
-    callbackURL: 'https://localhost:5000/dashboard'  
-}
-
+// For OAuth 
 var client_id = 'bbtI3tvNMBs';
-var redirect_uri = 'https://localhost:5000/dashboard'; 
+var redirect_uri = encodeURIComponent('https://localhost:5000/token');
 
-function getToken () {
+// This return the url for getting the tokenn
+getToken = function() {
 
-    var options = {
-        host: 'https://jawbone.com',
-        path: '/auth/oauth2/auth?responsetype=code&client_id=' + client_id + 
+   var options = {
+        host: 'jawbone.com',
+        path: '/auth/oauth2/auth?response_type=code&client_id=' + client_id + 
               '&scope=basic_read%20sleep_read&redirect_uri=' + redirect_uri
     }
 
-    console.log(options.path);
+    return (options.host + options.path)
 }
 
-getToken()
+module.exports.getToken = getToken;
