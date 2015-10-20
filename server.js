@@ -6,6 +6,59 @@ var ejs = require('ejs');
 var bodyParser = require('body-parser');
 var fs = require('fs');
 
+var mongoose = require('mongoose');
+//mongoose.connect('mongodb://localhost/myappdatabase');
+
+var MongoDB = mongoose.connect('mongodb://localhost:27017/myappdatabase').connection;
+MongoDB.on('error', function(err) { console.log(err.message); });
+MongoDB.once('open', function() {
+  console.log("mongodb connection open");
+});
+
+var Sleeps = require('./databaseSchema/sleeps.js')
+
+//deletes everything in this schema
+Sleeps.remove(function(err, p){
+	if (err)
+		throw err
+	else
+		console.log('Documents deleted: ' + p);
+});
+
+var test2 = new Sleeps({
+  userID: 2,
+  date: 20150812,
+  timeFallAsleep: "11:53:23pm",
+  timeWokenUp: "7:23:43am",
+  awakenings: 5,
+  remSleepTime: 3.2,
+  lightSleepTime: 1.2,
+  deepSleepTime: 2.1,
+  timeSpentAwake: 0.5,
+  duration: 83,
+  image: "url"
+});
+
+test2.save(function(err, thor) {
+  if (err) return console.error(err);
+  console.dir(test2);
+});
+
+Sleeps.find({}, function(err, sleeps){
+	if (err) throw err;
+	console.log(sleeps)
+})
+
+Sleeps.find({userID: 1}, function(err, sleeps){
+	if(err) throw err;
+	console.log("lines");
+	console.log(sleeps);
+})
+
+// make this available to our users in our Node applications
+//module.exports = User;
+
+
 var host = 'localhost'
 var port = 5000;
 var app = express()
