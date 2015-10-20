@@ -5,7 +5,7 @@ var JawboneStrategy = require('passport-oauth').OAuth2Strategy;
 var ejs = require('ejs');
 var bodyParser = require('body-parser');
 var fs = require('fs');
-
+var up = require ('./upAPI.js');
 var host = 'localhost'
 var port = 5000;
 var app = express()
@@ -18,6 +18,8 @@ app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views');
 app.use(passport.initialize());
 
+var userToken = ''
+
 var jawboneAuth = {
 	clientID: 'bbtI3tvNMBs',
 	clientSecret: '5734ad41f828bc7a6196342d2640cca3c3cb9193',
@@ -26,6 +28,16 @@ var jawboneAuth = {
 	callbackURL: 'https://localhost:5000/dashboard'
 };
 
+// This will get the token at the redirect url /token
+/*
+app.get('/login/jawbone', function (req, res) {
+
+    console.log(up.getToken());
+    res.redirect('https://' + up.getToken());
+    res.end;
+
+}
+*/
 
 app.get('/login/jawbone', 
 	passport.authorize('jawbone', {
@@ -33,6 +45,14 @@ app.get('/login/jawbone',
 		failureRedirect: '/'
 	})
 );
+
+app.get('/token', function (req, res) {
+
+    // store the token in the database
+
+    // display the dashboard page
+    console.log(req.query.code);
+});
 
 var testHold = {testingSleeps: null,
 	testingMoves: null};
