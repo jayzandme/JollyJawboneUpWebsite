@@ -9,16 +9,15 @@ var up = require ('./upAPI.js');
 var queries = require('./queries.js');
 var mongoose = require('mongoose');
 
-
+/*
 var MongoDB = mongoose.connect('mongodb://localhost:27017/myappdatabase').connection;
 MongoDB.on('error', function(err) { 
     console.log(err.message); 
 });
-
 MongoDB.once('open', function() {
   console.log("mongodb connection open");
 });
-
+*/
 var Sleeps = require('./databaseSchema/sleeps.js')
 
 //deletes everything in this schema
@@ -27,19 +26,8 @@ var Sleeps = require('./databaseSchema/sleeps.js')
 		throw err
 	else
 		console.log('Documents deleted: ' + p);
-});
+});*/
 
-Sleeps.find({}, function(err, sleeps){
-	if (err) throw err;
-	console.log(sleeps)
-})*/
-
-/*
-Sleeps.find({userID: 1}, function(err, sleeps){
-	if(err) throw err;
-	console.log(sleeps);
-})
-*/
 // make this available to our users in our Node applications
 //module.exports = User;
 
@@ -84,6 +72,7 @@ app.get('/token', function (req, res) {
         
         up.getSleeps(token, function(data) { 
             var jawboneData = JSON.parse(data).data;
+            console.log(jawboneData);
             for (var i = 0; i < jawboneData.items.length; i++) {
                 queries.insertSleep(jawboneData.items[i])
                 var date = jawboneData.items[i].date.toString(),
@@ -110,7 +99,13 @@ app.get('/token', function (req, res) {
             }
         });
 
-        queries.getSleeps(1);
+		up.getMoves(token, function(data) {
+			var jawboneMovesData = JSON.parse(data).data;
+			console.log(jawboneMovesData);
+
+		});
+
+        //queries.getSleeps(1);
         
         // display the dashboard page
         res.redirect('/dashboard');
