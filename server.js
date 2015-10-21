@@ -58,7 +58,7 @@ app.get('/token', function (req, res) {
     // store the token in the database
     // console.log(req.query.code);
     up.getToken(req.query.code, function(token) {    
-        console.log("user logging in with token\n" + token);
+        console.log("user logging in with token:\n" + token);
        
         up.updateSleeps(token, function(data) { 
 
@@ -68,9 +68,8 @@ app.get('/token', function (req, res) {
             }
         });
 
-		up.getMoves(token, function(data) {
-			var MovesData = JSON.parse(data).data;
-            console.log('got ' + MovesData.items.length + ' move events');
+		up.getMoves(token, function(movesData) {
+            console.log('got ' + movesData.length + ' move events');
 			//console.log(jawboneMovesData);
 
 		});
@@ -92,7 +91,6 @@ app.get('/dashboard', function(req, res) {
 );
 
 app.get('/', function(req, res) {
-	console.log('got to homepage');
 	res.render('index');
 });
 

@@ -59,6 +59,8 @@ updateSleeps = function(token, callback) {
 getSleeps = function(token, time, callback) {
 
     count = 0;
+    time++;
+    
     var options = {
         host: 'jawbone.com',
         path: '/nudge/api/v.1.1/users/@me/sleeps?updated_after=' + time,
@@ -93,7 +95,85 @@ getSleepsPage = function(token, url, callback) {
 
     url += "0";
 
-    console.log('getting page ' + count + '...');
+    console.log('getting sleeps page ' + count + '...');
+    var options = {
+        host: 'jawbone.com',
+        path: url,
+        headers: {'authorization': 'bearer ' + token}
+    };
+
+    https.request(options, function(response){
+        
+        var body = '';
+
+        response.on('data', function (chunk) {
+            body += chunk;
+        });
+
+        response.on('end', function(){
+            var parsedjson = json.parse(body).data;
+
+            if (parsedjson.links && parsedjson.links.next) {
+                count++;
+                getsleepspage(token, parsedjson.links.next, function(data){
+                    callback(parsedjson.items.concat(data));
+                });
+            }
+            else{
+                callback(parsedjson.items);
+            }
+        });
+    }).end();
+
+}
+
+updateMoves = function(token, callback) {
+
+    queries.getLatestMove(1, function(lastTime) {
+        
+        getMoves(token, lastTime, callback);
+    });
+        
+}
+
+getMoves = function(token, callback) {
+
+    count = 0;
+
+	var options = {
+		host: 'jawbone.com',
+		path: '/nudge/api/v.1.1/users/@me/moves',
+		headers: {'Authorization': 'Bearer ' + token}
+	}
+
+	https.request(options, function(response){
+
+		var body = '';
+
+		response.on('data', function(chunk){
+			body += chunk;
+		});
+
+		response.on('end', function(){
+            var parsedJSON = JSON.parse(body).data;
+            if (parsedJSON.links && parsedJSON.links.next) {
+                count++;
+                getMovesPage(token, parsedJSON.links.next, function(data) {
+                    callback(parsedJSON.items.concat(data));
+                });
+            }
+            else {
+                callback(parsedJSON.items);
+            }
+		});
+	}).end();
+}
+
+getMovesPage = function(token, url, callback) {
+
+    url += "0";
+
+    console.log('getting moves page ' + count + '...');
     var options = {
         host: 'jawbone.com',
         path: url,
@@ -110,10 +190,9 @@ getSleepsPage = function(token, url, callback) {
 
         response.on('end', function(){
             var parsedJSON = JSON.parse(body).data;
-
             if (parsedJSON.links && parsedJSON.links.next) {
                 count++;
-                getSleepsPage(token, parsedJSON.links.next, function(data){
+                getMovesPage(token, parsedJSON.links.next, function(data){
                     callback(parsedJSON.items.concat(data));
                 });
             }
@@ -123,32 +202,10 @@ getSleepsPage = function(token, url, callback) {
         });
     }).end();
 
-}
 
-getMoves = function(code, callback) {
-
-	var options = {
-		host: 'jawbone.com',
-		path: '/nudge/api/v.1.1/users/@me/moves',
-		headers: {'Authorization': 'Bearer ' + code}
-	}
-
-	https.request(options, function(response){
-
-		var body = '';
-
-		response.on('data', function(chunk){
-			body += chunk;
-		});
-
-		response.on('end', function(){
-			callback(body);
-		});
-	}).end();
 }
 
 module.exports.getToken = getToken;
 module.exports.getCode = getCode;
-module.exports.getSleeps = getSleeps;
 module.exports.updateSleeps = updateSleeps;
 module.exports.getMoves = getMoves;
