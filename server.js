@@ -18,7 +18,7 @@ MongoDB.once('open', function() {
   console.log("mongodb connection open");
 });
 */
-var Sleeps = require('./databaseSchema/sleeps.js')
+//var Sleeps = require('./databaseSchema/sleeps.js')
 
 //deletes everything in this schema
 /*Sleeps.remove(function(err, p){
@@ -72,9 +72,9 @@ app.get('/token', function (req, res) {
         
         up.getSleeps(token, function(data) { 
             var jawboneData = JSON.parse(data).data;
-            console.log(jawboneData);
             for (var i = 0; i < jawboneData.items.length; i++) {
                 queries.insertSleep(jawboneData.items[i])
+                
                 var date = jawboneData.items[i].date.toString(),
                     year = date.slice(0,4),
                     month = date.slice(4,6),
@@ -87,7 +87,7 @@ app.get('/token', function (req, res) {
                     timeCompletedFixed;
 
 
-                timeCreatedDate = new Date(timeCreated * 1000); // The 0 there is the key, which sets the date to the epochc
+                timeCreatedDate = new Date(timeCreated * 1000); // The 0 there is the key, which sets the date to the epoch
                 timeCompletedDate = new Date(timeCompleted * 1000);
                 timeCreatedFixed = getClockTime(timeCreatedDate);
                 timeCompletedFixed = getClockTime(timeCompletedDate);
@@ -101,9 +101,12 @@ app.get('/token', function (req, res) {
 
 		up.getMoves(token, function(data) {
 			var jawboneMovesData = JSON.parse(data).data;
-			console.log(jawboneMovesData);
+			for (var i = 0; i < jawboneMovesData.items.length; i++){
+				queries.insertMove(jawboneMovesData.items[i]);
+			}
 
 		});
+
 
         //queries.getSleeps(1);
         
