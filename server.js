@@ -89,8 +89,8 @@ app.get('/token', function (req, res) {
     up.getToken(req.query.code, function(token) {    
         console.log("user logging in with token\n" + token);
        
-        up.updateSleeps(token);
-        up.getSleeps(token, function(data) { 
+        up.updateSleeps(token, function(data) { 
+            console.log(data);
 
             console.log('got ' + data.length + ' sleep events');
             for (var i = 0; i < data.length; i++) {

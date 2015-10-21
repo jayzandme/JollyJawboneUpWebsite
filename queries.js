@@ -47,8 +47,8 @@ getSleeps = function(userID) {
     });
 }
 
-getLatestSleep = function(userID) {
-    sleeps.findOne({userID: userID}.sort({time_completed: -1}), 
+getLatestSleep = function(userID, callback) {
+    sleeps.findOne({userID: userID}).sort({time_completed: -1}).exec(
         function(err, sleeps) {
 
         if(err) {
@@ -56,6 +56,7 @@ getLatestSleep = function(userID) {
         }
         else {
             console.log(sleeps.time_completed);
+            callback(sleeps.time_completed);
         }
     });
 }

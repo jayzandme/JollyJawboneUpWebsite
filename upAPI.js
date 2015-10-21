@@ -49,15 +49,20 @@ getToken = function(code, callback) {
 
 updateSleeps = function(token, callback) {
 
-    queries.getLatestSleep(1);
+    queries.getLatestSleep(1, function(lastTime) {
+        
+        getSleeps(token, lastTime, callback);
+    });
+        
 }
 
-getSleeps = function(token, callback) {
+getSleeps = function(token, time, callback) {
 
+    console.log(time);
     count = 0;
     var options = {
         host: 'jawbone.com',
-        path: '/nudge/api/v.1.1/users/@me/sleeps',
+        path: '/nudge/api/v.1.1/users/@me/sleeps?updated_after=' + time,
         headers: {'Authorization': 'Bearer ' + token}
     }
 
@@ -71,6 +76,7 @@ getSleeps = function(token, callback) {
 
         response.on('end', function() {
             var parsedJSON = JSON.parse(body).data;
+            console.log(body);
             if (parsedJSON.links && parsedJSON.links.next) {
                 console.log(parsedJSON.links.next);
                 count++;
