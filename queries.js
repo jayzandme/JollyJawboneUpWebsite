@@ -1,6 +1,10 @@
 var mongoose = require('mongoose');
 var sleeps = require('./databaseSchema/sleeps.js');
+<<<<<<< HEAD
 var moves = require('./databaseSchema/moves.js')
+=======
+var moves = require('./databaseSchema/moves.js');
+>>>>>>> API-queries
 var users = require('./databaseSchema/users.js');
 var database 
     = mongoose.connect('mongodb://localhost:27017/myappdatabase').connection;
@@ -66,11 +70,67 @@ getSleeps = function(userID) {
             throw err;
         }
         else {
-            console.log(sleeps);
+            return sleeps;
+        }
+    });
+}
+
+getLatestSleep = function(userID, callback) {
+    sleeps.findOne({userID: userID}).sort({time_completed: -1}).exec(
+        function(err, sleeps) {
+
+        if(err) {
+            throw err;
+        }
+        else {
+            callback(sleeps);
+        }
+    });
+}
+
+insertMove = function(move) {
+
+   var newMove = new moves({
+        userID: 1,
+        xid: move.xid,
+        date: move.date,
+        time_created: move.time_created,
+        time_updated: move.time_updated,
+        time_completed: move.time_completed,
+        steps: move.steps,
+        active_time: move.active_time,
+        distance: move.distance,
+        calories: move.calories
+   });
+
+   newMove.save(function (err, thor) {
+        if (err) {
+            return console.error(err);
+        }
+   });
+
+};
+
+getLatestMove = function(userID, callback) {
+
+    moves.findOne({userID: userID}).sort({time_completed: -1}).exec(
+        function(err, moves) {
+
+        if (err) {
+            throw err;
+        }
+        else{
+            callback(moves);
         }
     });
 }
 
 module.exports.insertSleep = insertSleep;
 module.exports.getSleeps = getSleeps;
+<<<<<<< HEAD
 module.exports.insertMove = insertMove;
+=======
+module.exports.getLatestSleep = getLatestSleep;
+module.exports.insertMove = insertMove;
+module.exports.getLatestMove = getLatestMove;
+>>>>>>> API-queries

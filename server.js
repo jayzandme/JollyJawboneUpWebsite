@@ -9,6 +9,7 @@ var up = require ('./upAPI.js');
 var queries = require('./queries.js');
 var mongoose = require('mongoose');
 
+<<<<<<< HEAD
 /*
 var MongoDB = mongoose.connect('mongodb://localhost:27017/myappdatabase').connection;
 MongoDB.on('error', function(err) { 
@@ -35,6 +36,8 @@ MongoDB.once('open', function() {
 // eventually
 var token;
 
+=======
+>>>>>>> API-queries
 var host = 'localhost'
 var port = 5000;
 var app = express()
@@ -66,9 +69,8 @@ app.get('/login/jawbone', function (req, res) {
 
 app.get('/token', function (req, res) {
 
-    // store the token in the database
-    // console.log(req.query.code);
     up.getToken(req.query.code, function(token) {    
+<<<<<<< HEAD
         
         up.getSleeps(token, function(data) { 
             var jawboneData = JSON.parse(data).data;
@@ -96,15 +98,34 @@ app.get('/token', function (req, res) {
                 jawboneData.items[i].title = jawboneData.items[i].title.replace('for ', '');
                 jawboneData.items[i].time_created = timeCreatedFixed;
                 jawboneData.items[i].time_completed = timeCompletedFixed;
+=======
+        console.log("user logging in with token:\n" + token);
+       
+        up.updateSleeps(token, function(sleepsData) { 
+
+            console.log('got ' + sleepsData.length + ' sleep events');
+            for (var i = 0; i < sleepsData.length; i++) {
+                queries.insertSleep(sleepsData[i])
+>>>>>>> API-queries
             }
+            console.log('inserted sleeps')
         });
 
+<<<<<<< HEAD
 		up.getMoves(token, function(data) {
 			var jawboneMovesData = JSON.parse(data).data;
 			for (var i = 0; i < jawboneMovesData.items.length; i++){
 				queries.insertMove(jawboneMovesData.items[i]);
 			}
 
+=======
+		up.updateMoves(token, function(movesData) {
+            console.log('got ' + movesData.length + ' move events');
+            for (var i = 0; i < movesData.length; i++) {
+                queries.insertMove(movesData[i])
+            }
+            console.log('inserted moves');
+>>>>>>> API-queries
 		});
 
 
@@ -119,13 +140,11 @@ var testHold = {testingSleeps: null,
 	testingMoves: null};
 
 app.get('/dashboard', function(req, res) {
-		//res.render('dashboard', req.account);
 		res.render('dashboard', testHold)
 	}
 );
 
 app.get('/', function(req, res) {
-	console.log('got to homepage');
 	res.render('index');
 });
 
