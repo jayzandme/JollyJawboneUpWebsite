@@ -41,7 +41,6 @@ getSleeps = function(userID) {
             throw err;
         }
         else {
-            console.log(sleeps);
             return sleeps;
         }
     });
@@ -55,8 +54,12 @@ getLatestSleep = function(userID, callback) {
             throw err;
         }
         else {
-            console.log(sleeps.time_completed);
-            callback(sleeps.time_completed);
+            if (sleeps === null) {
+                callback(0);
+            }
+            else {
+                callback(sleeps.time_completed);
+            }
         }
     });
 }

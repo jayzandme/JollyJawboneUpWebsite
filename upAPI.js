@@ -58,7 +58,6 @@ updateSleeps = function(token, callback) {
 
 getSleeps = function(token, time, callback) {
 
-    console.log(time);
     count = 0;
     var options = {
         host: 'jawbone.com',
@@ -76,9 +75,7 @@ getSleeps = function(token, time, callback) {
 
         response.on('end', function() {
             var parsedJSON = JSON.parse(body).data;
-            console.log(body);
             if (parsedJSON.links && parsedJSON.links.next) {
-                console.log(parsedJSON.links.next);
                 count++;
                 getSleepsPage(token, parsedJSON.links.next, function(data) {
                     callback(parsedJSON.items.concat(data));

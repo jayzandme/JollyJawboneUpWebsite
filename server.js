@@ -90,12 +90,11 @@ app.get('/token', function (req, res) {
         console.log("user logging in with token\n" + token);
        
         up.updateSleeps(token, function(data) { 
-            console.log(data);
 
             console.log('got ' + data.length + ' sleep events');
             for (var i = 0; i < data.length; i++) {
+                queries.insertSleep(data[i])
                 /*
-                queries.insertSleep(jawboneData.items[i])
                 var date = jawboneData.items[i].date.toString(),
                     year = date.slice(0,4),
                     month = date.slice(4,6),
