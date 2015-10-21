@@ -15,7 +15,7 @@ getCode = function() {
    var options = {
         host: 'jawbone.com',
         path: '/auth/oauth2/auth?response_type=code&client_id=' + client_id + 
-              '&scope=basic_read%20sleep_read&redirect_uri=' + redirect_uri
+              '&scope=basic_read%20sleep_read%20move_read&redirect_uri=' + redirect_uri
     }
 
     return (options.host + options.path)
@@ -125,7 +125,30 @@ getSleepsPage = function(token, url, callback) {
 
 }
 
-module.exports.getToken = getToken
+getMoves = function(code, callback) {
+
+	var options = {
+		host: 'jawbone.com',
+		path: '/nudge/api/v.1.1/users/@me/moves',
+		headers: {'Authorization': 'Bearer ' + code}
+	}
+
+	https.request(options, function(response){
+
+		var body = '';
+
+		response.on('data', function(chunk){
+			body += chunk;
+		});
+
+		response.on('end', function(){
+			callback(body);
+		});
+	}).end();
+}
+
+module.exports.getToken = getToken;
 module.exports.getCode = getCode;
 module.exports.getSleeps = getSleeps;
 module.exports.updateSleeps = updateSleeps;
+module.exports.getMoves = getMoves;

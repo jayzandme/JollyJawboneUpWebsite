@@ -14,7 +14,6 @@ var MongoDB = mongoose.connect('mongodb://localhost:27017/myappdatabase').connec
 MongoDB.on('error', function(err) { 
     console.log(err.message); 
 });
-
 MongoDB.once('open', function() {
   console.log("mongodb connection open");
 });
@@ -66,31 +65,15 @@ app.get('/token', function (req, res) {
             console.log('got ' + data.length + ' sleep events');
             for (var i = 0; i < data.length; i++) {
                 queries.insertSleep(data[i])
-                /*
-                var date = jawboneData.items[i].date.toString(),
-                    year = date.slice(0,4),
-                    month = date.slice(4,6),
-                    day = date.slice(6,8),
-                    timeCreated = jawboneData.items[i].time_created,
-                    timeCompleted = jawboneData.items[i].time_completed,
-                    timeCreatedDate,
-                    timeCompletedDate,
-                    timeCreatedFixed,
-                    timeCompletedFixed;
-
-
-                timeCreatedDate = new Date(timeCreated * 1000); // The 0 there is the key, which sets the date to the epochc
-                timeCompletedDate = new Date(timeCompleted * 1000);
-                timeCreatedFixed = getClockTime(timeCreatedDate);
-                timeCompletedFixed = getClockTime(timeCompletedDate);
-
-                jawboneData.items[i].date = month + '/' + day + '/' + year;		
-                jawboneData.items[i].title = jawboneData.items[i].title.replace('for ', '');
-                jawboneData.items[i].time_created = timeCreatedFixed;
-                jawboneData.items[i].time_completed = timeCompletedFixed;
-                */
             }
         });
+
+		up.getMoves(token, function(data) {
+			var MovesData = JSON.parse(data).data;
+            console.log('got ' + MovesData.items.length + ' move events');
+			//console.log(jawboneMovesData);
+
+		});
 
         //queries.getSleeps(1);
         
