@@ -1,10 +1,6 @@
 var mongoose = require('mongoose');
 var sleeps = require('./databaseSchema/sleeps.js');
-<<<<<<< HEAD
-var moves = require('./databaseSchema/moves.js')
-=======
 var moves = require('./databaseSchema/moves.js');
->>>>>>> API-queries
 var users = require('./databaseSchema/users.js');
 var database 
     = mongoose.connect('mongodb://localhost:27017/myappdatabase').connection;
@@ -39,30 +35,6 @@ insertSleep = function(sleep) {
    });
 
 };
-
-insertMove = function(move) {
-
-    var newMove = new moves({
-      userID: 1, 
-      xid: move.xid,      //unique ID for this event (can get more data with it)
-      date: move.date,     //YYYYMMDD (int)
-      steps: move.steps,
-      active_time: move.active_time,    //in seconds 
-      distance: move.distance,       //in meters
-      calories: move.calories,
-      snapshot_image: move.snapshot_image,     //URI to link of image
-      time_created: move.time_created,     //epoch time
-      time_updated: move.time_updated,     //epoch time of when this move was last updated
-      time_completed: move.time_completed    //epoch time
-
-    });
-
-    newMove.save(function(err, thor) {
-        if (err){
-            return console.error(err);
-        }
-    });
-}
 
 getSleeps = function(userID) {
     sleeps.find({userID: userID}, function(err, sleeps) {
@@ -127,10 +99,7 @@ getLatestMove = function(userID, callback) {
 
 module.exports.insertSleep = insertSleep;
 module.exports.getSleeps = getSleeps;
-<<<<<<< HEAD
 module.exports.insertMove = insertMove;
-=======
 module.exports.getLatestSleep = getLatestSleep;
 module.exports.insertMove = insertMove;
 module.exports.getLatestMove = getLatestMove;
->>>>>>> API-queries

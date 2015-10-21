@@ -9,35 +9,6 @@ var up = require ('./upAPI.js');
 var queries = require('./queries.js');
 var mongoose = require('mongoose');
 
-<<<<<<< HEAD
-/*
-var MongoDB = mongoose.connect('mongodb://localhost:27017/myappdatabase').connection;
-MongoDB.on('error', function(err) { 
-    console.log(err.message); 
-});
-MongoDB.once('open', function() {
-  console.log("mongodb connection open");
-});
-*/
-//var Sleeps = require('./databaseSchema/sleeps.js')
-
-//deletes everything in this schema
-/*Sleeps.remove(function(err, p){
-	if (err)
-		throw err
-	else
-		console.log('Documents deleted: ' + p);
-});*/
-
-// make this available to our users in our Node applications
-//module.exports = User;
-
-// the token is stored locally for now, it will have to be stored in th database
-// eventually
-var token;
-
-=======
->>>>>>> API-queries
 var host = 'localhost'
 var port = 5000;
 var app = express()
@@ -70,35 +41,6 @@ app.get('/login/jawbone', function (req, res) {
 app.get('/token', function (req, res) {
 
     up.getToken(req.query.code, function(token) {    
-<<<<<<< HEAD
-        
-        up.getSleeps(token, function(data) { 
-            var jawboneData = JSON.parse(data).data;
-            for (var i = 0; i < jawboneData.items.length; i++) {
-                queries.insertSleep(jawboneData.items[i])
-                
-                var date = jawboneData.items[i].date.toString(),
-                    year = date.slice(0,4),
-                    month = date.slice(4,6),
-                    day = date.slice(6,8),
-                    timeCreated = jawboneData.items[i].time_created,
-                    timeCompleted = jawboneData.items[i].time_completed,
-                    timeCreatedDate,
-                    timeCompletedDate,
-                    timeCreatedFixed,
-                    timeCompletedFixed;
-
-
-                timeCreatedDate = new Date(timeCreated * 1000); // The 0 there is the key, which sets the date to the epoch
-                timeCompletedDate = new Date(timeCompleted * 1000);
-                timeCreatedFixed = getClockTime(timeCreatedDate);
-                timeCompletedFixed = getClockTime(timeCompletedDate);
-
-                jawboneData.items[i].date = month + '/' + day + '/' + year;		
-                jawboneData.items[i].title = jawboneData.items[i].title.replace('for ', '');
-                jawboneData.items[i].time_created = timeCreatedFixed;
-                jawboneData.items[i].time_completed = timeCompletedFixed;
-=======
         console.log("user logging in with token:\n" + token);
        
         up.updateSleeps(token, function(sleepsData) { 
@@ -106,26 +48,16 @@ app.get('/token', function (req, res) {
             console.log('got ' + sleepsData.length + ' sleep events');
             for (var i = 0; i < sleepsData.length; i++) {
                 queries.insertSleep(sleepsData[i])
->>>>>>> API-queries
             }
             console.log('inserted sleeps')
         });
 
-<<<<<<< HEAD
-		up.getMoves(token, function(data) {
-			var jawboneMovesData = JSON.parse(data).data;
-			for (var i = 0; i < jawboneMovesData.items.length; i++){
-				queries.insertMove(jawboneMovesData.items[i]);
-			}
-
-=======
 		up.updateMoves(token, function(movesData) {
             console.log('got ' + movesData.length + ' move events');
             for (var i = 0; i < movesData.length; i++) {
                 queries.insertMove(movesData[i])
             }
             console.log('inserted moves');
->>>>>>> API-queries
 		});
 
 

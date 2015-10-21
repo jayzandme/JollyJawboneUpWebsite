@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 var mongoose = require('mongoose');
-=======
-var mongoose = require("mongoose");
->>>>>>> API-queries
 var Schema = mongoose.Schema;
 
 // create a schema

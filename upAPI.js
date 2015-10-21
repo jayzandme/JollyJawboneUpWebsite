@@ -108,7 +108,6 @@ getSleepsPage = function(token, page, callback) {
     query.limit = 100;
     parsedURL.search = querystring.stringify(query);
     page = url.format(parsedURL);
-    console.log(page);
 
     console.log('getting sleeps page ' + sleepCount + '...');
     var options = {
@@ -200,7 +199,6 @@ getMovesPage = function(token, page, callback) {
     query.limit = 100;
     parsedURL.search = querystring.stringify(query);
     page = url.format(parsedURL);
-    console.log(page);
 
     console.log('getting moves page ' + movesCount + '...');
     var options = {
