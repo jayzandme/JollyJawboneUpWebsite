@@ -21,34 +21,6 @@ MongoDB.once('open', function() {
 */
 var Sleeps = require('./databaseSchema/sleeps.js')
 
-//deletes everything in this schema
-/*Sleeps.remove(function(err, p){
-	if (err)
-		throw err
-	else
-		console.log('Documents deleted: ' + p);
-});
-
-test2.save(function(err, thor) {
-  if (err) return console.error(err);
-  console.dir(test2);
-});
-
-Sleeps.find({}, function(err, sleeps){
-	if (err) throw err;
-	console.log(sleeps)
-})*/
-
-/*
-Sleeps.find({userID: 1}, function(err, sleeps){
-	if(err) throw err;
-	console.log("lines");
-	console.log(sleeps);
-})
-*/
-// make this available to our users in our Node applications
-//module.exports = User;
-
 // the token is stored locally for now, it will have to be stored in th database
 // eventually
 var token;
