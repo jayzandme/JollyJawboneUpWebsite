@@ -42,9 +42,23 @@ getSleeps = function(userID) {
         }
         else {
             console.log(sleeps);
+            return sleeps;
         }
     });
 }
 
+getLatestSleep = function(userID) {
+    sleeps.findOne({userID: userID}.sort({time_completed: -1}), 
+        function(err, sleeps) {
+
+        if(err) {
+            throw err;
+        }
+        else {
+            console.log(sleeps.time_completed);
+        }
+    });
+}
+module.exports.getLatestSleep = getLatestSleep;
 module.exports.insertSleep = insertSleep;
 module.exports.getSleeps = getSleeps;

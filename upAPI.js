@@ -1,9 +1,13 @@
 var https = require('https');
+var queries = require('./queries.js');
 
 // For OAuth 
 var client_id = 'bbtI3tvNMBs';
 var redirect_uri = encodeURIComponent('https://localhost:5000/token');
 var client_secret = '5734ad41f828bc7a6196342d2640cca3c3cb9193';
+
+// for printing purposes
+var count = 1;
 
 // This return the url for getting the tokenn
 getCode = function() {
@@ -43,8 +47,14 @@ getToken = function(code, callback) {
 
 }
 
+updateSleeps = function(token, callback) {
+
+    queries.getLatestSleep(1);
+}
+
 getSleeps = function(token, callback) {
 
+    count = 0;
     var options = {
         host: 'jawbone.com',
         path: '/nudge/api/v.1.1/users/@me/sleeps',
@@ -63,10 +73,13 @@ getSleeps = function(token, callback) {
             var parsedJSON = JSON.parse(body).data;
             if (parsedJSON.links && parsedJSON.links.next) {
                 console.log(parsedJSON.links.next);
-                getSleepsPage(token, parsedJSON.links.next, callback);
+                count++;
+                getSleepsPage(token, parsedJSON.links.next, function(data) {
+                    callback(parsedJSON.items.concat(data));
+                });
             }
             else {
-                callback(body);
+                callback(parsedJSON.items);
             }
         });
     }).end();
@@ -75,7 +88,9 @@ getSleeps = function(token, callback) {
 
 getSleepsPage = function(token, url, callback) {
 
-    console.log('getting page...');
+    url += "0";
+
+    console.log('getting page ' + count + '...');
     var options = {
         host: 'jawbone.com',
         path: url,
@@ -94,12 +109,13 @@ getSleepsPage = function(token, url, callback) {
             var parsedJSON = JSON.parse(body).data;
 
             if (parsedJSON.links && parsedJSON.links.next) {
+                count++;
                 getSleepsPage(token, parsedJSON.links.next, function(data){
-                    callback(body + data);
+                    callback(parsedJSON.items.concat(data));
                 });
             }
             else{
-                callback(body);
+                callback(parsedJSON.items);
             }
         });
     }).end();
@@ -109,3 +125,4 @@ getSleepsPage = function(token, url, callback) {
 module.exports.getToken = getToken
 module.exports.getCode = getCode;
 module.exports.getSleeps = getSleeps;
+module.exports.updateSleeps = updateSleeps;

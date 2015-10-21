@@ -88,11 +88,13 @@ app.get('/token', function (req, res) {
     // console.log(req.query.code);
     up.getToken(req.query.code, function(token) {    
         console.log("user logging in with token\n" + token);
-        
+       
+        up.updateSleeps(token);
         up.getSleeps(token, function(data) { 
-            var jawboneData = JSON.parse(data).data;
-            console.log(jawboneData);
-            for (var i = 0; i < jawboneData.items.length; i++) {
+
+            console.log('got ' + data.length + ' sleep events');
+            for (var i = 0; i < data.length; i++) {
+                /*
                 queries.insertSleep(jawboneData.items[i])
                 var date = jawboneData.items[i].date.toString(),
                     year = date.slice(0,4),
@@ -115,6 +117,7 @@ app.get('/token', function (req, res) {
                 jawboneData.items[i].title = jawboneData.items[i].title.replace('for ', '');
                 jawboneData.items[i].time_created = timeCreatedFixed;
                 jawboneData.items[i].time_completed = timeCompletedFixed;
+                */
             }
         });
 
