@@ -9,21 +9,6 @@ var up = require ('./upAPI.js');
 var queries = require('./queries.js');
 var mongoose = require('mongoose');
 
-/*
-var MongoDB = mongoose.connect('mongodb://localhost:27017/myappdatabase').connection;
-MongoDB.on('error', function(err) { 
-    console.log(err.message); 
-});
-MongoDB.once('open', function() {
-  console.log("mongodb connection open");
-});
-*/
-var Sleeps = require('./databaseSchema/sleeps.js')
-
-// the token is stored locally for now, it will have to be stored in th database
-// eventually
-var token;
-
 var host = 'localhost'
 var port = 5000;
 var app = express()
@@ -55,23 +40,24 @@ app.get('/login/jawbone', function (req, res) {
 
 app.get('/token', function (req, res) {
 
-    // store the token in the database
-    // console.log(req.query.code);
     up.getToken(req.query.code, function(token) {    
         console.log("user logging in with token:\n" + token);
        
-        up.updateSleeps(token, function(data) { 
+        up.updateSleeps(token, function(sleepsData) { 
 
-            console.log('got ' + data.length + ' sleep events');
-            for (var i = 0; i < data.length; i++) {
-                queries.insertSleep(data[i])
+            console.log('got ' + sleepsData.length + ' sleep events');
+            for (var i = 0; i < sleepsData.length; i++) {
+                queries.insertSleep(sleepsData[i])
             }
+            console.log('inserted sleeps')
         });
 
-		up.getMoves(token, function(movesData) {
+		up.updateMoves(token, function(movesData) {
             console.log('got ' + movesData.length + ' move events');
-			//console.log(jawboneMovesData);
-
+            for (var i = 0; i < movesData.length; i++) {
+                queries.insertMove(movesData[i])
+            }
+            console.log('inserted moves');
 		});
 
         //queries.getSleeps(1);
@@ -85,7 +71,6 @@ var testHold = {testingSleeps: null,
 	testingMoves: null};
 
 app.get('/dashboard', function(req, res) {
-		//res.render('dashboard', req.account);
 		res.render('dashboard', testHold)
 	}
 );
