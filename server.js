@@ -8,6 +8,9 @@ var fs = require('fs');
 var up = require ('./upAPI.js');
 var queries = require('./queries.js');
 var mongoose = require('mongoose');
+var flash = require('express-flash');   //new
+var session = require('express-session');   //new
+
 
 var host = 'localhost'
 var port = 5000;
@@ -20,6 +23,12 @@ app.use('/bower_components',  express.static(__dirname + '/bower_components'));
 app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views');
 app.use(passport.initialize());
+//new
+app.use(session({ cookie: { maxAge: 60000 }, 
+                  secret: 'woot',
+                  resave: false, 
+                  saveUninitialized: false}));
+app.use(flash());
 
 var userToken = ''
 
@@ -61,26 +70,44 @@ app.get('/token', function (req, res) {
     		});
 
 
-        hold = queries.getSleeps(1);
+        var hold = queries.getSleeps(1);
+
+        var returnData = [];
 
         //to go through the return of the query (array of objects)
         hold.exec(function(err, sleeps){
           if (err)
             throw err
           else {
+            var i = 0;
             sleeps.forEach(function(sleep){
-              console.log(sleep)
+              returnData.push( 
+                {
+                  title: sleep.title,
+                  date: sleep.date
+                });
+              i++;
+              console.log(returnData)
+              console.log(sleep + "here")
             });
           }
         })
         
         // display the dashboard page
+        req.flash('test', 'it worked')
         res.redirect('/dashboard');
     });
 });
 
 app.get('/dashboard', function(req, res) {
-		res.render('dashboard')
+  //the flash stuff only shows up the first time you go to dashboard
+  //when you go to a different page, it loses this data
+  hold1 = req.flash('test')
+  if (hold1 !== null){
+      hold = {message: hold1};
+  }
+  hold1 = null;
+	res.render('dashboard', hold)
 });
 
 app.get('/', function(req, res) {
