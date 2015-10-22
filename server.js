@@ -45,36 +45,43 @@ app.get('/token', function (req, res) {
        
         up.updateSleeps(token, function(sleepsData) { 
 
-            console.log('got ' + sleepsData.length + ' sleep events');
-            for (var i = 0; i < sleepsData.length; i++) {
-                queries.insertSleep(sleepsData[i])
-            }
-            console.log('inserted sleeps')
+          console.log('got ' + sleepsData.length + ' sleep events');
+          for (var i = 0; i < sleepsData.length; i++) {
+              queries.insertSleep(sleepsData[i])
+          }
+          console.log('inserted sleeps')
         });
 
-		up.updateMoves(token, function(movesData) {
-            console.log('got ' + movesData.length + ' move events');
-            for (var i = 0; i < movesData.length; i++) {
-                queries.insertMove(movesData[i])
-            }
-            console.log('inserted moves');
-		});
+    		up.updateMoves(token, function(movesData) {
+          console.log('got ' + movesData.length + ' move events');
+          for (var i = 0; i < movesData.length; i++) {
+              queries.insertMove(movesData[i])
+          }
+          console.log('inserted moves');
+    		});
 
 
-        //queries.getSleeps(1);
+        hold = queries.getSleeps(1);
+
+        //to go through the return of the query (array of objects)
+        hold.exec(function(err, sleeps){
+          if (err)
+            throw err
+          else {
+            sleeps.forEach(function(sleep){
+              console.log(sleep)
+            });
+          }
+        })
         
         // display the dashboard page
         res.redirect('/dashboard');
     });
 });
 
-var testHold = {testingSleeps: null,
-	testingMoves: null};
-
 app.get('/dashboard', function(req, res) {
-		res.render('dashboard', testHold)
-	}
-);
+		res.render('dashboard')
+});
 
 app.get('/', function(req, res) {
 	res.render('index');
