@@ -5,11 +5,9 @@
     "body-parser": "~1.4.2",
     "ejs": "latest",
     "express": "~4.5.1",
-    "jawbone-up": "latest",
     "method-override": "~2.0.2",
     "mongodb": "latest",
     "mongoose": "^4.1.11",
-    "passport": "latest",
-    "passport-oauth": "latest"
+    "mocha": "latest"
   }
 }
