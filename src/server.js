@@ -18,7 +18,7 @@ app.use(express.static(__dirname + '/css'));
 app.use('/bower_components',  express.static(__dirname + '/bower_components'));
 //app.use('/jquery', express.static(__dirname + '/jquery'));
 app.set('view engine', 'ejs');
-app.set('views', __dirname + '/views');
+app.set('views', __dirname + '/../views');
 app.use(passport.initialize());
 
 var userToken = ''
@@ -113,8 +113,8 @@ function getClockTime(date){
 }
 
 var sslOptions= {
-	key: fs.readFileSync('../server.key'),
-	cert: fs.readFileSync('../server.crt')
+	key: fs.readFileSync('.././server.key'),
+	cert: fs.readFileSync('.././server.crt')
 };
 
 var server = https.createServer(sslOptions, app);

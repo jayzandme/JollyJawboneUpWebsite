@@ -1,25 +1,74 @@
 var assert = require('assert');
+var mongoose = require('mongoose');
+var sleeps = require('../databaseSchema/sleeps.js');
+var moves = require('../databaseSchema/moves.js');
+var users = require('../databaseSchema/users.js');
 var queries = require('../src/queries.js');
+var database
+    = mongoose.connect('mongodb://localhost:27017/myappdatabase').connection;
 
-describe('queries', function() {
+describe('Testing queries', function() {
+ 
+    describe('Empty database', function() {
+        
+        before(function() {
+            clearDatabase();
+        });
 
-    
-    // this runs before all tests
-    before(function() {
-        console.log('clearing database...');
-        console.log('inputting test data...');
-        console.log('testing queries...');
+        describe('#getLatestSleep()', function() {
+
+            it('Should\'t break if no data', function(done){
+                queries.getLatestSleep(1, function(sleep) {
+                    done();
+                });
+            });
+
+        });
     });
 
-    describe('#getLatestSleep()', function() {
+    describe('Full database', function() {
 
-        it('Should get latest sleep', function(done) {
-            queries.getLatestSleep(1, function(sleep) {
-                assert.equal(sleep.time_completed, 1445427900);
-                done();
+        before(function() {
+            makeDatabase();
+        });
+
+        describe('#getLatestSleep()', function() {
+
+            it('Should get latest sleep', function(done) {
+                queries.getLatestSleep(1, function(sleep) {
+                    assert.equal(sleep.time_completed, 1445427900);
+                    done();
+                });
             });
         });
 
     });
 
 });
+
+// clears the database of any data
+function clearDatabase() {
+
+   sleeps.find({}).remove().exec(); 
+   moves.find({}).remove().exec();
+   users.find({}).remove().exec();
+}
+
+// Puts test data in the database
+function makeDatabase(){
+
+    for(int i = 0; i < 100; i++) {
+        makeSleep(i);
+        makeMove(i);
+    }
+});
+
+// makes a sleep data based upon the input number
+function makeSleep(number) {
+
+}
+
+// makes a move data based upon the input number
+function makeMove(number) {
+
+}
