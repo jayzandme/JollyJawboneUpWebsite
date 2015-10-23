@@ -73,39 +73,57 @@ app.get('/token', function (req, res) {
         var hold = queries.getSleeps(1);
 
         var returnData = [];
-
+        var done = false;
         //to go through the return of the query (array of objects)
         hold.exec(function(err, sleeps){
           if (err)
             throw err
           else {
-            var i = 0;
-            sleeps.forEach(function(sleep){
-              var epochTime = sleep.time_created;
-              var date = new Date(0);
-              date.setUTCSeconds(epochTime);
-              clockTime = getClockTime(date);
-              returnData.push( 
-                {
-                  title: sleep.title,
-                  time_created: epochtoClockTime(sleep.time_created),
-                  time_completed: epochtoClockTime(sleep.time_completed)
+            for (var i = sleeps.length - 10; i < sleeps.length; i++){
+                  returnData.push( 
+                    {
+                      title: sleeps[i].title,
+                      time_created: epochtoClockTime(sleeps[i].time_created),
+                      time_completed: epochtoClockTime(sleeps[i].time_completed)
 
-                });
-              i++;
-              console.log(returnData)
-              console.log(sleep + "here")
-            });
+                    });
+            }
           }
-        })
+          console.log(returnData)
+          /*app.get('/dashboard', function(req, res){
+            res.render('dashboard', returnData[returnData.length - 1]);
+          });
+          res.redirect('/dashboard');*/
+        });
+
+        var movesData = queries.getMoves(1);
+
+        var returnDataMoves = [];
+        movesData.exec(function(err, moves){
+          if (err)
+            throw err
+          else{
+            for (var i = moves.length - 10; i < moves.length; i++){
+                    returnDataMoves.push({
+                      steps: moves[i].steps
+                    });
+            }
+          }
+          app.get('/dashboard', function(req, res){
+            res.render('dashboard', 
+              { hold1: returnData[returnData.length - 1],
+                hold2: returnDataMoves[returnDataMoves.length - 1] 
+              });
+          });
+          res.redirect('/dashboard');
+          console.log(returnDataMoves)
+        });
+
         
         // display the dashboard page
         //req.flash('test', 'it worked')
         //res.redirect('/dashboard');
-        app.get('/dashboard', function(req, res){
-          res.render('dashboard', returnData[returnData.length - 1]);
-        });
-        res.redirect('/dashboard');
+        
         
     });
 });

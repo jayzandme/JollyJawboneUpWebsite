@@ -22,10 +22,11 @@ insertSleep = function(sleep) {
         time_created: sleep.time_created,
         time_completed: sleep.time_completed,
         title: sleep.title,
-        awakenings: sleep.awakenings,
-        light: sleep.light,
-        awake: sleep.awake,
-        duration: sleep.duration
+        awakenings: sleep.details.awakenings,
+        light: sleep.details.light,
+        deep: sleep.details.deep,
+        awake: sleep.details.awake,
+        duration: sleep.details.duration
    });
 
    newSleep.save(function (err, thor) {
@@ -71,10 +72,10 @@ insertMove = function(move) {
         time_created: move.time_created,
         time_updated: move.time_updated,
         time_completed: move.time_completed,
-        steps: move.steps,
-        active_time: move.active_time,
-        distance: move.distance,
-        calories: move.calories
+        steps: move.details.steps,
+        active_time: move.details.active_time,
+        distance: move.details.distance,
+        calories: move.details.calories
    });
 
    newMove.save(function (err, thor) {
@@ -84,6 +85,19 @@ insertMove = function(move) {
    });
 
 };
+
+getMoves = function(userID) {
+    //made this a value so that it can be returned to be used in server file
+    var queryVals = moves.find({userID: userID}, function(err, moves) {
+        if (err) {
+            throw err;
+        }
+        else {
+            return moves;
+        }
+    });
+    return queryVals;
+}
 
 getLatestMove = function(userID, callback) {
 
@@ -105,3 +119,4 @@ module.exports.insertMove = insertMove;
 module.exports.getLatestSleep = getLatestSleep;
 module.exports.insertMove = insertMove;
 module.exports.getLatestMove = getLatestMove;
+module.exports.getMoves = getMoves;

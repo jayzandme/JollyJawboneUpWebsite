@@ -11,6 +11,7 @@ var sleepsSchema = new mongoose.Schema({
   title: String,            //ex. '5h 30m'
   awakenings: Number,       //in details - number of times awakened
   light: Number,            //in details - seconds
+  deep: Number,             //in details - seconds
   awake: Number,            //in details - seconds
   duration: Number           //in details - time for this sleep event in seconds
 });
