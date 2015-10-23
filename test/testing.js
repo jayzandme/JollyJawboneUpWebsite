@@ -9,13 +9,15 @@ var database
 
 // testing variables
 var lastSleepTime = -1;
-var lastMoveTime = -1
+var lastSleepdate = -1;
+var lastMoveTime = -1;
+var lastMoveDate = -1;
 
 // test the queries file
 describe('Testing queries', function() {
 
     // Test with an empty database
-    describe('Empty database', function() {
+    describe('-Empty database', function() {
         
         before(function() {
             clearDatabase();
@@ -23,17 +25,28 @@ describe('Testing queries', function() {
 
         describe('#getLatestSleep()', function() {
 
-            it('Should\'t break if no data', function(done){
+            it('Should\'t break if no data', function(done) {
                 queries.getLatestSleep(1, function(sleep) {
                     assert.equal(sleep, null);
                     done();
                 });
             });
-
         });
+
+        describe('#getLatestMove()', function() {
+
+            it('Shouldn\'t break if no data', function(done) {
+                queries.getLatestMove(1, function(move) {
+                    assert.equal(move, null);
+                    done();
+                });
+            });
+        });
+
     });
 
-    describe('Full database', function() {
+    // test with a full database
+    describe('-Full database', function() {
 
         before(function() {
             makeDatabase();
@@ -44,6 +57,36 @@ describe('Testing queries', function() {
             it('Should get latest sleep', function(done) {
                 queries.getLatestSleep(1, function(sleep) {
                     assert.equal(sleep.time_completed, lastSleepTime);
+                    done();
+                });
+            });
+
+            it('Should get the proper sleep info', function(done) {
+                queries.getLatestSleep(1, function(sleep) {
+                    assert.equal(sleep.time_created, lastSleepTime - 50000);
+                    assert.equal(sleep.title, 'for 1h 23m');
+                    assert.equal(sleep.xid, 'xid goes here');
+                    assert.equal(sleep.date, lastSleepDate);
+                    done();
+                });
+            });
+        });
+
+        describe('#getLatestMove()', function() {
+
+            it('Should get the latest move', function(done) {
+                queries.getLatestMove(1, function(move) {
+                    assert.equal(move.time_completed, lastMoveTime);
+                    done();
+                });
+            });
+
+            it('Should get the proper move info', function(done) {
+                queries.getLatestMove(1, function(move) {
+                    assert.equal(move.time_created, lastMoveTime - 50000);
+                    assert.equal(move.xid, 'xid goes here');
+                    assert.equal(move.date, lastMoveDate);
+                    assert.equal(move.time_updated, lastMoveTime + 50000);
                     done();
                 });
             });
@@ -76,15 +119,17 @@ function makeSleep(number) {
 
     var time_created = parseInt(1435000000 + number * Math.random());
     var time_completed = time_created + 50000;
+    var date = 20151000 + parseInt(Math.random() * 30);
 
     if (time_completed > lastSleepTime) {
         lastSleepTime = time_completed;
+        lastSleepDate = date;
     }
 
     var newSleep = new sleeps({
         userID: 1,
         xid: "xid goes here",
-        date: 20151023,
+        date: date,
         time_created: time_created, 
         time_completed: time_completed, 
         title: "for 1h 23m"
@@ -103,15 +148,17 @@ function makeMove(number) {
     var time_created = parseInt(1435000000 + number * Math.random());
     var time_completed = time_created + 50000;
     var time_updated = time_completed + 50000;
+    var date = 20151000 + parseInt(Math.random() * 30);
 
     if (time_completed > lastMoveTime) {
         lastMoveTime = time_completed;
+        lastMoveDate = date;
     }
 
     var newMove = new moves({
         userID: 1,
         xid: "xid goes here",
-        date: 20151023,
+        date: date,
         time_created: time_created,
         time_updated: time_updated,
         time_completed: time_completed
