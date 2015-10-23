@@ -56,12 +56,14 @@ function clearDatabase() {
 
 // Puts test data in the database
 function makeDatabase(){
-
-    for(int i = 0; i < 100; i++) {
+    
+    var i;
+    
+    for(i = 0; i < 100; i++) {
         makeSleep(i);
         makeMove(i);
     }
-});
+}
 
 // makes a sleep data based upon the input number
 function makeSleep(number) {

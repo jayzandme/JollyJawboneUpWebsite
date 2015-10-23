@@ -113,8 +113,8 @@ function getClockTime(date){
 }
 
 var sslOptions= {
-	key: fs.readFileSync('.././server.key'),
-	cert: fs.readFileSync('.././server.crt')
+	key: fs.readFileSync('../server.key'),
+	cert: fs.readFileSync('../server.crt')
 };
 
 var server = https.createServer(sslOptions, app);
