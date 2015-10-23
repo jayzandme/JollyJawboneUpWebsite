@@ -81,10 +81,16 @@ app.get('/token', function (req, res) {
           else {
             var i = 0;
             sleeps.forEach(function(sleep){
+              var epochTime = sleep.time_created;
+              var date = new Date(0);
+              date.setUTCSeconds(epochTime);
+              clockTime = getClockTime(date);
               returnData.push( 
                 {
                   title: sleep.title,
-                  date: sleep.date
+                  time_created: epochtoClockTime(sleep.time_created),
+                  time_completed: epochtoClockTime(sleep.time_completed)
+
                 });
               i++;
               console.log(returnData)
@@ -94,21 +100,27 @@ app.get('/token', function (req, res) {
         })
         
         // display the dashboard page
-        req.flash('test', 'it worked')
+        //req.flash('test', 'it worked')
+        //res.redirect('/dashboard');
+        app.get('/dashboard', function(req, res){
+          res.render('dashboard', returnData[returnData.length - 1]);
+        });
         res.redirect('/dashboard');
+        
     });
 });
 
-app.get('/dashboard', function(req, res) {
+//app.get('/dashboard', function(req, res) {
   //the flash stuff only shows up the first time you go to dashboard
   //when you go to a different page, it loses this data
-  hold1 = req.flash('test')
+  /*hold1 = req.flash('test')
   if (hold1 !== null){
       hold = {message: hold1};
   }
-  hold1 = null;
-	res.render('dashboard', hold)
-});
+  hold1 = null;*/
+	//res.render('dashboard', hold)
+  //res.render('dashboard')
+//});
 
 app.get('/', function(req, res) {
 	res.render('index');
@@ -129,6 +141,13 @@ app.get('/teamPage', function(req, res){
 app.get('/weeklyChallenges', function(req,res){
 	res.render('weeklyChallenges');
 });
+
+function epochtoClockTime(epochTime){
+  var date = new Date(0);
+  date.setUTCSeconds(epochTime);
+  clockTime = getClockTime(date);
+  return clockTime;
+}
 
 function getClockTime(date){
    var now    = new Date(date);
