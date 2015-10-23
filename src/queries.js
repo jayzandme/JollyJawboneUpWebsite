@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
-var sleeps = require('./databaseSchema/sleeps.js');
-var moves = require('./databaseSchema/moves.js');
-var users = require('./databaseSchema/users.js');
+var sleeps = require('../databaseSchema/sleeps.js');
+var moves = require('../databaseSchema/moves.js');
+var users = require('../databaseSchema/users.js');
 var database 
     = mongoose.connect('mongodb://localhost:27017/myappdatabase').connection;
 

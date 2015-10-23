@@ -1,21 +1,25 @@
 var assert = require('assert');
-var queries = require('./queries.js');
+var queries = require('../src/queries.js');
 
 describe('queries', function() {
 
     
     // this runs before all tests
     before(function() {
+        console.log('clearing database...');
+        console.log('inputting test data...');
         console.log('testing queries...');
     });
 
     describe('#getLatestSleep()', function() {
-        it('Should get one sleep', function(done) {
-            queries.getLatestSleep(1, function(err) {
-                if (err) throw err;
+
+        it('Should get latest sleep', function(done) {
+            queries.getLatestSleep(1, function(sleep) {
+                assert.equal(sleep.time_completed, 1445427900);
                 done();
             });
         });
+
     });
 
-}
+});

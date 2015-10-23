@@ -7,7 +7,13 @@
     "express": "~4.5.1",
     "method-override": "~2.0.2",
     "mongodb": "latest",
-    "mongoose": "^4.1.11",
+    "mongoose": "^4.1.11"
+  },
+  "devDependancies" : {
     "mocha": "latest"
+  },
+  "scripts": {
+    "start": "src/server.js",
+    "test": "node_modules/.bin/mocha -w"
   }
 }
