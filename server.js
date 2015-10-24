@@ -97,7 +97,7 @@ app.get('/token', function (req, res) {
                     });
             }
           }
-          console.log(returnDataSleeps)
+          //console.log(returnDataSleeps)
           /*app.get('/dashboard', function(req, res){
             res.render('dashboard', returnData[returnData.length - 1]);
           });
@@ -105,6 +105,7 @@ app.get('/token', function (req, res) {
         });
 
         var movesData = queries.getMoves(1);
+        var otherData = {date: null};
 
         var returnDataMoves = [];
         movesData.exec(function(err, moves){
@@ -116,19 +117,15 @@ app.get('/token', function (req, res) {
                       steps: moves[i].steps
                     });
             }
+            otherData.date = getFormattedDate('' + moves[moves.length - 1].date);
           }
         });
 
-
-        var otherData = {date: null};
-
-        otherData.date = getFormattedDate();
-
-        function getFormattedDate() {
-          var date = new Date();
-          var year = date.getFullYear();
-          var month = date.getMonth() + 1;
-          var day = date.getDate();
+        function getFormattedDate(dateString) {
+          console.log(dateString)
+          var year = dateString.substring(0, 4)
+          var month = dateString.substring(4, 6);
+          var day = dateString.substring(6, 8);
           var formattedDate = month + "/" + day + "/" + year;
           return formattedDate
         }
@@ -157,7 +154,7 @@ app.get('/token', function (req, res) {
             });
             res.redirect('/dashboard');
 
-            console.log(returnDataWorkouts)
+            //console.log(returnDataWorkouts)
         });
 
         
