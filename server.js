@@ -21,12 +21,6 @@ app.use('/bower_components',  express.static(__dirname + '/bower_components'));
 app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views');
 app.use(passport.initialize());
-//new
-//app.use(session({ cookie: { maxAge: 60000 }, 
-//                secret: 'woot',
-//                resave: false, 
-//                saveUninitialized: false}));
-//app.use(flash());
 
 var userToken = ''
 
@@ -136,30 +130,11 @@ app.get('/token', function (req, res) {
               });
             });
             res.redirect('/dashboard');
-            
-            //console.log(returnDataWorkouts)
         });
-
-        
-        // display the dashboard page
-        //req.flash('test', 'it worked')
-        //res.redirect('/dashboard');
         
         
     });
 });
-
-//app.get('/dashboard', function(req, res) {
-  //the flash stuff only shows up the first time you go to dashboard
-  //when you go to a different page, it loses this data
-  /*hold1 = req.flash('test')
-  if (hold1 !== null){
-      hold = {message: hold1};
-  }
-  hold1 = null;*/
-    //res.render('dashboard', hold)
-  //res.render('dashboard')
-//});
 
 app.get('/', function(req, res) {
     res.render('index');
