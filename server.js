@@ -8,8 +8,6 @@ var fs = require('fs');
 var up = require ('./src/upAPI.js');
 var queries = require('./src/queries.js');
 var mongoose = require('mongoose');
-var flash = require('express-flash');   //new
-var session = require('express-session');   //new
 
 
 var host = 'localhost'
@@ -23,12 +21,6 @@ app.use('/bower_components',  express.static(__dirname + '/bower_components'));
 app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views');
 app.use(passport.initialize());
-//new
-app.use(session({ cookie: { maxAge: 60000 }, 
-                  secret: 'woot',
-                  resave: false, 
-                  saveUninitialized: false}));
-app.use(flash());
 
 var userToken = ''
 
@@ -80,6 +72,20 @@ app.get('/token', function (req, res) {
 
         var hold = queries.getSleeps(1);
 
+        var stepsAverage;
+        var resultsTest = queries.getAverageSteps(function (err, results) {
+            if (err){
+                throw(err)
+            }
+            else{
+                console.log(results);
+                stepsAverage = results; 
+                return results;
+            }
+        });
+
+        console.log(stepsAverage);
+
         var returnDataSleeps = [];
         var done = false;
         //to go through the return of the query (array of objects)
@@ -97,11 +103,6 @@ app.get('/token', function (req, res) {
                     });
             }
           }
-          //console.log(returnDataSleeps)
-          /*app.get('/dashboard', function(req, res){
-            res.render('dashboard', returnData[returnData.length - 1]);
-          });
-          res.redirect('/dashboard');*/
         });
 
         var movesData = queries.getMoves(1);
@@ -122,7 +123,6 @@ app.get('/token', function (req, res) {
         });
 
         function getFormattedDate(dateString) {
-          console.log(dateString)
           var year = dateString.substring(0, 4)
           var month = dateString.substring(4, 6);
           var day = dateString.substring(6, 8);
@@ -155,28 +155,9 @@ app.get('/token', function (req, res) {
             res.redirect('/dashboard');
 
             //console.log(returnDataWorkouts)
-        });
-
-        
-        // display the dashboard page
-        //req.flash('test', 'it worked')
-        //res.redirect('/dashboard');
-        
-        
+        });          
     });
 });
-
-//app.get('/dashboard', function(req, res) {
-  //the flash stuff only shows up the first time you go to dashboard
-  //when you go to a different page, it loses this data
-  /*hold1 = req.flash('test')
-  if (hold1 !== null){
-      hold = {message: hold1};
-  }
-  hold1 = null;*/
-	//res.render('dashboard', hold)
-  //res.render('dashboard')
-//});
 
 app.get('/', function(req, res) {
 	res.render('index');

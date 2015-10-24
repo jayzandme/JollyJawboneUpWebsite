@@ -14,6 +14,18 @@ database.once('open', function() {
     console.log('mongodb connection open');
 });
 
+getAverageSteps = function(callback){
+    moves.aggregate([
+    { $group: {
+        _id: '$userID',
+        movesAvg: { $avg: '$steps'}
+    }}
+    ],
+    callback
+
+    );
+}
+
 insertSleep = function(sleep) {
 
    var newSleep = new sleeps({
@@ -174,3 +186,4 @@ module.exports.getMoves = getMoves;
 module.exports.insertWorkout = insertWorkout;
 module.exports.getLatestWorkout = getLatestWorkout;
 module.exports.getWorkouts = getWorkouts;
+module.exports.getAverageSteps = getAverageSteps;
