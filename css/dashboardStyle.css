@@ -2,7 +2,7 @@
 .boxContainer
 {
     margin:0px;
-    width:900px;
+    width:1500px;
     height:auto;
     background-color:blue}
 
@@ -11,23 +11,23 @@
     margin:9px 9px 9px 0px;
     float:left;
     height:auto;
-    width:120px;
+    width:250px;
 }
 
 #column1 li, #column2 li, #column3 li, #column4 li { 
     height:auto;
-    width:120px;
+    width:200px;
 }
 .box2, .box4, .box9 {
     margin:0px 0px 9px 0px;
     background-color:#409da5;
-    height = 120px;
+    height = 100px;
 }
 
 .box10, .box1, .box5 {
     margin:0px 0px 9px 0px;
     background-color:#da8515;
-    height = 60px;
+    height = 100px;
 }
 .box8, .box11, .box3 {
     margin:0px 0px 9px 0px;
@@ -37,5 +37,5 @@
 .box6, .box7, .box12 {
     margin:0px 0px 9px 0px;
     background-color:#cd432d;
-    height=267px;
+    height=100px;
 }

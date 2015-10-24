@@ -19,9 +19,9 @@
             forcePlaceholderSize: true
         }).disableSelection();
 
-    	$('.box1, .box9, .box2,.box10, .box4, .box6, .box12, .box8').append('<div style="height:120px;"></div>');
+    	$('.box1, .box9, .box2,.box10, .box4, .box6, .box12, .box8').append('<div style="height:200px;"></div>');
 
-    	$('.box3, .box5, .box11, .box7').append('<div style="height:267px;"></div>');
+    	$('.box3, .box5, .box11, .box7').append('<div style="height:200px;"></div>');
       
     });
   </script>
@@ -43,28 +43,31 @@
     		</div>
   		</div>
 	</nav>
-	<div> Dashboard Page
-	</div>
+	<div class = "text-center"> <h3>Dashboard</h3> </div>
+  <div class = "text-center"> <h4>Data for <%= otherData.date %> </h4></div>
+
+  <div class ="col-md-1"></div>
 		<div class="boxContainer">
-			<ul id="column1" class="connectedSortable">
+			<ul id="column1" class="connectedSortable" >
         		<li class="box1"><div> Slept <%= sleeps.title %></div></li>
         		<li class="box2"> <div>Time Created <%= sleeps.time_created %></div></li>
         		<li class="box3"><div>Time Completed <%= sleeps.time_completed %></div></li>
     		</ul>
-    		<ul id="column2" class="connectedSortable">
+    		<ul id="column2" class="connectedSortable" >
 		        <li class="box4"><div>Steps <%= moves.steps %></div></li>
 		        <li class="box5"></li>
 		        <li class="box6"></li>
 		    </ul>
-		    <ul id="column3" class="connectedSortable">
+		    <ul id="column3" class="connectedSortable" >
 		        <li class="box7"><div>Workout Type <%= workouts.title %></div></li>
 		        <li class="box8"></li>
 		        <li class="box9"></li>
 		    </ul>
-		    <ul id="column4" class="connectedSortable">
+		    <ul id="column4" class="connectedSortable" >
 		        <li class="box10"></li>
 		        <li class="box11"></li>
 		        <li class="box12"></li>
 		    </ul>
 		</div>
+
 </body>

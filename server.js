@@ -120,6 +120,19 @@ app.get('/token', function (req, res) {
         });
 
 
+        var otherData = {date: null};
+
+        otherData.date = getFormattedDate();
+
+        function getFormattedDate() {
+          var date = new Date();
+          var year = date.getFullYear();
+          var month = date.getMonth() + 1;
+          var day = date.getDate();
+          var formattedDate = month + "/" + day + "/" + year;
+          return formattedDate
+        }
+
         var workoutsData = queries.getWorkouts(1);
 
         var returnDataWorkouts = [];
@@ -138,7 +151,8 @@ app.get('/token', function (req, res) {
             res.render('dashboard', 
               { sleeps: returnDataSleeps[returnDataSleeps.length - 1],
                 moves: returnDataMoves[returnDataMoves.length - 1],
-                workouts: returnDataWorkouts[returnDataWorkouts.length - 1]
+                workouts: returnDataWorkouts[returnDataWorkouts.length - 1],
+                otherData: otherData
               });
             });
             res.redirect('/dashboard');
