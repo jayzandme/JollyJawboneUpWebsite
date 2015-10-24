@@ -8,8 +8,6 @@ var fs = require('fs');
 var up = require ('./upAPI.js');
 var queries = require('./queries.js');
 var mongoose = require('mongoose');
-var flash = require('express-flash');   //new
-var session = require('express-session');   //new
 
 
 var host = 'localhost'
@@ -24,11 +22,11 @@ app.set('view engine', 'ejs');
 app.set('views', __dirname + '/../views');
 app.use(passport.initialize());
 //new
-app.use(session({ cookie: { maxAge: 60000 }, 
-                  secret: 'woot',
-                  resave: false, 
-                  saveUninitialized: false}));
-app.use(flash());
+//app.use(session({ cookie: { maxAge: 60000 }, 
+//                secret: 'woot',
+//                resave: false, 
+//                saveUninitialized: false}));
+//app.use(flash());
 
 var userToken = ''
 
