@@ -8,6 +8,8 @@ var database
     = mongoose.connect('mongodb://localhost:27017/myappdatabase').connection;
 
 // testing variables
+var testSleeps = [];
+var testMoves =[];
 var lastSleepTime = -1;
 var lastSleepdate = -1;
 var lastMoveTime = -1;
@@ -72,6 +74,33 @@ describe('Testing queries', function() {
             });
         });
 
+        describe('#getSleeps()', function() {
+
+            it('Should get all the sleeps', function() {
+                sleeps = queries.getSleeps(1); 
+                var i = 0;
+                for (i = 0; i < testSleeps.length; i++) {
+                    assert.equal(sleeps[i].time_created, 
+                                 testSleeps[i].time_created,
+                                 'sleep ' + i + ': time_created'
+                                 );
+                    assert.equal(sleeps[i].title, 
+                                 testSleeps[i].title,
+                                 'sleep ' + i + ': title'
+                                 );
+                    assert.equal(sleeps[i].xid, 
+                                 testSleeps[i].xid,
+                                 'sleep ' + i + ': xid'
+                                 );
+                    assert.equal(sleeps[i].date, 
+                                 testSleeps[i].date,
+                                 'sleep ' + i + ': date'
+                                 );
+                }
+            });
+        });
+
+
         describe('#getLatestMove()', function() {
 
             it('Should get the latest move', function(done) {
@@ -89,6 +118,38 @@ describe('Testing queries', function() {
                     assert.equal(move.time_updated, lastMoveTime + 50000);
                     done();
                 });
+            });
+        });
+
+        describe('#getMoves()', function() {
+
+            it('Should get all the moves', function(done) {
+                queries.getMoves(1, function (moves) {
+                    var i = 0;
+                    for (i = 0; i < testmoves.length; i++) {
+                        assert.equal(moves[i].time_created, 
+                                     testMoves[i].time_created,
+                                     'move ' + i + ': time_created'
+                                     );
+                        assert.equal(moves[i].time-updated, 
+                                     testMoves[i].time-updated,
+                                     'move ' + i + ': time-updated'
+                                     );
+                        assert.equal(moves[i].title, 
+                                     testMoves[i].title,
+                                     'move ' + i + ': title'
+                                     );
+                        assert.equal(moves[i].xid, 
+                                     testMoves[i].xid,
+                                     'move ' + i + ': xid'
+                                     );
+                        assert.equal(moves[i].date, 
+                                     testMoves[i].date,
+                                     'move ' + i + ': date'
+                                     );
+                    }
+                });
+                done();
             });
         });
 
@@ -135,6 +196,15 @@ function makeSleep(number) {
         title: "for 1h 23m"
     });
 
+    testSleeps.push({
+        userID: 1,
+        xid: "xid goes here",
+        date: date,
+        time_created: time_created, 
+        time_completed: time_completed, 
+        title: "for 1h 23m"
+    });
+
     newSleep.save(function (err, thor) {
         if (err) {
             return console.error(err);
@@ -156,6 +226,15 @@ function makeMove(number) {
     }
 
     var newMove = new moves({
+        userID: 1,
+        xid: "xid goes here",
+        date: date,
+        time_created: time_created,
+        time_updated: time_updated,
+        time_completed: time_completed
+    });
+
+    testMoves.push({
         userID: 1,
         xid: "xid goes here",
         date: date,

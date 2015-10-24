@@ -38,17 +38,17 @@ insertSleep = function(sleep) {
 
 };
 
-getSleeps = function(userID) {
-    //made this a value so that it can be returned to be used in server file
-    var queryVals = sleeps.find({userID: userID}, function(err, sleeps) {
-        if (err) {
+getSleeps = function(userID, callback) {
+
+    var queryVals = sleeps.find({userID: userID});
+
+    queryVals.exec(function (err, sleeps) {
+        if (err) 
             throw err;
-        }
         else {
-            return sleeps;
+            callback(sleeps);
         }
     });
-    return queryVals;
 }
 
 getLatestSleep = function(userID, callback) {
