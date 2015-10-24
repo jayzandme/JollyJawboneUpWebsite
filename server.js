@@ -69,10 +69,18 @@ app.get('/token', function (req, res) {
           console.log('inserted moves');
     		});
 
+        up.updateWorkouts(token, function(workoutsData){
+          console.log('got' + workoutsData.length + ' workout events');
+          for (var i = 0; i < workoutsData.length; i++) {
+              queries.insertWorkout(workoutsData[i])
+          }
+          console.log('inserted workouts');
+        })
+
 
         var hold = queries.getSleeps(1);
 
-        var returnData = [];
+        var returnDataSleeps = [];
         var done = false;
         //to go through the return of the query (array of objects)
         hold.exec(function(err, sleeps){
@@ -80,7 +88,7 @@ app.get('/token', function (req, res) {
             throw err
           else {
             for (var i = sleeps.length - 10; i < sleeps.length; i++){
-                  returnData.push( 
+                  returnDataSleeps.push( 
                     {
                       title: sleeps[i].title,
                       time_created: epochtoClockTime(sleeps[i].time_created),
@@ -89,7 +97,7 @@ app.get('/token', function (req, res) {
                     });
             }
           }
-          console.log(returnData)
+          console.log(returnDataSleeps)
           /*app.get('/dashboard', function(req, res){
             res.render('dashboard', returnData[returnData.length - 1]);
           });
@@ -109,14 +117,33 @@ app.get('/token', function (req, res) {
                     });
             }
           }
-          app.get('/dashboard', function(req, res){
+        });
+
+
+        var workoutsData = queries.getWorkouts(1);
+
+        var returnDataWorkouts = [];
+        workoutsData.exec(function(err, workouts){
+            if (err)
+              throw err
+            else {
+              for (var i = workouts.length - 10; i < workouts.length; i++){
+                returnDataWorkouts.push({
+                  title: workouts[i].title
+                });
+              }
+            }
+
+            app.get('/dashboard', function(req, res){
             res.render('dashboard', 
-              { hold1: returnData[returnData.length - 1],
-                hold2: returnDataMoves[returnDataMoves.length - 1] 
+              { sleeps: returnDataSleeps[returnDataSleeps.length - 1],
+                moves: returnDataMoves[returnDataMoves.length - 1],
+                workouts: returnDataWorkouts[returnDataWorkouts.length - 1]
               });
-          });
-          res.redirect('/dashboard');
-          console.log(returnDataMoves)
+            });
+            res.redirect('/dashboard');
+
+            console.log(returnDataWorkouts)
         });
 
         

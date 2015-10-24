@@ -18,7 +18,7 @@ getCode = function() {
    var options = {
         host: 'jawbone.com',
         path: '/auth/oauth2/auth?response_type=code&client_id=' + client_id + 
-              '&scope=basic_read%20sleep_read%20move_read&redirect_uri=' + redirect_uri
+              '&scope=basic_read%20sleep_read%20move_read%20workout_read&redirect_uri=' + redirect_uri
     }
 
     return (options.host + options.path)
@@ -232,7 +232,99 @@ getMovesPage = function(token, page, callback) {
 
 }
 
+updateWorkouts = function(token, callback) {
+
+    var time;
+
+    queries.getLatestWorkout(1, function(lastWorkout) {
+
+        if (lastWorkout === null) {
+            time = 0;
+        }
+        else {
+            time = lastWorkout.time_completed;
+        }
+        getWorkouts(token, time, callback);
+    });
+        
+}
+
+getWorkouts = function(token, time, callback) {
+
+    workoutsCount = 0;
+    time++;
+
+    var options = {
+        host: 'jawbone.com',
+        path: '/nudge/api/v.1.1/users/@me/workouts?start_time=' + time,
+        headers: {'Authorization': 'Bearer ' + token}
+    }
+
+    https.request(options, function(response){
+
+        var body = '';
+
+        response.on('data', function(chunk){
+            body += chunk;
+        });
+
+        response.on('end', function(){
+            var parsedJSON = JSON.parse(body).data;
+            if (parsedJSON.links && parsedJSON.links.next) {
+                workoutsCount++;
+                getWorkoutsPage(token, parsedJSON.links.next, function(data) {
+                    callback(parsedJSON.items.concat(data));
+                });
+            }
+            else {
+                callback(parsedJSON.items);
+            }
+        });
+    }).end();
+}
+
+getWorkoutsPage = function(token, page, callback) {
+
+    parsedURL = url.parse(page);
+    query = querystring.parse(parsedURL.query);
+    query.limit = 100;
+    parsedURL.search = querystring.stringify(query);
+    page = url.format(parsedURL);
+
+    console.log('getting workouts page ' + workoutsCount + '...');
+    var options = {
+        host: 'jawbone.com',
+        path: page,
+        headers: {'Authorization': 'Bearer ' + token}
+    };
+
+    https.request(options, function(response){
+        
+        var body = '';
+
+        response.on('data', function (chunk) {
+            body += chunk;
+        });
+
+        response.on('end', function(){
+            var parsedJSON = JSON.parse(body).data;
+            if (parsedJSON.links && parsedJSON.links.next) {
+                workoutsCount++;
+                getWorkoutsPage(token, parsedJSON.links.next, function(data){
+                    callback(parsedJSON.items.concat(data));
+                });
+            }
+            else{
+                callback(parsedJSON.items);
+            }
+        });
+    }).end();
+
+
+}
+
 module.exports.getToken = getToken;
 module.exports.getCode = getCode;
 module.exports.updateSleeps = updateSleeps;
 module.exports.updateMoves = updateMoves;
+module.exports.updateWorkouts = updateWorkouts;

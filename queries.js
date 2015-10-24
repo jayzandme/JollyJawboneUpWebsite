@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
 var sleeps = require('./databaseSchema/sleeps.js');
 var moves = require('./databaseSchema/moves.js');
+var workouts = require('./databaseSchema/workouts.js');
 var users = require('./databaseSchema/users.js');
 var database 
     = mongoose.connect('mongodb://localhost:27017/myappdatabase').connection;
@@ -113,10 +114,63 @@ getLatestMove = function(userID, callback) {
     });
 }
 
+insertWorkout = function(workout) {
+
+   var newWorkout= new workouts({
+        userID: 1,
+        xid: workout.xid,
+        date: workout.date,
+        time_created: workout.time_created,
+        time_completed: workout.time_completed,
+        title: workout.title,
+        steps: workout.details.steps,
+        time: workout.details.time,
+        meters: workout.details.meters,
+        calories: workout.details.calories,
+        intensity: workout.details.intensity
+   });
+
+   newWorkout.save(function (err, thor) {
+        if (err) {
+            return console.error(err);
+        }
+   });
+
+};
+
+getWorkouts = function(userID) {
+    //made this a value so that it can be returned to be used in server file
+    var queryVals = workouts.find({userID: userID}, function(err, workouts) {
+        if (err) {
+            throw err;
+        }
+        else {
+            return workouts;
+        }
+    });
+    return queryVals;
+}
+
+getLatestWorkout = function(userID, callback) {
+    workouts.findOne({userID: userID}).sort({time_completed: -1}).exec(
+        function(err, workouts) {
+
+        if(err) {
+            throw err;
+        }
+        else {
+            callback(workouts);
+        }
+    });
+}
+
+
 module.exports.insertSleep = insertSleep;
 module.exports.getSleeps = getSleeps;
-module.exports.insertMove = insertMove;
 module.exports.getLatestSleep = getLatestSleep;
 module.exports.insertMove = insertMove;
 module.exports.getLatestMove = getLatestMove;
 module.exports.getMoves = getMoves;
+module.exports.insertWorkout = insertWorkout;
+module.exports.getLatestWorkout = getLatestWorkout;
+module.exports.getWorkouts = getWorkouts;
