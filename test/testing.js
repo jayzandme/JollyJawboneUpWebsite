@@ -10,14 +10,14 @@ var database
 
 // testing variables
 var testSleeps = [];
-var lastSleep = {};
-var lastSleepTime = -1;
-var lastSleepdate = -1;
+var lastSleep = {
+    time_completed: -1
+    };
 
 var testMoves = [];
-var lastMove = {};
-var lastMoveTime = -1;
-var lastMoveDate = -1;
+var lastMove = {
+    time_completed: -1
+    };
 
 var testWorkouts = [];
 var lastWorkout = {
@@ -72,17 +72,23 @@ describe('Testing queries', function() {
 
                 it('Should get latest sleep', function(done) {
                     queries.getLatestSleep(1, function(sleep) {
-                        assert.equal(sleep.time_completed, lastSleepTime);
+                        assert.equal(sleep.time_completed, 
+                                     lastSleep.time_completed,
+                                     'time_completed'
+                                    );
                         done();
                     });
                 });
 
                 it('Should get the proper sleep info', function(done) {
                     queries.getLatestSleep(1, function(sleep) {
-                        assert.equal(sleep.time_created, lastSleepTime - 50000);
-                        assert.equal(sleep.title, 'for 1h 23m');
-                        assert.equal(sleep.xid, 'xid goes here');
-                        assert.equal(sleep.date, lastSleepDate);
+                        assert.equal(sleep.time_created, 
+                                     lastSleep.time_created,
+                                     'time_created'
+                                    );
+                        assert.equal(sleep.title, lastSleep.title, 'title');
+                        assert.equal(sleep.xid, lastSleep.xid); 
+                        assert.equal(sleep.date, lastSleep.date); 
                         done();
                     });
                 });
@@ -119,17 +125,26 @@ describe('Testing queries', function() {
 
                 it('Should get the latest move', function(done) {
                     queries.getLatestMove(1, function(move) {
-                        assert.equal(move.time_completed, lastMoveTime);
+                        assert.equal(move.time_completed, 
+                                     lastMove.time_completed,
+                                     'time_completed'
+                                    );
                         done();
                     });
                 });
 
                 it('Should get the proper move info', function(done) {
                     queries.getLatestMove(1, function(move) {
-                        assert.equal(move.time_created, lastMoveTime - 50000);
-                        assert.equal(move.xid, 'xid goes here');
-                        assert.equal(move.date, lastMoveDate);
-                        assert.equal(move.time_updated, lastMoveTime + 50000);
+                        assert.equal(move.time_created, 
+                                     lastMove.time_completed,
+                                     'time_created'
+                                    );
+                        assert.equal(move.xid, lastMove.xid, 'xid'); 
+                        assert.equal(move.date, lastMove.date, 'date'); 
+                        assert.equal(move.time_updated, 
+                                     lastMove.time_updated,
+                                     'time_updated'
+                                    );
                         done();
                     });
                 });
@@ -298,11 +313,6 @@ function makeSleep(number) {
     var time_completed = time_created + 50000;
     var date = 20151000 + parseInt(Math.random() * 30);
 
-    if (time_completed > lastSleepTime) {
-        lastSleepTime = time_completed;
-        lastSleepDate = date;
-    }
-
     var newSleep = new sleeps({
         userID: 1,
         xid: "xid goes here",
@@ -321,6 +331,10 @@ function makeSleep(number) {
         title: "for 1h 23m"
     });
 
+    if (time_completed > lastSleep.time_completed) {
+        lastSleep = testSleeps[testSleeps.length - 1];
+    }
+
     newSleep.save(function (err, thor) {
         if (err) {
             return console.error(err);
@@ -336,10 +350,6 @@ function makeMove(number) {
     var time_updated = time_completed + 50000;
     var date = 20151000 + parseInt(Math.random() * 30);
 
-    if (time_completed > lastMoveTime) {
-        lastMoveTime = time_completed;
-        lastMoveDate = date;
-    }
 
     var newMove = new moves({
         userID: 1,
@@ -358,6 +368,11 @@ function makeMove(number) {
         time_updated: time_updated,
         time_completed: time_completed
     });
+
+    if (time_completed > lastMove.time_completed) {
+        lastMove = testMoves[testMoves.length - 1];
+    }
+
 
     newMove.save(function (err, thor) {
         if (err) {
