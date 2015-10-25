@@ -27,271 +27,273 @@ var lastWorkout = {
 // test the queries file
 describe('Testing queries', function() {
 
-    setTimeout(function() {
 
-        clearDatabase();
-        console.log('cleared database');
+    // Test with an empty database
+    describe('-Empty database', function() {
 
-        // Test with an empty database
-        describe('-Empty database', function() {
-            
-            describe('#getLatestSleep()', function() { 
-                it('Should\'t break if no data', function(done) {
-                    queries.getLatestSleep(1, function(sleep) {
-                        assert.equal(sleep, null);
-                        done();
-                    });
+        before(function(done) {
+            setTimeout(function() {
+                clearDatabase();
+                done()
+            }, 2, 50);
+        });
+        
+        describe('#getLatestSleep()', function() { 
+            it('Should\'t break if no data', function(done) {
+                queries.getLatestSleep(1, function(sleep) {
+                    assert.equal(sleep, null);
+                    done();
                 });
             });
+        });
 
-            describe('#getLatestMove()', function() {
+        describe('#getLatestMove()', function() {
 
-                it('Shouldn\'t break if no data', function(done) {
-                    queries.getLatestMove(1, function(move) {
-                        assert.equal(move, null);
-                        done();
-                    });
+            it('Shouldn\'t break if no data', function(done) {
+                queries.getLatestMove(1, function(move) {
+                    assert.equal(move, null);
+                    done();
                 });
             });
+        });
+
+    });
+
+
+    // test with a full database
+    describe('-Full database', function() {
+
+        before(function(done) {
+
+            setTimeout(function() {
+                makeDatabase();
+                done();
+            }, 500);
 
         });
 
-        run();
-    }, 1000);
+        describe('#getLatestSleep()', function() {
 
-    setTimeout( function() {
-
-        // test with a full database
-        describe('-Full database', function() {
-
-            before(function() {
-                makeDatabase();
-            });
-
-            describe('#getLatestSleep()', function() {
-
-                it('Should get latest sleep', function(done) {
-                    queries.getLatestSleep(1, function(sleep) {
-                        assert.equal(sleep.time_completed, 
-                                     lastSleep.time_completed,
-                                     'time_completed'
-                                    );
-                        done();
-                    });
-                });
-
-                it('Should get the proper sleep info', function(done) {
-                    queries.getLatestSleep(1, function(sleep) {
-                        assert.equal(sleep.time_created, 
-                                     lastSleep.time_created,
-                                     'time_created'
-                                    );
-                        assert.equal(sleep.title, lastSleep.title, 'title');
-                        assert.equal(sleep.xid, lastSleep.xid); 
-                        assert.equal(sleep.date, lastSleep.date); 
-                        done();
-                    });
+            it('Should get latest sleep', function(done) {
+                queries.getLatestSleep(1, function(sleep) {
+                    assert.equal(sleep.time_completed, 
+                                 lastSleep.time_completed,
+                                 'time_completed'
+                                );
+                    done();
                 });
             });
 
-            describe('#getSleeps()', function() {
+            it('Should get the proper sleep info', function(done) {
+                queries.getLatestSleep(1, function(sleep) {
+                    assert.equal(sleep.time_created, 
+                                 lastSleep.time_created,
+                                 'time_created'
+                                );
+                    assert.equal(sleep.title, lastSleep.title, 'title');
+                    assert.equal(sleep.xid, lastSleep.xid); 
+                    assert.equal(sleep.date, lastSleep.date); 
+                    done();
+                });
+            });
+        });
 
-                it('Should get all the sleeps', function() {
-                    sleeps = queries.getSleeps(1, function (sleeps) {    
+        describe('#getSleeps()', function() {
+
+            it('Should get all the sleeps', function() {
+                sleeps = queries.getSleeps(1, function (sleeps) {    
+                var i = 0;
+                for (i = 0; i < testSleeps.length; i++) {
+                    assert.equal(sleeps[i].time_created, 
+                                 testSleeps[i].time_created,
+                                 'sleep ' + i + ': time_created'
+                                 );
+                    assert.equal(sleeps[i].title, 
+                                 testSleeps[i].title,
+                                 'sleep ' + i + ': title'
+                                 );
+                    assert.equal(sleeps[i].xid, 
+                                 testSleeps[i].xid,
+                                 'sleep ' + i + ': xid'
+                                 );
+                    assert.equal(sleeps[i].date, 
+                                 testSleeps[i].date,
+                                 'sleep ' + i + ': date'
+                                 );
+                }
+                }); 
+            });
+        });
+
+        describe('#getLatestMove()', function() {
+
+            it('Should get the latest move', function(done) {
+                queries.getLatestMove(1, function(move) {
+                    assert.equal(move.time_completed, 
+                                 lastMove.time_completed,
+                                 'time_completed'
+                                );
+                    done();
+                });
+            });
+
+            it('Should get the proper move info', function(done) {
+                queries.getLatestMove(1, function(move) {
+                    assert.equal(move.time_created, 
+                                 lastMove.time_completed,
+                                 'time_created'
+                                );
+                    assert.equal(move.xid, lastMove.xid, 'xid'); 
+                    assert.equal(move.date, lastMove.date, 'date'); 
+                    assert.equal(move.time_updated, 
+                                 lastMove.time_updated,
+                                 'time_updated'
+                                );
+                    done();
+                });
+            });
+        });
+
+        describe('#getMoves()', function() {
+
+            it('Should get all the moves', function(done) {
+                queries.getMoves(1, function (moves) {
                     var i = 0;
-                    for (i = 0; i < testSleeps.length; i++) {
-                        assert.equal(sleeps[i].time_created, 
-                                     testSleeps[i].time_created,
-                                     'sleep ' + i + ': time_created'
+                    for (i = 0; i < testMoves.length; i++) {
+                        assert.equal(moves[i].time_created, 
+                                     testMoves[i].time_created,
+                                     'move ' + i + ': time_created'
                                      );
-                        assert.equal(sleeps[i].title, 
-                                     testSleeps[i].title,
-                                     'sleep ' + i + ': title'
+                        assert.equal(moves[i].time_updated, 
+                                     testMoves[i].time_updated,
+                                     'move ' + i + ': time-updated'
                                      );
-                        assert.equal(sleeps[i].xid, 
-                                     testSleeps[i].xid,
-                                     'sleep ' + i + ': xid'
+                        assert.equal(moves[i].title, 
+                                     testMoves[i].title,
+                                     'move ' + i + ': title'
                                      );
-                        assert.equal(sleeps[i].date, 
-                                     testSleeps[i].date,
-                                     'sleep ' + i + ': date'
+                        assert.equal(moves[i].xid, 
+                                     testMoves[i].xid,
+                                     'move ' + i + ': xid'
+                                     );
+                        assert.equal(moves[i].date, 
+                                     testMoves[i].date,
+                                     'move ' + i + ': date'
                                      );
                     }
-                    }); 
                 });
+                done();
             });
-
-            describe('#getLatestMove()', function() {
-
-                it('Should get the latest move', function(done) {
-                    queries.getLatestMove(1, function(move) {
-                        assert.equal(move.time_completed, 
-                                     lastMove.time_completed,
-                                     'time_completed'
-                                    );
-                        done();
-                    });
-                });
-
-                it('Should get the proper move info', function(done) {
-                    queries.getLatestMove(1, function(move) {
-                        assert.equal(move.time_created, 
-                                     lastMove.time_completed,
-                                     'time_created'
-                                    );
-                        assert.equal(move.xid, lastMove.xid, 'xid'); 
-                        assert.equal(move.date, lastMove.date, 'date'); 
-                        assert.equal(move.time_updated, 
-                                     lastMove.time_updated,
-                                     'time_updated'
-                                    );
-                        done();
-                    });
-                });
-            });
-
-            describe('#getMoves()', function() {
-
-                it('Should get all the moves', function(done) {
-                    queries.getMoves(1, function (moves) {
-                        var i = 0;
-                        for (i = 0; i < testMoves.length; i++) {
-                            assert.equal(moves[i].time_created, 
-                                         testMoves[i].time_created,
-                                         'move ' + i + ': time_created'
-                                         );
-                            assert.equal(moves[i].time_updated, 
-                                         testMoves[i].time_updated,
-                                         'move ' + i + ': time-updated'
-                                         );
-                            assert.equal(moves[i].title, 
-                                         testMoves[i].title,
-                                         'move ' + i + ': title'
-                                         );
-                            assert.equal(moves[i].xid, 
-                                         testMoves[i].xid,
-                                         'move ' + i + ': xid'
-                                         );
-                            assert.equal(moves[i].date, 
-                                         testMoves[i].date,
-                                         'move ' + i + ': date'
-                                         );
-                        }
-                    });
-                    done();
-                });
-            });
-
-            describe('#getLatestWorkout()', function() {
-
-                it('Should get the latest workout', function(done) {
-                    queries.getLatestWorkout(1, function(workout) {
-                        assert.equal(workout.time_completed, 
-                                     lastWorkout.time_completed,
-                                     'time_completed is wrong'
-                                    );
-                        done();
-                    });
-                });
-
-                it('Should get the proper workout info', function(done) {
-                    queries.getLatestWorkout(1, function(workout) {
-                        assert.equal(workout.time_created, 
-                                     lastWorkout.time_created,
-                                     'time_created expected: ' + 
-                                     lastWorkout.time_completed + 
-                                     ' got: ' + workout.time_completed
-                                    );
-                        assert.equal(workout.xid, 
-                                     lastWorkout.xid,
-                                     'xid expected: ' + 
-                                     lastWorkout.xid + 
-                                     ' got: ' + workout.xid
-                                    );
-                        assert.equal(workout.date, 
-                                     lastWorkout.date,
-                                     'date expected: ' + lastWorkout.date + 
-                                     ' got: ' + workout.date
-                                    );
-                        assert.equal(workout.title, 
-                                     lastWorkout.title,
-                                     'title: expected ' + lastWorkout.title,
-                                     ' got: ' + workout.title 
-                                    );
-                        assert.equal(workout.steps, 
-                                     lastWorkout.steps,
-                                     'steps: expected ' + lastWorkout.steps,
-                                     ' got: ' + workout.steps 
-                                    );
-                        assert.equal(workout.time, 
-                                     lastWorkout.time,
-                                     'time: expected ' + lastWorkout.time,
-                                     ' got: ' + workout.time 
-                                    );
-                        assert.equal(workout.meters, 
-                                     lastWorkout.meters,
-                                     'meters: expected ' + lastWorkout.meters,
-                                     ' got: ' + workout.meters 
-                                    );
-                        assert.equal(workout.calories, 
-                                     lastWorkout.calories,
-                                     'calories: expected ' + lastWorkout.calories,
-                                     ' got: ' + workout.calories
-                                    );
-                        assert.equal(workout.intensity, 
-                                     lastWorkout.intensity,
-                                     'intensity: expected ' + lastWorkout.intensity,
-                                     ' got: ' + workout.intensity
-                                    );
-                        done();
-                    });
-                });
-            });
-
-            describe('#getWorkouts()', function() {
-
-                it('Should get all the workout', function(done) {
-                    queries.getWorkouts(1, function (workouts) {
-                        var i = 0;
-                        for (i = 0; i < testWorkouts.length; i++) {
-                            assert.equal(workouts[i].time_created, 
-                                         testWorkouts[i].time_created,
-                                         'workout ' + i + ': time_created'
-                                         );
-                            assert.equal(workouts[i].time-updated, 
-                                         testWorkouts[i].time-updated,
-                                         'workout ' + i + ': time-updated'
-                                         );
-                            assert.equal(workouts[i].title, 
-                                         testWorkouts[i].title,
-                                         'workout ' + i + ': title'
-                                         );
-                            assert.equal(workouts[i].xid, 
-                                         testWorkouts[i].xid,
-                                         'workout ' + i + ': xid'
-                                         );
-                            assert.equal(workouts[i].date, 
-                                         testWorkouts[i].date,
-                                         'workout ' + i + ': date'
-                                         );
-                        }
-                    });
-                    done();
-                });
-            });
-
         });
-        run();
-    }, 1000);
+
+        describe('#getLatestWorkout()', function() {
+
+            it('Should get the latest workout', function(done) {
+                queries.getLatestWorkout(1, function(workout) {
+                    assert.equal(workout.time_completed, 
+                                 lastWorkout.time_completed,
+                                 'time_completed is wrong'
+                                );
+                    done();
+                });
+            });
+
+            it('Should get the proper workout info', function(done) {
+                queries.getLatestWorkout(1, function(workout) {
+                    assert.equal(workout.time_created, 
+                                 lastWorkout.time_created,
+                                 'time_created expected: ' + 
+                                 lastWorkout.time_completed + 
+                                 ' got: ' + workout.time_completed
+                                );
+                    assert.equal(workout.xid, 
+                                 lastWorkout.xid,
+                                 'xid expected: ' + 
+                                 lastWorkout.xid + 
+                                 ' got: ' + workout.xid
+                                );
+                    assert.equal(workout.date, 
+                                 lastWorkout.date,
+                                 'date expected: ' + lastWorkout.date + 
+                                 ' got: ' + workout.date
+                                );
+                    assert.equal(workout.title, 
+                                 lastWorkout.title,
+                                 'title: expected ' + lastWorkout.title,
+                                 ' got: ' + workout.title 
+                                );
+                    assert.equal(workout.steps, 
+                                 lastWorkout.steps,
+                                 'steps: expected ' + lastWorkout.steps,
+                                 ' got: ' + workout.steps 
+                                );
+                    assert.equal(workout.time, 
+                                 lastWorkout.time,
+                                 'time: expected ' + lastWorkout.time,
+                                 ' got: ' + workout.time 
+                                );
+                    assert.equal(workout.meters, 
+                                 lastWorkout.meters,
+                                 'meters: expected ' + lastWorkout.meters,
+                                 ' got: ' + workout.meters 
+                                );
+                    assert.equal(workout.calories, 
+                                 lastWorkout.calories,
+                                 'calories: expected ' + lastWorkout.calories,
+                                 ' got: ' + workout.calories
+                                );
+                    assert.equal(workout.intensity, 
+                                 lastWorkout.intensity,
+                                 'intensity: expected ' + lastWorkout.intensity,
+                                 ' got: ' + workout.intensity
+                                );
+                    done();
+                });
+            });
+        });
+
+        describe('#getWorkouts()', function() {
+
+            it('Should get all the workout', function(done) {
+                queries.getWorkouts(1, function (workouts) {
+                    var i = 0;
+                    for (i = 0; i < testWorkouts.length; i++) {
+                        assert.equal(workouts[i].time_created, 
+                                     testWorkouts[i].time_created,
+                                     'workout ' + i + ': time_created'
+                                     );
+                        assert.equal(workouts[i].time-updated, 
+                                     testWorkouts[i].time-updated,
+                                     'workout ' + i + ': time-updated'
+                                     );
+                        assert.equal(workouts[i].title, 
+                                     testWorkouts[i].title,
+                                     'workout ' + i + ': title'
+                                     );
+                        assert.equal(workouts[i].xid, 
+                                     testWorkouts[i].xid,
+                                     'workout ' + i + ': xid'
+                                     );
+                        assert.equal(workouts[i].date, 
+                                     testWorkouts[i].date,
+                                     'workout ' + i + ': date'
+                                     );
+                    }
+                });
+                done();
+            });
+        });
+
+    });
 });
 
 // clears the database of any data
 function clearDatabase() {
 
-   sleeps.find({}).remove().exec(); 
-   moves.find({}).remove().exec();
-   users.find({}).remove().exec();
-   workout.find({}).remove().exec();
+    sleeps.find({}).remove().exec(); 
+    moves.find({}).remove().exec();
+    users.find({}).remove().exec();
+    workout.find({}).remove().exec();
 }
 
 // Puts test data in the database
