@@ -14,7 +14,7 @@ database.once('open', function() {
     console.log('mongodb connection open');
 });
 
-getStepsAggregation = function(callback){ 
+getMovesAggregation = function(callback){ 
     moves.aggregate([ 
         { $group: 
             { _id: '$userID', 
@@ -236,6 +236,6 @@ module.exports.getMoves = getMoves;
 module.exports.insertWorkout = insertWorkout;
 module.exports.getLatestWorkout = getLatestWorkout;
 module.exports.getWorkouts = getWorkouts;
-module.exports.getStepsAggregation = getStepsAggregation;
+module.exports.getMovesAggregation = getMovesAggregation;
 module.exports.getSleepsAggregation = getSleepsAggregation;
 module.exports.getWorkoutsAggregation = getWorkoutsAggregation;

@@ -91,7 +91,7 @@ app.get('/token', function (req, res) {
                          workoutsDistanceTotal: null,
                         };
 
-        queries.getStepsAggregation(function (results) {
+        queries.getMovesAggregation(function (results) {
             otherData.stepsAverage = addCommas((results[0].movesAvg).toFixed(2));
             otherData.stepsTotal = addCommas(results[0].stepsTotal);
         });
