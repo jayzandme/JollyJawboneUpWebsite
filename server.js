@@ -109,11 +109,11 @@ app.get('/token', function (req, res) {
                       calories: (moves[i].calories).toFixed(2)
                     });
           }
-          otherData.date = getFormattedDate('' + moves[moves.length - 1].date);
+          otherData.date = getFormattedDate(moves[moves.length - 1].date);
         });
 
         function getFormattedDate(dateString) {
-          console.log(dateString)
+          dateString = '' + dateString;
           var year = dateString.substring(0, 4)
           var month = dateString.substring(4, 6);
           var day = dateString.substring(6, 8);
@@ -138,7 +138,14 @@ app.get('/token', function (req, res) {
         queries.getWorkouts(1, function(workouts) {
           for (var i = workouts.length - 10; i < workouts.length; i++){
                     returnDataWorkouts.push({
-              title: workouts[i].title
+              title: workouts[i].title,
+              steps: workouts[i].steps,
+              time: secondsToTimeString(workouts[i].time),
+              distance: metersToMiles(workouts[i].meters).toFixed(2),
+              calories: workouts[i].calories,
+              intensity: workouts[i].intensity,
+              date: getFormattedDate(workouts[i].date)
+
             });
           }
 

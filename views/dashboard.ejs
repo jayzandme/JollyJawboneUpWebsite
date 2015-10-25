@@ -72,7 +72,15 @@
 		        <li class="box6"></li>
 		    </ul>
 		    <ul id="column3" class="connectedSortable" >
-		        <li class="box7"><div>Workout Type <%= workouts.title %></div></li>
+		        <li class="box7">
+              <div>Most Recent Workout Completed On: <%= workouts.date %></div>
+              <div>Workout Type: <%= workouts.title %></div>
+              <div>Number of Steps: <%= workouts.steps%></div>
+              <div>Workout Time: <%= workouts.time%></div>
+              <div>Distance Moves: <%= workouts.distance%> miles</div>
+              <div>Calories Burned: <%= workouts.calories%></div>
+              <div>Intensity Levels: <%= workouts.intensity%></div>
+            </li>
 		        <li class="box8"></li>
 		        <li class="box9"></li>
 		    </ul>
