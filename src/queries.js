@@ -31,6 +31,25 @@ getAverageSteps = function(callback){
     ); 
 }
 
+getAverageSleeps = function(callback){
+    sleeps.aggregate([
+        { $group:
+            {_id: '$userID',
+             sleepsAvg: {$avg: '$duration'}
+            }
+
+        }], function (err, results){
+            if (err){
+                throw err
+            }
+            else {
+                callback(results);
+            }
+        }
+
+    );
+}
+
 insertSleep = function(sleep) {
 
    var newSleep = new sleeps({
@@ -194,3 +213,4 @@ module.exports.insertWorkout = insertWorkout;
 module.exports.getLatestWorkout = getLatestWorkout;
 module.exports.getWorkouts = getWorkouts;
 module.exports.getAverageSteps = getAverageSteps;
+module.exports.getAverageSleeps = getAverageSleeps;

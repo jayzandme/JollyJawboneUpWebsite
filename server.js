@@ -70,11 +70,21 @@ app.get('/token', function (req, res) {
         });
 
          var otherData = {date: null, 
-                         stepsAverage: null
+                         stepsAverage: null,
+                         sleepsAverage: null
                         };
 
         queries.getAverageSteps(function (results) {
             otherData.stepsAverage = results[0].movesAvg;
+        });
+
+        queries.getAverageSleeps(function (results) {
+            totalSecondsAve = results[0].sleepsAvg;
+            hours = Math.floor(totalSecondsAve / 3600);
+            totalSecondsAve %= 3600;
+            minutes = Math.floor(totalSecondsAve / 60);
+            seconds = totalSecondsAve % 60;
+            otherData.sleepsAverage = hours + "hrs" + minutes + "min";
         });
 
         var returnDataSleeps = [];
