@@ -73,7 +73,15 @@ app.get('/token', function (req, res) {
                          stepsAverage: null,
                          sleepsAverage: null,
                          stepsTotal: null,
-                         sleepsTotal: null
+                         sleepsTotal: null,
+                         workoutsStepsAverage: null,
+                         workoutsStepsTotal: null,
+                         workoutsCaloriesAverage: null,
+                         workoutsCaloriesTotal: null,
+                         workoutsTimeAverage: null,
+                         workoutsTimeTotal: null,
+                         workoutsDistanceAverage: null,
+                         workoutsDistanceTotal: null,
                         };
 
         queries.getStepsAggregation(function (results) {
@@ -86,6 +94,18 @@ app.get('/token', function (req, res) {
             var totalSeconds = results[0].sleepsTotal;
             otherData.sleepsTotal = secondsToTimeString(totalSeconds);
             otherData.sleepsAverage = secondsToTimeString(totalSecondsAve);
+        });
+
+        queries.getWorkoutsAggregation(function (results){
+            otherData.workoutsStepsAverage = (results[0].workoutsStepsAvg).toFixed(2);
+            otherData.workoutsStepsTotal = results[0].workoutsStepsTotal;
+            otherData.workoutsCaloriesAverage = (results[0].workoutsCaloriesAvg).toFixed(2);
+            otherData.workoutsCaloriesTotal = (results[0].workoutsCaloriesTotal).toFixed(2);
+            otherData.workoutsTimeAverage = secondsToTimeString(results[0].workoutsTimeAvg);
+            otherData.workoutsTimeTotal = secondsToTimeString(results[0].workoutsTimeTotal);
+            otherData.workoutsDistanceAverage = (metersToMiles(results[0].workoutsDistanceAvg)).toFixed(2);
+            otherData.workoutsDistanceTotal = (metersToMiles(results[0].workoutsDistanceTotal)).toFixed(2);
+
         });
 
         var returnDataSleeps = [];

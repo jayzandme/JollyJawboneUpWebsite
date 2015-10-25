@@ -51,6 +51,31 @@ getSleepsAggregation = function(callback){
     );
 }
 
+getWorkoutsAggregation = function(callback) {
+    workouts.aggregate([
+        { $group:
+            {_id: '$userID',
+             workoutsStepsAvg: {$avg: '$steps'},
+             workoutsCaloriesAvg: {$avg: '$calories'},
+             workoutsTimeAvg: {$avg: '$time'},
+             workoutsDistanceAvg: {$avg: '$meters'},
+             workoutsStepsTotal: {$sum: '$steps'},
+             workoutsCaloriesTotal: {$sum: '$calories'},
+             workoutsTimeTotal: {$sum: '$time'},
+             workoutsDistanceTotal: {$sum: '$meters'}
+            }
+
+        }], function (err, results){
+            if (err){
+                throw err
+            }
+            else {
+                callback(results);
+            }
+        }
+    );
+}
+
 insertSleep = function(sleep) {
 
    var newSleep = new sleeps({
@@ -217,3 +242,4 @@ module.exports.getLatestWorkout = getLatestWorkout;
 module.exports.getWorkouts = getWorkouts;
 module.exports.getStepsAggregation = getStepsAggregation;
 module.exports.getSleepsAggregation = getSleepsAggregation;
+module.exports.getWorkoutsAggregation = getWorkoutsAggregation;
