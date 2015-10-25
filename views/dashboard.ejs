@@ -6,28 +6,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="/dashboardStyle.css" rel="stylesheet" type="text/css">
   <link rel ="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
-  <link rel="stylesheet" href="bower_components/jquery-ui/themes/smoothness/jquery-ui.min.css">
-  <script src="bower_components/jquery/dist/jquery.min.js"></script>
-  <script src="bower_components/jquery-ui/jquery-ui.min.js"></script>
   <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-
-  <script type='text/javascript'>
-    $(document).ready(function(){
-      	$("ul.connectedSortable").sortable({
-        	connectWith: '.connectedSortable',
-            placeholder: 'ui-state-highlight',
-            forcePlaceholderSize: true
-        }).disableSelection();
-
-    	$('.box1, .box9, .box2,.box10, .box4, .box6, .box12, .box8').append('<div style="height:200px;"></div>');
-
-    	$('.box3, .box5, .box11, .box7').append('<div style="height:200px;"></div>');
-      
-    });
-  </script>
 </head>
 <body>
-	<nav class="navbar navbar-default">
+	<nav class="navbar navbar-trans">
   		<div class="container-fluid">
     		<div class="navbar-header">
       			<a class="navbar-brand" href="#">Jawbone Data Website</a>
@@ -43,31 +25,60 @@
     		</div>
   		</div>
 	</nav>
-	<div class = "text-center"> <h3>Dashboard</h3> </div>
-  <div class = "text-center"> <h4>Data for <%= otherData.date %> </h4></div>
+	<div class = "text-center"> <h1>Dashboard</h1> </div>
+  <div class = "text-center"> <h3>Data for <%= otherData.date %> </h3></div>
 
-  <div class ="col-md-1"></div>
-		<div class="boxContainer">
-			<ul id="column1" class="connectedSortable" >
-        		<li class="box1"><div> Slept <%= sleeps.title %></div></li>
-        		<li class="box2"> <div>Time Created <%= sleeps.time_created %></div></li>
-        		<li class="box3"><div>Time Completed <%= sleeps.time_completed %></div></li>
-    		</ul>
-    		<ul id="column2" class="connectedSortable" >
-		        <li class="box4"><div>Steps <%= moves.steps %></div></li>
-		        <li class="box5"></li>
-		        <li class="box6"></li>
-		    </ul>
-		    <ul id="column3" class="connectedSortable" >
-		        <li class="box7"><div>Workout Type <%= workouts.title %></div></li>
-		        <li class="box8"></li>
-		        <li class="box9"></li>
-		    </ul>
-		    <ul id="column4" class="connectedSortable" >
-		        <li class="box10"></li>
-		        <li class="box11"></li>
-		        <li class="box12"></li>
-		    </ul>
-		</div>
-
+  <div class="container">
+    <div class="row">
+        <div class="col-md-4">
+          <div class="sleeps img-rounded">
+            <div class= "circleBase"><span>Slept <%= sleeps.title %></span></div>
+            <div>Times Awakened: <%= sleeps.awakenings %></div>
+            <div>Light Sleep <%= sleeps.lightSleep %> </div>
+            <div>Fell asleep at: <%= sleeps.asleep_time %></div>
+            <div>Woke up at: <%= sleeps.awake_time %></div>
+            <div>Date: <%= sleeps.date%></div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="moves img-rounded">
+            <div>Todays Steps: <%= moves.steps %></div>
+            <div>Active Time: <%= moves.active_time %></div>
+            <div>Distance: <%= moves.distance %> miles</div>
+            <div>Active Calories Burned: <%= moves.calories %></div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="workouts img-rounded">
+            <div>Most Recent Workout Completed On: <%= workouts.date %></div>
+            <div>Workout Type: <%= workouts.title %></div>
+            <div>Number of Steps: <%= workouts.steps%></div>
+            <div>Workout Time: <%= workouts.time%></div>
+            <div>Distance Moves: <%= workouts.distance%> miles</div>
+            <div>Calories Burned: <%= workouts.calories%></div>
+            <div>Intensity Levels: <%= workouts.intensity%></div>
+          </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 averages img-rounded">
+          <div>Average Steps: <%= otherData.stepsAverage %></div>
+          <div> Average Sleep Time: <%= otherData.sleepsAverage %></div>
+          <div> Average Workout Steps: <%= otherData.workoutsStepsAverage %></div>
+          <div> Average Workout Calories Burned: <%= otherData.workoutsCaloriesAverage %></div>
+          <div> Average Workout Time: <%= otherData.workoutsTimeAverage %></div>
+          <div> Average Workout Distance: <%= otherData.workoutsDistanceAverage %> Miles</div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 totals img-rounded">
+          <div>Total Steps: <%= otherData.stepsTotal %></div>
+          <div> Total Sleep Time: <%= otherData.sleepsTotal %></div>
+          <div> Total Workout Steps: <%= otherData.workoutsStepsTotal %></div>
+          <div> Total Workout Calories Burned: <%= otherData.workoutsCaloriesTotal %></div>
+          <div> Total Workout Time: <%= otherData.workoutsTimeTotal %></div>
+          <div> Total Workout Distance: <%= otherData.workoutsDistanceTotal %> Miles</div>
+        </div>
+    </div>
+  </div>
 </body>

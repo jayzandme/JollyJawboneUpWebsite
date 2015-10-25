@@ -14,6 +14,68 @@ database.once('open', function() {
     console.log('mongodb connection open');
 });
 
+getMovesAggregation = function(callback){ 
+    moves.aggregate([ 
+        { $group: 
+            { _id: '$userID', 
+              movesAvg: { $avg: '$steps'},
+              stepsTotal: {$sum: '$steps'}
+            }
+        } ], function(err, results)  {
+            if (err){
+                throw err
+            }
+            else {
+                callback(results);
+            }
+        }
+    ); 
+}
+
+getSleepsAggregation = function(callback){
+    sleeps.aggregate([
+        { $group:
+            {_id: '$userID',
+             sleepsAvg: {$avg: '$duration'},
+             sleepsTotal: {$sum: '$duration'}
+            }
+
+        }], function (err, results){
+            if (err){
+                throw err
+            }
+            else {
+                callback(results);
+            }
+        }
+    );
+}
+
+getWorkoutsAggregation = function(callback) {
+    workouts.aggregate([
+        { $group:
+            {_id: '$userID',
+             workoutsStepsAvg: {$avg: '$steps'},
+             workoutsCaloriesAvg: {$avg: '$calories'},
+             workoutsTimeAvg: {$avg: '$time'},
+             workoutsDistanceAvg: {$avg: '$meters'},
+             workoutsStepsTotal: {$sum: '$steps'},
+             workoutsCaloriesTotal: {$sum: '$calories'},
+             workoutsTimeTotal: {$sum: '$time'},
+             workoutsDistanceTotal: {$sum: '$meters'}
+            }
+
+        }], function (err, results){
+            if (err){
+                throw err
+            }
+            else {
+                callback(results);
+            }
+        }
+    );
+}
+
 insertSleep = function(sleep) {
 
    var newSleep = new sleeps({
@@ -27,7 +89,9 @@ insertSleep = function(sleep) {
         light: sleep.details.light,
         deep: sleep.details.deep,
         awake: sleep.details.awake,
-        duration: sleep.details.duration
+        duration: sleep.details.duration,
+        asleep_time: sleep.details.asleep_time,
+        awake_time: sleep.details.awake_time
    });
 
    newSleep.save(function (err, thor) {
@@ -38,17 +102,16 @@ insertSleep = function(sleep) {
 
 };
 
-getSleeps = function(userID) {
-    //made this a value so that it can be returned to be used in server file
-    var queryVals = sleeps.find({userID: userID}, function(err, sleeps) {
-        if (err) {
+getSleeps = function(userID, callback){
+    var queryVals = sleeps.find({userID: userID}).sort({_id:-1});
+
+    queryVals.exec(function (err, sleeps) {
+        if (err) 
             throw err;
-        }
         else {
-            return sleeps;
+            callback(sleeps);
         }
     });
-    return queryVals;
 }
 
 getLatestSleep = function(userID, callback) {
@@ -63,6 +126,7 @@ getLatestSleep = function(userID, callback) {
         }
     });
 }
+
 
 insertMove = function(move) {
 
@@ -87,17 +151,16 @@ insertMove = function(move) {
 
 };
 
-getMoves = function(userID) {
-    //made this a value so that it can be returned to be used in server file
-    var queryVals = moves.find({userID: userID}, function(err, moves) {
-        if (err) {
+getMoves = function(userID, callback){
+    var queryVals = moves.find({userID: userID}).sort({_id:-1});
+
+    queryVals.exec(function (err, sleeps) {
+        if (err) 
             throw err;
-        }
         else {
-            return moves;
+            callback(sleeps);
         }
     });
-    return queryVals;
 }
 
 getLatestMove = function(userID, callback) {
@@ -138,17 +201,16 @@ insertWorkout = function(workout) {
 
 };
 
-getWorkouts = function(userID) {
-    //made this a value so that it can be returned to be used in server file
-    var queryVals = workouts.find({userID: userID}, function(err, workouts) {
-        if (err) {
+getWorkouts = function(userID, callback){
+    var queryVals = workouts.find({userID: userID}).sort({_id:-1});
+
+    queryVals.exec(function (err, sleeps) {
+        if (err) 
             throw err;
-        }
         else {
-            return workouts;
+            callback(sleeps);
         }
     });
-    return queryVals;
 }
 
 getLatestWorkout = function(userID, callback) {
@@ -174,3 +236,6 @@ module.exports.getMoves = getMoves;
 module.exports.insertWorkout = insertWorkout;
 module.exports.getLatestWorkout = getLatestWorkout;
 module.exports.getWorkouts = getWorkouts;
+module.exports.getMovesAggregation = getMovesAggregation;
+module.exports.getSleepsAggregation = getSleepsAggregation;
+module.exports.getWorkoutsAggregation = getWorkoutsAggregation;
