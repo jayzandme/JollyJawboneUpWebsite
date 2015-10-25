@@ -63,7 +63,9 @@ insertSleep = function(sleep) {
         light: sleep.details.light,
         deep: sleep.details.deep,
         awake: sleep.details.awake,
-        duration: sleep.details.duration
+        duration: sleep.details.duration,
+        asleep_time: sleep.details.asleep_time,
+        awake_time: sleep.details.awake_time
    });
 
    newSleep.save(function (err, thor) {

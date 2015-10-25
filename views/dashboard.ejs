@@ -49,14 +49,27 @@
   <div class ="col-md-1"></div>
 		<div class="boxContainer">
 			<ul id="column1" class="connectedSortable" >
-        		<li class="box1"><div> Slept <%= sleeps.title %></div></li>
-        		<li class="box2"> <div>Time Created <%= sleeps.time_created %></div></li>
-        		<li class="box3"><div>Time Completed <%= sleeps.time_completed %></div></li>
+        		<li class="box1">
+              <div>Slept <%= sleeps.title %></div>
+              <div>Times Awakened: <%= sleeps.awakenings %></div>
+              <div>Light Sleep <%= sleeps.lightSleep %> </div>
+              <div>Fell asleep at: <%= sleeps.asleep_time %></div>
+              <div>Woke up at: <%= sleeps.awake_time %>
+            </li>
+        		<li class="box2"></li>
+        		<li class="box3"></div></li>
     		</ul>
     		<ul id="column2" class="connectedSortable" >
-		        <li class="box4"><div>Steps <%= moves.steps %></div></li>
-		        <li class="box5">Average Steps <%= otherData.stepsAverage %></li>
-		        <li class="box6"> Average Sleep Time <%= otherData.sleepsAverage %></li>
+		        <li class="box4">
+              <div>Todays Steps: <%= moves.steps %></div>
+              <div>Active Time: <%= moves.active_time %></div>
+              <div>Distance: <%= moves.distance %> miles</div>
+              <div>Active Calories Burned: <%= moves.calories %></div>
+            </li>
+		        <li class="box5"><div>Average Steps: <%= otherData.stepsAverage %></div>
+              <div> Average Sleep Time: <%= otherData.sleepsAverage %></div>
+            </li>
+		        <li class="box6"></li>
 		    </ul>
 		    <ul id="column3" class="connectedSortable" >
 		        <li class="box7"><div>Workout Type <%= workouts.title %></div></li>

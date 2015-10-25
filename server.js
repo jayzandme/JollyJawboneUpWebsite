@@ -75,16 +75,12 @@ app.get('/token', function (req, res) {
                         };
 
         queries.getAverageSteps(function (results) {
-            otherData.stepsAverage = results[0].movesAvg;
+            otherData.stepsAverage = (results[0].movesAvg).toFixed(2);
         });
 
         queries.getAverageSleeps(function (results) {
             totalSecondsAve = results[0].sleepsAvg;
-            hours = Math.floor(totalSecondsAve / 3600);
-            totalSecondsAve %= 3600;
-            minutes = Math.floor(totalSecondsAve / 60);
-            seconds = totalSecondsAve % 60;
-            otherData.sleepsAverage = hours + "hrs" + minutes + "min";
+            otherData.sleepsAverage = secondsToTimeString(totalSecondsAve);
         });
 
         var returnDataSleeps = [];
@@ -93,18 +89,24 @@ app.get('/token', function (req, res) {
             for (var i = sleeps.length - 10; i < sleeps.length; i++) {
                 returnDataSleeps.push({
                     title: sleeps[i].title,
-                      time_created: epochtoClockTime(sleeps[i].time_created),
-                      time_completed: epochtoClockTime(sleeps[i].time_completed)
+                      awake_time: epochtoClockTime(sleeps[i].awake_time),
+                      asleep_time: epochtoClockTime(sleeps[i].asleep_time),
+                      awakenings: sleeps[i].awakenings,
+                      lightSleep: secondsToTimeString(sleeps[i].light),
+                      deepSleep: secondsToTimeString(sleeps[i].deep)
                 });
             }
-        });
+        }); 
 
         var returnDataMoves = [];
 
         queries.getMoves(1, function(moves) {
           for (var i = moves.length - 10; i < moves.length; i++){
                     returnDataMoves.push({
-                      steps: moves[i].steps
+                      steps: moves[i].steps,
+                      active_time: moves[i].active_time,
+                      distance: (metersToMiles(moves[i].distance)).toFixed(2),
+                      calories: (moves[i].calories).toFixed(2)
                     });
           }
           otherData.date = getFormattedDate('' + moves[moves.length - 1].date);
@@ -117,6 +119,18 @@ app.get('/token', function (req, res) {
           var day = dateString.substring(6, 8);
           var formattedDate = month + "/" + day + "/" + year;
           return formattedDate
+        }
+
+        function secondsToTimeString(secondsTotal){
+          hours = Math.floor(secondsTotal / 3600);
+          secondsTotal %= 3600;
+          minutes = Math.floor(secondsTotal / 60);
+          seconds = secondsTotal % 60;
+          return hours + "h " + minutes + "m";
+        }
+
+        function metersToMiles(meters){
+          return meters * 0.000621371192;
         }
 
         var returnDataWorkouts = [];
@@ -181,7 +195,8 @@ function getClockTime(date){
    if (hour   < 10) { hour   = "0" + hour;   }
    if (minute < 10) { minute = "0" + minute; }
    if (second < 10) { second = "0" + second; }
-   var timeString = hour + ':' + minute + ':' + second + " " + ap;
+   //var timeString = hour + ':' + minute + ':' + second + " " + ap;
+   var timeString = hour + ':' + minute + ' ' + ap;
    return timeString;
 }
 
