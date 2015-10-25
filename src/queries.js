@@ -115,6 +115,18 @@ getSleeps = function(userID, callback) {
     });
 }
 
+getSortedSleeps = function(userID, callback){
+    var queryVals = sleeps.find({userID: userID}).sort({_id:-1});
+
+    queryVals.exec(function (err, sleeps) {
+        if (err) 
+            throw err;
+        else {
+            callback(sleeps);
+        }
+    });
+}
+
 getLatestSleep = function(userID, callback) {
     sleeps.findOne({userID: userID}).sort({time_completed: -1}).exec(
         function(err, sleeps) {
@@ -127,6 +139,7 @@ getLatestSleep = function(userID, callback) {
         }
     });
 }
+
 
 insertMove = function(move) {
 
@@ -152,7 +165,6 @@ insertMove = function(move) {
 };
 
 getMoves = function(userID, callback) {
-    //made this a value so that it can be returned to be used in server file
     var queryVals = moves.find({userID: userID});
 
     queryVals.exec(function (err, moves){
@@ -161,6 +173,18 @@ getMoves = function(userID, callback) {
         }
         else {
             callback(moves);
+        }
+    });
+}
+
+getSortedMoves = function(userID, callback){
+    var queryVals = moves.find({userID: userID}).sort({_id:-1});
+
+    queryVals.exec(function (err, sleeps) {
+        if (err) 
+            throw err;
+        else {
+            callback(sleeps);
         }
     });
 }
@@ -204,7 +228,6 @@ insertWorkout = function(workout) {
 };
 
 getWorkouts = function(userID, callback) {
-    //made this a value so that it can be returned to be used in server file
     var queryVals = workouts.find({userID: userID});
 
     queryVals.exec(function (err, workouts){
@@ -213,6 +236,18 @@ getWorkouts = function(userID, callback) {
         }
         else {
             callback(workouts);
+        }
+    });
+}
+
+getSortedWorkouts = function(userID, callback){
+    var queryVals = workouts.find({userID: userID}).sort({_id:-1});
+
+    queryVals.exec(function (err, sleeps) {
+        if (err) 
+            throw err;
+        else {
+            callback(sleeps);
         }
     });
 }
@@ -243,3 +278,6 @@ module.exports.getWorkouts = getWorkouts;
 module.exports.getStepsAggregation = getStepsAggregation;
 module.exports.getSleepsAggregation = getSleepsAggregation;
 module.exports.getWorkoutsAggregation = getWorkoutsAggregation;
+module.exports.getSortedSleeps = getSortedSleeps;
+module.exports.getSortedMoves = getSortedMoves;
+module.exports.getSortedWorkouts = getSortedWorkouts;

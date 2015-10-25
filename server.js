@@ -69,7 +69,7 @@ app.get('/token', function (req, res) {
             console.log('inserted workouts');
         });
 
-         var otherData = {date: null, 
+        var otherData = {date: null, 
                          stepsAverage: null,
                          sleepsAverage: null,
                          stepsTotal: null,
@@ -110,23 +110,24 @@ app.get('/token', function (req, res) {
 
         var returnDataSleeps = [];
 
-        queries.getSleeps(1, function(sleeps) {
-            for (var i = sleeps.length - 10; i < sleeps.length; i++) {
+        queries.getSortedSleeps(1, function(sleeps) {
+            for (var i = 0; i < 10; i++) {
                 returnDataSleeps.push({
                     title: sleeps[i].title,
                       awake_time: epochtoClockTime(sleeps[i].awake_time),
                       asleep_time: epochtoClockTime(sleeps[i].asleep_time),
                       awakenings: sleeps[i].awakenings,
                       lightSleep: secondsToTimeString(sleeps[i].light),
-                      deepSleep: secondsToTimeString(sleeps[i].deep)
+                      deepSleep: secondsToTimeString(sleeps[i].deep),
+                      date: getFormattedDate(sleeps[i].date)
                 });
             }
         }); 
 
         var returnDataMoves = [];
 
-        queries.getMoves(1, function(moves) {
-          for (var i = moves.length - 10; i < moves.length; i++){
+        queries.getSortedMoves(1, function(moves) {
+          for (var i = 0; i < 10; i++){
                     returnDataMoves.push({
                       steps: addCommas(moves[i].steps),
                       active_time: secondsToTimeString(moves[i].active_time),
@@ -134,13 +135,13 @@ app.get('/token', function (req, res) {
                       calories: addCommas((moves[i].calories).toFixed(2))
                     });
           }
-          otherData.date = getFormattedDate(moves[moves.length - 1].date);
+          otherData.date = getFormattedDate(moves[0].date);
         });
 
         var returnDataWorkouts = [];
 
-        queries.getWorkouts(1, function(workouts) {
-          for (var i = workouts.length - 10; i < workouts.length; i++){
+        queries.getSortedWorkouts(1, function(workouts) {
+          for (var i = 0; i < 10; i++){
                     returnDataWorkouts.push({
               title: workouts[i].title,
               steps: addCommas(workouts[i].steps),
@@ -156,15 +157,15 @@ app.get('/token', function (req, res) {
           setTimeout(function(){
           app.get('/dashboard', function(req, res){
             res.render('dashboard', 
-              { sleeps: returnDataSleeps[returnDataSleeps.length - 1],
-                moves: returnDataMoves[returnDataMoves.length - 1],
-                workouts: returnDataWorkouts[returnDataWorkouts.length - 1],
+              { sleeps: returnDataSleeps[0],
+                moves: returnDataMoves[0],
+                workouts: returnDataWorkouts[0],
                 otherData: otherData
               });
             });
             res.redirect('/dashboard');
           }, 1000);
-        });
+        }); 
     });
 });
 
