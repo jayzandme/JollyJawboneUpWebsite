@@ -153,6 +153,7 @@ app.get('/token', function (req, res) {
             });
           }
 
+          setTimeout(function(){
           app.get('/dashboard', function(req, res){
             res.render('dashboard', 
               { sleeps: returnDataSleeps[returnDataSleeps.length - 1],
@@ -162,6 +163,7 @@ app.get('/token', function (req, res) {
               });
             });
             res.redirect('/dashboard');
+          }, 1000);
         });
     });
 });
