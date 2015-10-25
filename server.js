@@ -1,6 +1,5 @@
 var express = require('express');
 var https = require('https');
-var JawboneStrategy = require('passport-oauth').OAuth2Strategy;
 var ejs = require('ejs');
 var bodyParser = require('body-parser');
 var fs = require('fs');
