@@ -3,17 +3,26 @@ var mongoose = require('mongoose');
 var sleeps = require('../databaseSchema/sleeps.js');
 var moves = require('../databaseSchema/moves.js');
 var users = require('../databaseSchema/users.js');
+var workout = require('../databaseSchema/workouts.js');
 var queries = require('../src/queries.js');
 var database
     = mongoose.connect('mongodb://localhost:27017/myappdatabase').connection;
 
 // testing variables
 var testSleeps = [];
-var testMoves =[];
+var lastSleep = {};
 var lastSleepTime = -1;
 var lastSleepdate = -1;
+
+var testMoves = [];
+var lastMove = {};
 var lastMoveTime = -1;
 var lastMoveDate = -1;
+
+var testWorkouts = [];
+var lastWorkout = {};
+var lastWorkoutTime = -1;
+var lastWorkoutDate = -1;
 
 // test the queries file
 describe('Testing queries', function() {
@@ -77,7 +86,7 @@ describe('Testing queries', function() {
         describe('#getSleeps()', function() {
 
             it('Should get all the sleeps', function() {
-                sleeps = queries.getSleeps(1); 
+                sleeps = queries.getSleeps(1, function (sleeps) {    
                 var i = 0;
                 for (i = 0; i < testSleeps.length; i++) {
                     assert.equal(sleeps[i].time_created, 
@@ -97,9 +106,9 @@ describe('Testing queries', function() {
                                  'sleep ' + i + ': date'
                                  );
                 }
+                }); 
             });
         });
-
 
         describe('#getLatestMove()', function() {
 
@@ -126,13 +135,13 @@ describe('Testing queries', function() {
             it('Should get all the moves', function(done) {
                 queries.getMoves(1, function (moves) {
                     var i = 0;
-                    for (i = 0; i < testmoves.length; i++) {
+                    for (i = 0; i < testMoves.length; i++) {
                         assert.equal(moves[i].time_created, 
                                      testMoves[i].time_created,
                                      'move ' + i + ': time_created'
                                      );
-                        assert.equal(moves[i].time-updated, 
-                                     testMoves[i].time-updated,
+                        assert.equal(moves[i].time_updated, 
+                                     testMoves[i].time_updated,
                                      'move ' + i + ': time-updated'
                                      );
                         assert.equal(moves[i].title, 
@@ -153,6 +162,106 @@ describe('Testing queries', function() {
             });
         });
 
+        describe('#getLatestWorkout()', function() {
+
+            it('Should get the latest workout', function(done) {
+                queries.getLatestWorkout(1, function(workout) {
+                    assert.equal(workout.time_completed, 
+                                 lastWorkout.time_completed,
+                                 'time_completed expected: ' + 
+                                 lastWorkout.time_completed + 
+                                 ' got: ' + workout.time_completed
+                                );
+                    done();
+                });
+            });
+
+            it('Should get the proper workout info', function(done) {
+                queries.getLatestWorkout(1, function(workout) {
+                    assert.equal(workout.time_created, 
+                                 lastWorkout.time_created,
+                                 'time_created expected: ' + 
+                                 lastWorkout.time_completed + 
+                                 ' got: ' + workout.time_completed
+                                );
+                    assert.equal(workout.xid, 
+                                 lastWorkout.xid,
+                                 'xid expected: ' + 
+                                 lastWorkout.xid + 
+                                 ' got: ' + workout.xid
+                                );
+                    assert.equal(workout.date, 
+                                 lastWorkout.date,
+                                 'date expected: ' + lastWorkout.date + 
+                                 ' got: ' + workout.date
+                                );
+                    assert.equal(workout.title, 
+                                 lastWorkout.title,
+                                 'title: expected ' + lastWorkout.title,
+                                 ' got: ' + workout.title 
+                                );
+                    assert.equal(workout.steps, 
+                                 lastWorkout.steps,
+                                 'steps: expected ' + lastWorkout.steps,
+                                 ' got: ' + workout.steps 
+                                );
+                    assert.equal(workout.time, 
+                                 lastWorkout.time,
+                                 'time: expected ' + lastWorkout.time,
+                                 ' got: ' + workout.time 
+                                );
+                    assert.equal(workout.meters, 
+                                 lastWorkout.meters,
+                                 'meters: expected ' + lastWorkout.meters,
+                                 ' got: ' + workout.meters 
+                                );
+                    assert.equal(workout.calories, 
+                                 lastWorkout.calories,
+                                 'calories: expected ' + lastWorkout.calories,
+                                 ' got: ' + workout.calories
+                                );
+                    assert.equal(workout.intensity, 
+                                 lastWorkout.intensity,
+                                 'intensity: expected ' + lastWorkout.intensity,
+                                 ' got: ' + workout.intensity
+                                );
+                    done();
+                });
+            });
+        });
+
+        describe('#getWorkout()', function() {
+
+            it('Should get all the workout', function(done) {
+                queries.getWorkouts(1, function (workouts) {
+                    var i = 0;
+                    for (i = 0; i < testWorkout.length; i++) {
+                        assert.equal(workouts[i].time_created, 
+                                     testWorkout[i].time_created,
+                                     'workout ' + i + ': time_created'
+                                     );
+                        assert.equal(workouts[i].time-updated, 
+                                     testWorkout[i].time-updated,
+                                     'workout ' + i + ': time-updated'
+                                     );
+                        assert.equal(workouts[i].title, 
+                                     testWorkout[i].title,
+                                     'workout ' + i + ': title'
+                                     );
+                        assert.equal(workouts[i].xid, 
+                                     testWorkout[i].xid,
+                                     'workout ' + i + ': xid'
+                                     );
+                        assert.equal(workouts[i].date, 
+                                     testWorkout[i].date,
+                                     'workout ' + i + ': date'
+                                     );
+                    }
+                });
+                done();
+            });
+        });
+
     });
 });
 
@@ -162,6 +271,7 @@ function clearDatabase() {
    sleeps.find({}).remove().exec(); 
    moves.find({}).remove().exec();
    users.find({}).remove().exec();
+   workout.find({}).remove().exec();
 }
 
 // Puts test data in the database
@@ -172,6 +282,7 @@ function makeDatabase(){
     for(i = 0; i < 100; i++) {
         makeSleep(i);
         makeMove(i);
+        makeWorkout(i);
     }
 }
 
@@ -250,3 +361,56 @@ function makeMove(number) {
     });
     
 }
+
+// makes a workout based upon the input number
+function makeWorkout(number) {
+    
+    var time_created = parseInt(1435000000 + number * Math.random());
+    var time_completed = time_created + 50000;
+    var date = 20151000 + parseInt(Math.random() * 30);
+    var steps = parseInt(Math.random() * 2000);
+    var time = parseInt(Math.random() * 4000);
+    var meters = parseInt(Math.random() * 5000);
+    var calories = parseInt(Math.random() * 600);
+    var intensity = parseInt(Math.random() * 5);
+
+    var newWorkout = new workout({
+        userID: 1,
+        xid: "xid goes here",
+        date: date,
+        title: 'Run',
+        steps: steps,
+        time: time,
+        meters: meters,
+        calories: calories,
+        intensity: intensity,
+        time_created: time_created,
+        time_completed: time_completed
+    });
+
+    testWorkouts.push({
+        userID: 1,
+        xid: "xid goes here",
+        date: date,
+        title: 'Run',
+        steps: steps,
+        time: time,
+        meters: meters,
+        calories: calories,
+        intensity: intensity,
+        time_created: time_created,
+        time_completed: time_completed
+    });
+
+    if (time_completed > lastWorkoutTime) {
+        lastWorkout = testWorkouts[testWorkouts.length - 1];
+    }
+
+    newWorkout.save(function (err, thor) {
+        if (err) {
+            return console.log(err);
+        }
+    });
+    
+}
+

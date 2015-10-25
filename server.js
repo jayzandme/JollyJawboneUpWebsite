@@ -69,7 +69,7 @@ app.get('/token', function (req, res) {
             console.log('inserted workouts');
         });
 
-         var otherData = {date: null, 
+        var otherData = {date: null, 
                          stepsAverage: null
                         };
 
