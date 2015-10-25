@@ -4,36 +4,28 @@
   <title>Jolly Up Website</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="/dashboardStyle.css" rel="stylesheet" type="text/css">
+  <link href="/achievements.css" rel="stylesheet" type="text/css">
   <link rel ="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
-  <link rel="stylesheet" href="bower_components/jquery-ui/themes/smoothness/jquery-ui.min.css">
-  <script src="bower_components/jquery/dist/jquery.min.js"></script>
-  <script src="bower_components/jquery-ui/jquery-ui.min.js"></script>
   <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
 </head>
 
 <body>
-	<nav class="navbar navbar-default">
-  		<div class="container-fluid">
-    		<div class="navbar-header">
-      			<a class="navbar-brand" href="#">Jawbone Data Website</a>
-    		</div>
-    		<div>
-      			<ul class="nav navbar-nav">
-        			<li><a href="/dashboard">Dashboard</a></li>
-        			<li><a href="/levels">Levels</a></li>
-        			<li class="active"><a href="/achievements">Achievements</a></li>
-        			<li><a href="/teamPage">Team</a></li>
-        			<li><a href="/weeklyChallenges">Weekly Challenges</a></li>
-      			</ul>
-    		</div>
-  		</div>
-	</nav>
-
-  <div> Achievements Page
-  </div>
-
-
+  <nav class="navbar navbar-trans">
+      <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">Jawbone Data Website</a>
+        </div>
+        <div>
+            <ul class="nav navbar-nav">
+              <li><a href="/dashboard">Dashboard</a></li>
+              <li><a href="/levels">Levels</a></li>
+              <li class="active"><a href="/achievements">Achievements</a></li>
+              <li><a href="/teamPage">Team</a></li>
+              <li><a href="/weeklyChallenges">Weekly Challenges</a></li>
+            </ul>
+        </div>
+      </div>
+  </nav>
   <table class="table table-bordered">
     <thead>
       <tr>
@@ -44,15 +36,204 @@
     <tbody>
      
       <tr>
-        <td>Stepper 1</td>
-        <td>Take 10000 steps in a day</td>
+        <td><%= stepper1.name %></td>
+        <td><%= stepper1.description %></td>
+      </tr>
+
+      <tr>
+        <td><%= stepper2.name %></td>
+        <td><%= stepper2.description %></td>
       </tr>
       
       <tr>
-        <td>Stepper 2</td>
-        <td>Take 10000 steps 2 days in a row</td>
+        <td><%= stepper3.name %></td>
+        <td><%= stepper3.description %></td>
       </tr>
       
+      <tr>
+        <td><%= stepper4.name %></td>
+        <td><%= stepper4.description %></td>
+      </tr>
+
+      <tr>
+        <td><%= stepper5.name %></td>
+        <td><%= stepper5.description %></td>
+      </tr>
+
+      <tr>
+        <td><%= sleeper1.name %></td>
+        <td><%= sleeper1.description %></td>
+      </tr>
+
+      <tr>
+        <td><%= sleeper2.name %></td>
+        <td><%= sleeper2.description %></td>
+      </tr>
+
+      <tr>
+        <td><%= workout1.name %></td>
+        <td><%= workout1.description %></td>
+      </tr>
+
+      <tr>
+        <td><%= workout2.name %></td>
+        <td><%= workout2.description %></td>
+      </tr>
+
+      <tr>
+        <td><%= workout3.name %></td>
+        <td><%= workout3.description %></td>
+      </tr>
+
+      <tr>
+        <td><%= workout5.name %></td>
+        <td><%= workout5.description %></td>
+      </tr>
+
+      <tr>
+        <td><%= workout10.name %></td>
+        <td><%= workout10.description %></td>
+      </tr>
+
+      <tr>
+        <td><%= cstepper1.name %></td>
+        <td><%= cstepper1.description %></td>
+      </tr>
+
+      <tr>
+        <td><%= cstepper2.name %></td>
+        <td><%= cstepper2.description %></td>
+      </tr>
+
+      <tr>
+        <td><%= cstepper3.name %></td>
+        <td><%= cstepper3.description %></td>
+      </tr>
+
+      <tr>
+        <td><%= cstepper4.name %></td>
+        <td><%= cstepper4.description %></td>
+      </tr>
+
+      <tr>
+        <td><%= cstepper5.name %></td>
+        <td><%= cstepper5.description %></td>
+      </tr>
+
+      <tr>
+        <td><%= cstepper6.name %></td>
+        <td><%= cstepper6.description %></td>
+      </tr>
+
+      <tr>
+        <td><%= cstepper7.name %></td>
+        <td><%= cstepper7.description %></td>
+      </tr>
+
+      <tr>
+        <td><%= csleeper1.name %></td>
+        <td><%= csleeper1.description %></td>
+      </tr>
+
+      <tr>
+        <td><%= csleeper2.name %></td>
+        <td><%= csleeper2.description %></td>
+      </tr>
+
+      <tr>
+        <td><%= csleeper3.name %></td>
+        <td><%= csleeper3.description %></td>
+      </tr>
+
+      <tr>
+        <td><%= csleeper4.name %></td>
+        <td><%= csleeper4.description %></td>
+      </tr>
+
+      <tr>
+        <td><%= csleeper5.name %></td>
+        <td><%= csleeper5.description %></td>
+      </tr>
+
+      <tr>
+        <td><%= csleeper6.name %></td>
+        <td><%= csleeper6.description %></td>
+      </tr>
+
+      <tr>
+        <td><%= csleeper7.name %></td>
+        <td><%= csleeper7.description %></td>
+      </tr>
+
+      <tr>
+        <td><%= cworkout1.name %></td>
+        <td><%= cworkout1.description %></td>
+      </tr>
+
+      <tr>
+        <td><%= cworkout2.name %></td>
+        <td><%= cworkout2.description %></td>
+      </tr>
+
+      <tr>
+        <td><%= cworkout3.name %></td>
+        <td><%= cworkout3.description %></td>
+      </tr>
+
+      <tr>
+        <td><%= cworkout4.name %></td>
+        <td><%= cworkout4.description %></td>
+      </tr>
+
+      <tr>
+        <td><%= cworkout5.name %></td>
+        <td><%= cworkout5.description %></td>
+      </tr>
+
+      <tr>
+        <td><%= cworkout6.name %></td>
+        <td><%= cworkout6.description %></td>
+      </tr>
+
+      <tr>
+        <td><%= cworkout7.name %></td>
+        <td><%= cworkout7.description %></td>
+      </tr>
+
+      <tr>
+        <td><%= asteps1.name %></td>
+        <td><%= asteps1.description %></td>
+      </tr>
+
+      <tr>
+        <td><%= asteps2.name %></td>
+        <td><%= asteps2.description %></td>
+      </tr>
+
+      <tr>
+        <td><%= asteps3.name %></td>
+        <td><%= asteps3.description %></td>
+      </tr>
+
+      <tr>
+        <td><%= asteps4.name %></td>
+        <td><%= asteps4.description %></td>
+      </tr>
+
+      <tr>
+        <td><%= asteps5.name %></td>
+        <td><%= asteps5.description %></td>
+      </tr>
+
+      <tr>
+        <td><%= asteps6.name %></td>
+        <td><%= asteps6.description %></td>
+      </tr>
+
+
+
+
+      <!--
       <tr>
         <td>Sleep 1</td>
         <td>Sleep for 8 hours 2 days in a row</td>
@@ -67,7 +248,7 @@
         <td>Gym Hero 1</td>
         <td>Workout 2 times in a week</td>
       </tr>
-
+-->
     </tbody>
   </table>
 </div>
