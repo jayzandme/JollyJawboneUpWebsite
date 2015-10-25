@@ -1,6 +1,5 @@
 var express = require('express');
 var https = require('https');
-var passport = require('passport');
 var JawboneStrategy = require('passport-oauth').OAuth2Strategy;
 var ejs = require('ejs');
 var bodyParser = require('body-parser');
@@ -24,10 +23,8 @@ var app = express()
 app.use(bodyParser.json());
 app.use(express.static(__dirname + '/css'));
 app.use('/bower_components',  express.static(__dirname + '/bower_components'));
-//app.use('/jquery', express.static(__dirname + '/jquery'));
 app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views');
-app.use(passport.initialize());
 
 var userToken = ''
 
