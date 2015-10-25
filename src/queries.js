@@ -14,6 +14,23 @@ database.once('open', function() {
     console.log('mongodb connection open');
 });
 
+getAverageSteps = function(callback){ 
+    moves.aggregate([ 
+        { $group: 
+            { _id: '$userID', 
+              movesAvg: { $avg: '$steps'} 
+            }
+        } ], function(err, results)  {
+            if (err){
+                throw err
+            }
+            else {
+                callback(results);
+            }
+        }
+    ); 
+}
+
 insertSleep = function(sleep) {
 
    var newSleep = new sleeps({
@@ -87,17 +104,18 @@ insertMove = function(move) {
 
 };
 
-getMoves = function(userID) {
+getMoves = function(userID, callback) {
     //made this a value so that it can be returned to be used in server file
-    var queryVals = moves.find({userID: userID}, function(err, moves) {
+    var queryVals = moves.find({userID: userID});
+
+    queryVals.exec(function (err, moves){
         if (err) {
             throw err;
         }
         else {
-            return moves;
+            callback(moves);
         }
     });
-    return queryVals;
 }
 
 getLatestMove = function(userID, callback) {
@@ -138,17 +156,18 @@ insertWorkout = function(workout) {
 
 };
 
-getWorkouts = function(userID) {
+getWorkouts = function(userID, callback) {
     //made this a value so that it can be returned to be used in server file
-    var queryVals = workouts.find({userID: userID}, function(err, workouts) {
+    var queryVals = workouts.find({userID: userID});
+
+    queryVals.exec(function (err, workouts){
         if (err) {
             throw err;
         }
         else {
-            return workouts;
+            callback(workouts);
         }
     });
-    return queryVals;
 }
 
 getLatestWorkout = function(userID, callback) {
@@ -174,3 +193,4 @@ module.exports.getMoves = getMoves;
 module.exports.insertWorkout = insertWorkout;
 module.exports.getLatestWorkout = getLatestWorkout;
 module.exports.getWorkouts = getWorkouts;
+module.exports.getAverageSteps = getAverageSteps;

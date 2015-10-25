@@ -21,12 +21,6 @@ app.use('/bower_components',  express.static(__dirname + '/bower_components'));
 app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views');
 app.use(passport.initialize());
-//new
-//app.use(session({ cookie: { maxAge: 60000 }, 
-//                secret: 'woot',
-//                resave: false, 
-//                saveUninitialized: false}));
-//app.use(flash());
 
 var userToken = ''
 
@@ -75,6 +69,14 @@ app.get('/token', function (req, res) {
             console.log('inserted workouts');
         });
 
+         var otherData = {date: null, 
+                         stepsAverage: null
+                        };
+
+        queries.getAverageSteps(function (results) {
+            otherData.stepsAverage = results[0].movesAvg;
+        });
+
         var returnDataSleeps = [];
 
         queries.getSleeps(1, function(sleeps) {
@@ -87,21 +89,15 @@ app.get('/token', function (req, res) {
             }
         });
 
-        var movesData = queries.getMoves(1);
-        var otherData = {date: null};
-
         var returnDataMoves = [];
-        movesData.exec(function(err, moves){
-          if (err)
-            throw err
-          else{
-            for (var i = moves.length - 10; i < moves.length; i++){
+
+        queries.getMoves(1, function(moves) {
+          for (var i = moves.length - 10; i < moves.length; i++){
                     returnDataMoves.push({
                       steps: moves[i].steps
                     });
-            }
-            otherData.date = getFormattedDate('' + moves[moves.length - 1].date);
           }
+          otherData.date = getFormattedDate('' + moves[moves.length - 1].date);
         });
 
         function getFormattedDate(dateString) {
@@ -113,21 +109,16 @@ app.get('/token', function (req, res) {
           return formattedDate
         }
 
-        var workoutsData = queries.getWorkouts(1);
-
         var returnDataWorkouts = [];
-        workoutsData.exec(function(err, workouts){
-            if (err)
-              throw err
-            else {
-              for (var i = workouts.length - 10; i < workouts.length; i++){
-                returnDataWorkouts.push({
-                  title: workouts[i].title
-                });
-              }
-            }
 
-            app.get('/dashboard', function(req, res){
+        queries.getWorkouts(1, function(workouts) {
+          for (var i = workouts.length - 10; i < workouts.length; i++){
+                    returnDataWorkouts.push({
+              title: workouts[i].title
+            });
+          }
+
+          app.get('/dashboard', function(req, res){
             res.render('dashboard', 
               { sleeps: returnDataSleeps[returnDataSleeps.length - 1],
                 moves: returnDataMoves[returnDataMoves.length - 1],
@@ -136,30 +127,10 @@ app.get('/token', function (req, res) {
               });
             });
             res.redirect('/dashboard');
-            
-            //console.log(returnDataWorkouts)
         });
-
-        
-        // display the dashboard page
-        //req.flash('test', 'it worked')
-        //res.redirect('/dashboard');
-        
         
     });
 });
-
-//app.get('/dashboard', function(req, res) {
-  //the flash stuff only shows up the first time you go to dashboard
-  //when you go to a different page, it loses this data
-  /*hold1 = req.flash('test')
-  if (hold1 !== null){
-      hold = {message: hold1};
-  }
-  hold1 = null;*/
-    //res.render('dashboard', hold)
-  //res.render('dashboard')
-//});
 
 app.get('/', function(req, res) {
     res.render('index');
