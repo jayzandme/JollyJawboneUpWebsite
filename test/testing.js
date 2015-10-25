@@ -24,6 +24,13 @@ var lastWorkout = {
     time_completed: -1
     };
 
+var totalStepsMove = 0;
+var totalTimeSlept = 0;
+var totalStepsWorkout = 0;
+var totalCaloriesWorkout = 0;
+var totalTimeWorkout = 0;
+var totalDistanceWorkout = 0;
+
 // test the queries file
 describe('Testing queries', function() {
 
@@ -252,6 +259,22 @@ describe('Testing queries', function() {
                                      testMoves[length - i - 1].date,
                                      'move ' + i + ': date'
                                      );
+                        assert.equal(moves[i].steps, 
+                                     testMoves[length - i - 1].steps,
+                                     'move ' + i + ': steps'
+                                     );
+                        assert.equal(moves[i].active_time, 
+                                     testMoves[length - i - 1].active_time,
+                                     'move ' + i + ': active_time'
+                                     );
+                        assert.equal(moves[i].distance, 
+                                     testMoves[length - i - 1].distance,
+                                     'move ' + i + ': distance'
+                                     );
+                        assert.equal(moves[i].calories, 
+                                     testMoves[length - i - 1].calories,
+                                     'move ' + i + ': calories'
+                                     );
                     }
                 });
                 done();
@@ -376,6 +399,82 @@ describe('Testing queries', function() {
             });
         });
 
+        describe('#getMovesAggregation()', function() {
+
+            it('should get proper data', function(done) {
+                queries.getMovesAggregation(function(aggregation) {
+                    assert.equal(aggregation[0].movesAvg, 
+                                 totalStepsMove / 100, 
+                                 'wrong average'
+                                );
+                    assert.equal(aggregation[0].stepsTotal, 
+                                 totalStepsMove, 
+                                 'wrong total'
+                                );
+                    done();
+                });
+            });
+        });
+
+        describe('#getSleepsAggregation()', function() {
+
+            it('should get proper data', function(done) {
+                queries.getSleepsAggregation(function(aggregation) {
+                    assert.equal(aggregation[0].sleepsAvg,
+                                 totalTimeSlept / 100,
+                                 'wrong average'
+                                );
+                    assert.equal(aggregation[0].sleepsTotal,
+                                 totalTimeSlept,
+                                 'wrong total'
+                                );
+                    done();
+                });
+            });
+        });
+
+        describe('#getWorkoutsAggregation()', function() {
+
+            it('should get proper data', function(done) {
+                queries.getWorkoutsAggregation(function(aggregation) {
+                    assert.equal(aggregation[0].workoutsStepsAvg,
+                                 totalStepsWorkout / 100,
+                                 'wrong steps average'
+                                );
+                    assert.equal(aggregation[0].workoutsStepsTotal,
+                                 totalStepsWorkout,
+                                 'wrong steps total'
+                                );
+                    assert.equal(aggregation[0].workoutsCaloriesAvg,
+                                 totalCaloriesWorkout / 100,
+                                 'wrong calories average'
+                                );
+                    assert.equal(aggregation[0].workoutsCaloriesTotal,
+                                 totalCaloriesWorkout,
+                                 'wrong calories total'
+                                );
+                    assert.equal(aggregation[0].workoutsTimeAvg,
+                                 totalTimeWorkout / 100,
+                                 'wrong time average'
+                                );
+                    assert.equal(aggregation[0].workoutsTimeTotal,
+                                 totalTimeWorkout,
+                                 'wrong time total'
+                                );
+                    assert.equal(aggregation[0].workoutsDistanceAvg,
+                                 totalDistanceWorkout / 100,
+                                 'wrong distance average'
+                                );
+                    assert.equal(aggregation[0].workoutsDistanceTotal,
+                                 totalDistanceWorkout,
+                                 'wrong distance total'
+                                );
+                    done();
+                });
+            });
+        });
+
+
     });
 });
 
@@ -406,6 +505,13 @@ function makeSleep(number) {
     var time_created = parseInt(1435000000 + number * Math.random());
     var time_completed = time_created + 50000;
     var date = 20151000 + parseInt(Math.random() * 30);
+    var awakenings = parseInt(Math.random() * 5);
+    var light = parseInt(Math.random() * 360);
+    var deep = parseInt(Math.random() * 360);
+    var awake = parseInt(Math.random() * 360);
+    var duration = light + deep + awake;
+    var asleep_time = parseInt(Math.random() * duration);
+    var awake_time = duration - asleep_time;
 
     var newSleep = new sleeps({
         userID: 1,
@@ -413,7 +519,14 @@ function makeSleep(number) {
         date: date,
         time_created: time_created, 
         time_completed: time_completed, 
-        title: "for 1h 23m"
+        title: "for 1h 23m",
+        awakenings: awakenings,
+        light: light,
+        deep: deep,
+        awake: awake,
+        duration: duration,
+        asleep_time: asleep_time,
+        awake_time: awake_time
     });
 
     testSleeps.push({
@@ -422,12 +535,21 @@ function makeSleep(number) {
         date: date,
         time_created: time_created, 
         time_completed: time_completed, 
-        title: "for 1h 23m"
+        title: "for 1h 23m",
+        awakenings: awakenings,
+        light: light,
+        deep: deep,
+        awake: awake,
+        duration: duration,
+        asleep_time: asleep_time,
+        awake_time: awake_time
     });
 
     if (time_completed > lastSleep.time_completed) {
         lastSleep = testSleeps[testSleeps.length - 1];
     }
+
+    totalTimeSlept += duration;
 
     newSleep.save(function (err, thor) {
         if (err) {
@@ -443,6 +565,10 @@ function makeMove(number) {
     var time_completed = time_created + 50000;
     var time_updated = time_completed + 50000;
     var date = 20151000 + parseInt(Math.random() * 30);
+    var steps = parseInt(Math.random() * 2000);
+    var active_time = parseInt(Math.random() * 200);
+    var distance = parseInt(Math.random() * 2000);
+    var calories = parseInt(Math.random() * 2000);
 
 
     var newMove = new moves({
@@ -451,7 +577,11 @@ function makeMove(number) {
         date: date,
         time_created: time_created,
         time_updated: time_updated,
-        time_completed: time_completed
+        time_completed: time_completed,
+        steps: steps,
+        active_time: active_time,
+        distance:distance,
+        calories: calories
     });
 
     testMoves.push({
@@ -460,13 +590,18 @@ function makeMove(number) {
         date: date,
         time_created: time_created,
         time_updated: time_updated,
-        time_completed: time_completed
+        time_completed: time_completed,
+        steps: steps,
+        active_time: active_time,
+        distance:distance,
+        calories: calories
     });
 
     if (time_completed > lastMove.time_completed) {
         lastMove = testMoves[testMoves.length - 1];
     }
 
+    totalStepsMove += steps;
 
     newMove.save(function (err, thor) {
         if (err) {
