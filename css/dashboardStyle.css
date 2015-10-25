@@ -82,43 +82,8 @@ body{
     padding: 20px;
 }
 
-.boxContainer
-{
-    margin:0px;
-    width:1500px;
-    height:auto;
-    background-color:blue}
-
-#column1, #column2, #column3, #column4 { 
-    list-style-type: none;
-    margin:9px 9px 9px 0px;
-    float:left;
-    height:auto;
-    width:250px;
-}
-
-#column1 li, #column2 li, #column3 li, #column4 li { 
-    height:auto;
-    width:200px;
-}
-.box2, .box4, .box9 {
-    margin:0px 0px 9px 0px;
-    background-color:#409da5;
-    height = 100px;
-}
-
-.box10, .box1, .box5 {
-    margin:0px 0px 9px 0px;
-    background-color:#da8515;
-    height = 100px;
-}
-.box8, .box11, .box3 {
-    margin:0px 0px 9px 0px;
-    background-color:#4849a6;
-    height = 100px;
-}
-.box6, .box7, .box12 {
-    margin:0px 0px 9px 0px;
-    background-color:#cd432d;
-    height=100px;
+.totals {
+    background-color: #5a9bfc;
+    margin:10px 10px 10px 10px;
+    padding: 20px;
 }

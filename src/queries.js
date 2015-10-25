@@ -14,11 +14,12 @@ database.once('open', function() {
     console.log('mongodb connection open');
 });
 
-getAverageSteps = function(callback){ 
+getStepsAggregation = function(callback){ 
     moves.aggregate([ 
         { $group: 
             { _id: '$userID', 
-              movesAvg: { $avg: '$steps'} 
+              movesAvg: { $avg: '$steps'},
+              stepsTotal: {$sum: '$steps'}
             }
         } ], function(err, results)  {
             if (err){
@@ -31,11 +32,12 @@ getAverageSteps = function(callback){
     ); 
 }
 
-getAverageSleeps = function(callback){
+getSleepsAggregation = function(callback){
     sleeps.aggregate([
         { $group:
             {_id: '$userID',
-             sleepsAvg: {$avg: '$duration'}
+             sleepsAvg: {$avg: '$duration'},
+             sleepsTotal: {$sum: '$duration'}
             }
 
         }], function (err, results){
@@ -214,5 +216,5 @@ module.exports.getMoves = getMoves;
 module.exports.insertWorkout = insertWorkout;
 module.exports.getLatestWorkout = getLatestWorkout;
 module.exports.getWorkouts = getWorkouts;
-module.exports.getAverageSteps = getAverageSteps;
-module.exports.getAverageSleeps = getAverageSleeps;
+module.exports.getStepsAggregation = getStepsAggregation;
+module.exports.getSleepsAggregation = getSleepsAggregation;

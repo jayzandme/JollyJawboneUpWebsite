@@ -71,15 +71,20 @@ app.get('/token', function (req, res) {
 
          var otherData = {date: null, 
                          stepsAverage: null,
-                         sleepsAverage: null
+                         sleepsAverage: null,
+                         stepsTotal: null,
+                         sleepsTotal: null
                         };
 
-        queries.getAverageSteps(function (results) {
+        queries.getStepsAggregation(function (results) {
             otherData.stepsAverage = (results[0].movesAvg).toFixed(2);
+            otherData.stepsTotal = results[0].stepsTotal;
         });
 
-        queries.getAverageSleeps(function (results) {
-            totalSecondsAve = results[0].sleepsAvg;
+        queries.getSleepsAggregation(function (results) {
+            var totalSecondsAve = results[0].sleepsAvg;
+            var totalSeconds = results[0].sleepsTotal;
+            otherData.sleepsTotal = secondsToTimeString(totalSeconds);
             otherData.sleepsAverage = secondsToTimeString(totalSecondsAve);
         });
 
