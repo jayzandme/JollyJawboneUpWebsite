@@ -13,7 +13,9 @@ var sleepsSchema = new mongoose.Schema({
   light: Number,            //in details - seconds
   deep: Number,             //in details - seconds
   awake: Number,            //in details - seconds
-  duration: Number           //in details - time for this sleep event in seconds
+  duration: Number,         //in details - time for this sleep event in seconds
+  asleep_time: Number,      //in details - time fall asleep in epoch time
+  awake_time: Number        //in details - time woke up in epoch time
 });
 
 var Sleeps = mongoose.model('Sleeps', sleepsSchema);

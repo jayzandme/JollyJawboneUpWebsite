@@ -14,11 +14,12 @@ database.once('open', function() {
     console.log('mongodb connection open');
 });
 
-getAverageSteps = function(callback){ 
+getStepsAggregation = function(callback){ 
     moves.aggregate([ 
         { $group: 
             { _id: '$userID', 
-              movesAvg: { $avg: '$steps'} 
+              movesAvg: { $avg: '$steps'},
+              stepsTotal: {$sum: '$steps'}
             }
         } ], function(err, results)  {
             if (err){
@@ -29,6 +30,50 @@ getAverageSteps = function(callback){
             }
         }
     ); 
+}
+
+getSleepsAggregation = function(callback){
+    sleeps.aggregate([
+        { $group:
+            {_id: '$userID',
+             sleepsAvg: {$avg: '$duration'},
+             sleepsTotal: {$sum: '$duration'}
+            }
+
+        }], function (err, results){
+            if (err){
+                throw err
+            }
+            else {
+                callback(results);
+            }
+        }
+    );
+}
+
+getWorkoutsAggregation = function(callback) {
+    workouts.aggregate([
+        { $group:
+            {_id: '$userID',
+             workoutsStepsAvg: {$avg: '$steps'},
+             workoutsCaloriesAvg: {$avg: '$calories'},
+             workoutsTimeAvg: {$avg: '$time'},
+             workoutsDistanceAvg: {$avg: '$meters'},
+             workoutsStepsTotal: {$sum: '$steps'},
+             workoutsCaloriesTotal: {$sum: '$calories'},
+             workoutsTimeTotal: {$sum: '$time'},
+             workoutsDistanceTotal: {$sum: '$meters'}
+            }
+
+        }], function (err, results){
+            if (err){
+                throw err
+            }
+            else {
+                callback(results);
+            }
+        }
+    );
 }
 
 insertSleep = function(sleep) {
@@ -44,7 +89,9 @@ insertSleep = function(sleep) {
         light: sleep.details.light,
         deep: sleep.details.deep,
         awake: sleep.details.awake,
-        duration: sleep.details.duration
+        duration: sleep.details.duration,
+        asleep_time: sleep.details.asleep_time,
+        awake_time: sleep.details.awake_time
    });
 
    newSleep.save(function (err, thor) {
@@ -193,4 +240,6 @@ module.exports.getMoves = getMoves;
 module.exports.insertWorkout = insertWorkout;
 module.exports.getLatestWorkout = getLatestWorkout;
 module.exports.getWorkouts = getWorkouts;
-module.exports.getAverageSteps = getAverageSteps;
+module.exports.getStepsAggregation = getStepsAggregation;
+module.exports.getSleepsAggregation = getSleepsAggregation;
+module.exports.getWorkoutsAggregation = getWorkoutsAggregation;
