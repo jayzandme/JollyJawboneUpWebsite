@@ -85,8 +85,8 @@ app.get('/token', function (req, res) {
                         };
 
         queries.getStepsAggregation(function (results) {
-            otherData.stepsAverage = (results[0].movesAvg).toFixed(2);
-            otherData.stepsTotal = results[0].stepsTotal;
+            otherData.stepsAverage = addCommas((results[0].movesAvg).toFixed(2));
+            otherData.stepsTotal = addCommas(results[0].stepsTotal);
         });
 
         queries.getSleepsAggregation(function (results) {
@@ -97,14 +97,14 @@ app.get('/token', function (req, res) {
         });
 
         queries.getWorkoutsAggregation(function (results){
-            otherData.workoutsStepsAverage = (results[0].workoutsStepsAvg).toFixed(2);
-            otherData.workoutsStepsTotal = results[0].workoutsStepsTotal;
-            otherData.workoutsCaloriesAverage = (results[0].workoutsCaloriesAvg).toFixed(2);
-            otherData.workoutsCaloriesTotal = (results[0].workoutsCaloriesTotal).toFixed(2);
+            otherData.workoutsStepsAverage = addCommas((results[0].workoutsStepsAvg).toFixed(2));
+            otherData.workoutsStepsTotal = addCommas(results[0].workoutsStepsTotal);
+            otherData.workoutsCaloriesAverage = addCommas((results[0].workoutsCaloriesAvg).toFixed(2));
+            otherData.workoutsCaloriesTotal = addCommas((results[0].workoutsCaloriesTotal).toFixed(2));
             otherData.workoutsTimeAverage = secondsToTimeString(results[0].workoutsTimeAvg);
             otherData.workoutsTimeTotal = secondsToTimeString(results[0].workoutsTimeTotal);
             otherData.workoutsDistanceAverage = (metersToMiles(results[0].workoutsDistanceAvg)).toFixed(2);
-            otherData.workoutsDistanceTotal = (metersToMiles(results[0].workoutsDistanceTotal)).toFixed(2);
+            otherData.workoutsDistanceTotal = addCommas((metersToMiles(results[0].workoutsDistanceTotal)).toFixed(2));
 
         });
 
@@ -128,35 +128,14 @@ app.get('/token', function (req, res) {
         queries.getMoves(1, function(moves) {
           for (var i = moves.length - 10; i < moves.length; i++){
                     returnDataMoves.push({
-                      steps: moves[i].steps,
-                      active_time: moves[i].active_time,
+                      steps: addCommas(moves[i].steps),
+                      active_time: secondsToTimeString(moves[i].active_time),
                       distance: (metersToMiles(moves[i].distance)).toFixed(2),
-                      calories: (moves[i].calories).toFixed(2)
+                      calories: addCommas((moves[i].calories).toFixed(2))
                     });
           }
           otherData.date = getFormattedDate(moves[moves.length - 1].date);
         });
-
-        function getFormattedDate(dateString) {
-          dateString = '' + dateString;
-          var year = dateString.substring(0, 4)
-          var month = dateString.substring(4, 6);
-          var day = dateString.substring(6, 8);
-          var formattedDate = month + "/" + day + "/" + year;
-          return formattedDate
-        }
-
-        function secondsToTimeString(secondsTotal){
-          hours = Math.floor(secondsTotal / 3600);
-          secondsTotal %= 3600;
-          minutes = Math.floor(secondsTotal / 60);
-          seconds = secondsTotal % 60;
-          return hours + "h " + minutes + "m";
-        }
-
-        function metersToMiles(meters){
-          return meters * 0.000621371192;
-        }
 
         var returnDataWorkouts = [];
 
@@ -164,7 +143,7 @@ app.get('/token', function (req, res) {
           for (var i = workouts.length - 10; i < workouts.length; i++){
                     returnDataWorkouts.push({
               title: workouts[i].title,
-              steps: workouts[i].steps,
+              steps: addCommas(workouts[i].steps),
               time: secondsToTimeString(workouts[i].time),
               distance: metersToMiles(workouts[i].meters).toFixed(2),
               calories: workouts[i].calories,
@@ -229,6 +208,32 @@ function getClockTime(date){
    //var timeString = hour + ':' + minute + ':' + second + " " + ap;
    var timeString = hour + ':' + minute + ' ' + ap;
    return timeString;
+}
+
+function addCommas(num) {
+  //return (intNum + '').replace(/(\d)(?=(\d{3})+$)/g, '$1,');
+  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
+function getFormattedDate(dateString) {
+  dateString = '' + dateString;
+  var year = dateString.substring(0, 4)
+  var month = dateString.substring(4, 6);
+  var day = dateString.substring(6, 8);
+  var formattedDate = month + "/" + day + "/" + year;
+  return formattedDate
+}
+
+function secondsToTimeString(secondsTotal){
+  hours = Math.floor(secondsTotal / 3600);
+  secondsTotal %= 3600;
+  minutes = Math.floor(secondsTotal / 60);
+  seconds = secondsTotal % 60;
+  return hours + "h " + minutes + "m";
+}
+
+function metersToMiles(meters){
+  return meters * 0.000621371192;
 }
 
 var sslOptions= {
