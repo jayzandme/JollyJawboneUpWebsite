@@ -79,6 +79,56 @@ describe('Testing queries', function() {
              });
         });
 
+        describe('#getLatestWorkout()', function() {
+
+            it('Shouldn\'t break if no data', function(done) {
+                queries.getLatestWorkout(1, function(workout) {
+                    assert.equal(workout, null, 'got a workout');
+                    done();
+                });
+            });
+        });
+
+        describe('#getWorkouts()', function() {
+
+            it('Shouldn\'t get workouts if no data', function(done) {
+                queries.getWorkouts(1, function(workouts) {
+                    assert.equal(workouts.length, 0, 'got workouts somehow');
+                    done();
+                });
+            });
+        });
+
+        describe('#getMovesAggregation()', function() {
+
+            it('Should have no data', function(done) {
+                queries.getMovesAggregation(function(aggregate) {
+                    assert.equal(aggregate.length, 0, 'got data somehow');
+                    done();
+                });
+            });
+        });
+
+        describe('#getSleepsAggregation()', function() {
+
+            it('Should have no data', function(done) {
+                queries.getSleepsAggregation(function(aggregate) {
+                    assert.equal(aggregate.length, 0, 'got data somehow');
+                    done();
+                });
+            });
+        });
+
+        describe('#getWorkoutsAggregation()', function() {
+
+            it('Should have no data', function(done) {
+                queries.getWorkoutsAggregation(function(aggregate) {
+                    assert.equal(aggregate.length, 0, 'got data somehow');
+                    done();
+                });
+            });
+        });
+
     });
 
 
