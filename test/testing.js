@@ -32,6 +32,7 @@ describe('Testing queries', function() {
     describe('-Empty database', function() {
 
         before(function(done) {
+
             setTimeout(function() {
                 clearDatabase();
                 done()
@@ -39,12 +40,23 @@ describe('Testing queries', function() {
         });
         
         describe('#getLatestSleep()', function() { 
+
             it('Should\'t break if no data', function(done) {
                 queries.getLatestSleep(1, function(sleep) {
                     assert.equal(sleep, null);
                     done();
                 });
             });
+        });
+
+        describe('#getSleeps()', function() {
+
+            it('Shouldn\'t get sleeps if no data', function(done) {
+                queries.getSleeps(1, function(sleeps) {
+                    assert.equal(sleeps.length, 0, 'got sleeps values');
+                    done();
+                });
+             });
         });
 
         describe('#getLatestMove()', function() {
@@ -55,6 +67,16 @@ describe('Testing queries', function() {
                     done();
                 });
             });
+        });
+
+        describe('#getMoves()', function() {
+
+            it('Shouldn\'t get sleeps if no data', function(done) {
+                queries.getSleeps(1, function(sleeps) {
+                    assert.equal(sleeps.length, 0, 'got sleeps values');
+                    done();
+                });
+             });
         });
 
     });
