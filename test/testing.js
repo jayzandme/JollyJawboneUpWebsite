@@ -171,7 +171,26 @@ describe('Testing queries', function() {
                                 );
                     assert.equal(sleep.title, lastSleep.title, 'title');
                     assert.equal(sleep.xid, lastSleep.xid); 
-                    assert.equal(sleep.date, lastSleep.date); 
+                    assert.equal(sleep.date, lastSleep.date, 'date'); 
+                    assert.equal(sleep.awakenings, 
+                                 lastSleep.awakenings,
+                                 'awakenings'
+                                ); 
+                    assert.equal(sleep.light, lastSleep.light, 'light'); 
+                    assert.equal(sleep.deep, lastSleep.deep, 'deep'); 
+                    assert.equal(sleep.awake, lastSleep.awake, 'awake'); 
+                    assert.equal(sleep.duration, 
+                                 lastSleep.duration, 
+                                 'duration'
+                                ); 
+                    assert.equal(sleep.asleep_time, 
+                                 lastSleep.asleep_time, 
+                                 'asleep_time'
+                                ); 
+                    assert.equal(sleep.awake_time, 
+                                 lastSleep.awake_time, 
+                                 'awake_time'
+                                ); 
                     done();
                 });
             });
@@ -181,25 +200,53 @@ describe('Testing queries', function() {
 
             it('Should get all the sleeps', function() {
                 sleeps = queries.getSleeps(1, function (sleeps) {    
-                var length = testSleeps.length;
-                for (i = 0; i < testSleeps.length; i++) {
-                    assert.equal(sleeps[i].time_created, 
-                                 testSleeps[length - i - 1].time_created,
-                                 'sleep ' + i + ': time_created'
-                                 );
-                    assert.equal(sleeps[i].title, 
-                                 testSleeps[length - i - 1].title,
-                                 'sleep ' + i + ': title'
-                                 );
-                    assert.equal(sleeps[i].xid, 
-                                 testSleeps[length - i - 1].xid,
-                                 'sleep ' + i + ': xid'
-                                 );
-                    assert.equal(sleeps[i].date, 
-                                 testSleeps[length - i - 1].date,
-                                 'sleep ' + i + ': date'
-                                 );
-                }
+                    var length = testSleeps.length;
+                    for (i = 0; i < testSleeps.length; i++) {
+                        assert.equal(sleeps[i].time_created, 
+                                     testSleeps[length - i - 1].time_created,
+                                     'sleep ' + i + ': time_created'
+                                     );
+                        assert.equal(sleeps[i].title, 
+                                     testSleeps[length - i - 1].title,
+                                     'sleep ' + i + ': title'
+                                     );
+                        assert.equal(sleeps[i].xid, 
+                                     testSleeps[length - i - 1].xid,
+                                     'sleep ' + i + ': xid'
+                                     );
+                        assert.equal(sleeps[i].date, 
+                                     testSleeps[length - i - 1].date,
+                                     'sleep ' + i + ': date'
+                                     );
+                        assert.equal(sleeps[i].awakenings, 
+                                     testSleeps[length - i - 1].awakenings,
+                                     'sleep ' + i + ': awakenings'
+                                     );
+                        assert.equal(sleeps[i].light, 
+                                     testSleeps[length - i - 1].light,
+                                     'sleep ' + i + ': light'
+                                     );
+                        assert.equal(sleeps[i].deep, 
+                                     testSleeps[length - i - 1].deep,
+                                     'sleep ' + i + ': deep'
+                                     );
+                        assert.equal(sleeps[i].awake, 
+                                     testSleeps[length - i - 1].awake,
+                                     'sleep ' + i + ': awake'
+                                     );
+                        assert.equal(sleeps[i].duration, 
+                                     testSleeps[length - i - 1].duration,
+                                     'sleep ' + i + ': duration'
+                                     );
+                        assert.equal(sleeps[i].asleep_time, 
+                                     testSleeps[length - i - 1].asleep_time,
+                                     'sleep ' + i + ': asleep_time'
+                                     );
+                        assert.equal(sleeps[i].awake_time, 
+                                     testSleeps[length - i - 1].awake_time,
+                                     'sleep ' + i + ': awake_time'
+                                     );
+                    }
                 }); 
             });
         });
@@ -228,6 +275,13 @@ describe('Testing queries', function() {
                                  lastMove.time_updated,
                                  'time_updated'
                                 );
+                    assert.equal(move.steps, lastMove.steps, 'steps');
+                    assert.equal(move.active_time, 
+                                 lastMove.active_time, 
+                                 'active_time'
+                                );
+                    assert.equal(move.distance, lastMove.distance, 'distance');
+                    assert.equal(move.calories, lastMove.calories, 'calories');
                     done();
                 });
             });
@@ -473,7 +527,6 @@ describe('Testing queries', function() {
                 });
             });
         });
-
 
     });
 });
