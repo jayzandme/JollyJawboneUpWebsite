@@ -708,6 +708,11 @@ function makeWorkout(number) {
         lastWorkout = testWorkouts[testWorkouts.length - 1];
     }
 
+    totalStepsWorkout += steps;
+    totalTimeWorkout += time;
+    totalCaloriesWorkout += calories;
+    totalDistanceWorkout += meters;
+
     newWorkout.save(function (err, thor) {
         if (err) {
             return console.log(err);
