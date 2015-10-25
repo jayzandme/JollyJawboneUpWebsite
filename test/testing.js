@@ -102,22 +102,22 @@ describe('Testing queries', function() {
 
             it('Should get all the sleeps', function() {
                 sleeps = queries.getSleeps(1, function (sleeps) {    
-                var i = 0;
+                var length = testSleeps.length;
                 for (i = 0; i < testSleeps.length; i++) {
                     assert.equal(sleeps[i].time_created, 
-                                 testSleeps[i].time_created,
+                                 testSleeps[length - i - 1].time_created,
                                  'sleep ' + i + ': time_created'
                                  );
                     assert.equal(sleeps[i].title, 
-                                 testSleeps[i].title,
+                                 testSleeps[length - i - 1].title,
                                  'sleep ' + i + ': title'
                                  );
                     assert.equal(sleeps[i].xid, 
-                                 testSleeps[i].xid,
+                                 testSleeps[length - i - 1].xid,
                                  'sleep ' + i + ': xid'
                                  );
                     assert.equal(sleeps[i].date, 
-                                 testSleeps[i].date,
+                                 testSleeps[length - i - 1].date,
                                  'sleep ' + i + ': date'
                                  );
                 }
@@ -140,7 +140,7 @@ describe('Testing queries', function() {
             it('Should get the proper move info', function(done) {
                 queries.getLatestMove(1, function(move) {
                     assert.equal(move.time_created, 
-                                 lastMove.time_completed,
+                                 lastMove.time_created,
                                  'time_created'
                                 );
                     assert.equal(move.xid, lastMove.xid, 'xid'); 
@@ -158,26 +158,26 @@ describe('Testing queries', function() {
 
             it('Should get all the moves', function(done) {
                 queries.getMoves(1, function (moves) {
-                    var i = 0;
+                    var length = testMoves.length;
                     for (i = 0; i < testMoves.length; i++) {
                         assert.equal(moves[i].time_created, 
-                                     testMoves[i].time_created,
+                                     testMoves[length - i - 1].time_created,
                                      'move ' + i + ': time_created'
                                      );
                         assert.equal(moves[i].time_updated, 
-                                     testMoves[i].time_updated,
+                                     testMoves[length - i - 1].time_updated,
                                      'move ' + i + ': time-updated'
                                      );
                         assert.equal(moves[i].title, 
-                                     testMoves[i].title,
+                                     testMoves[length - i - 1].title,
                                      'move ' + i + ': title'
                                      );
                         assert.equal(moves[i].xid, 
-                                     testMoves[i].xid,
+                                     testMoves[length - i - 1].xid,
                                      'move ' + i + ': xid'
                                      );
                         assert.equal(moves[i].date, 
-                                     testMoves[i].date,
+                                     testMoves[length - i - 1].date,
                                      'move ' + i + ': date'
                                      );
                     }
@@ -203,7 +203,7 @@ describe('Testing queries', function() {
                     assert.equal(workout.time_created, 
                                  lastWorkout.time_created,
                                  'time_created expected: ' + 
-                                 lastWorkout.time_completed + 
+                                 lastWorkout.time_created + 
                                  ' got: ' + workout.time_completed
                                 );
                     assert.equal(workout.xid, 
@@ -256,27 +256,47 @@ describe('Testing queries', function() {
 
             it('Should get all the workout', function(done) {
                 queries.getWorkouts(1, function (workouts) {
-                    var i = 0;
+                    var length = testWorkouts.length;
                     for (i = 0; i < testWorkouts.length; i++) {
                         assert.equal(workouts[i].time_created, 
-                                     testWorkouts[i].time_created,
+                                     testWorkouts[length - i - 1].time_created,
                                      'workout ' + i + ': time_created'
                                      );
-                        assert.equal(workouts[i].time-updated, 
-                                     testWorkouts[i].time-updated,
+                        assert.equal(workouts[i].time_completed, 
+                                     testWorkouts[length - i - 1].time_completed,
                                      'workout ' + i + ': time-updated'
                                      );
                         assert.equal(workouts[i].title, 
-                                     testWorkouts[i].title,
+                                     testWorkouts[length - i - 1].title,
                                      'workout ' + i + ': title'
                                      );
                         assert.equal(workouts[i].xid, 
-                                     testWorkouts[i].xid,
+                                     testWorkouts[length - i - 1].xid,
                                      'workout ' + i + ': xid'
                                      );
                         assert.equal(workouts[i].date, 
-                                     testWorkouts[i].date,
+                                     testWorkouts[length - i - 1].date,
                                      'workout ' + i + ': date'
+                                     );
+                        assert.equal(workouts[i].steps, 
+                                     testWorkouts[length - i - 1].steps,
+                                     'workout ' + i + ': steps'
+                                     );
+                        assert.equal(workouts[i].time, 
+                                     testWorkouts[length - i - 1].time,
+                                     'workout ' + i + ': time'
+                                     );
+                        assert.equal(workouts[i].meters, 
+                                     testWorkouts[length - i - 1].meters,
+                                     'workout ' + i + ': meters'
+                                     );
+                        assert.equal(workouts[i].calories, 
+                                     testWorkouts[length - i - 1].calories,
+                                     'workout ' + i + ': calories'
+                                     );
+                        assert.equal(workouts[i].intensity, 
+                                     testWorkouts[length - i - 1].intensity,
+                                     'workout ' + i + ': intensity'
                                      );
                     }
                 });
