@@ -20,9 +20,9 @@ var lastMoveTime = -1;
 var lastMoveDate = -1;
 
 var testWorkouts = [];
-var lastWorkout = {};
-var lastWorkoutTime = -1;
-var lastWorkoutDate = -1;
+var lastWorkout = {
+    time_completed: -1
+    };
 
 // test the queries file
 describe('Testing queries', function() {
@@ -173,9 +173,7 @@ describe('Testing queries', function() {
                     queries.getLatestWorkout(1, function(workout) {
                         assert.equal(workout.time_completed, 
                                      lastWorkout.time_completed,
-                                     'time_completed expected: ' + 
-                                     lastWorkout.time_completed + 
-                                     ' got: ' + workout.time_completed
+                                     'time_completed is wrong'
                                     );
                         done();
                     });
@@ -235,30 +233,30 @@ describe('Testing queries', function() {
                 });
             });
 
-            describe('#getWorkout()', function() {
+            describe('#getWorkouts()', function() {
 
                 it('Should get all the workout', function(done) {
                     queries.getWorkouts(1, function (workouts) {
                         var i = 0;
                         for (i = 0; i < testWorkouts.length; i++) {
                             assert.equal(workouts[i].time_created, 
-                                         testWorkout[i].time_created,
+                                         testWorkouts[i].time_created,
                                          'workout ' + i + ': time_created'
                                          );
                             assert.equal(workouts[i].time-updated, 
-                                         testWorkout[i].time-updated,
+                                         testWorkouts[i].time-updated,
                                          'workout ' + i + ': time-updated'
                                          );
                             assert.equal(workouts[i].title, 
-                                         testWorkout[i].title,
+                                         testWorkouts[i].title,
                                          'workout ' + i + ': title'
                                          );
                             assert.equal(workouts[i].xid, 
-                                         testWorkout[i].xid,
+                                         testWorkouts[i].xid,
                                          'workout ' + i + ': xid'
                                          );
                             assert.equal(workouts[i].date, 
-                                         testWorkout[i].date,
+                                         testWorkouts[i].date,
                                          'workout ' + i + ': date'
                                          );
                         }
@@ -409,7 +407,7 @@ function makeWorkout(number) {
         time_completed: time_completed
     });
 
-    if (time_completed > lastWorkoutTime) {
+    if (time_completed > lastWorkout.time_completed) {
         lastWorkout = testWorkouts[testWorkouts.length - 1];
     }
 
