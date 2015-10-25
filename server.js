@@ -25,11 +25,11 @@ app.use(passport.initialize());
 var userToken = ''
 
 var jawboneAuth = {
-	clientID: 'bbtI3tvNMBs',
-	clientSecret: '5734ad41f828bc7a6196342d2640cca3c3cb9193',
-	authorizationURL: 'https://jawbone.com/auth/oauth2/auth',
-	tokenURL: 'https://jawbone.com/auth/oauth2/token',
-	callbackURL: 'https://localhost:5000/dashboard'
+    clientID: 'bbtI3tvNMBs',
+    clientSecret: '5734ad41f828bc7a6196342d2640cca3c3cb9193',
+    authorizationURL: 'https://jawbone.com/auth/oauth2/auth',
+    tokenURL: 'https://jawbone.com/auth/oauth2/token',
+    callbackURL: 'https://localhost:5000/dashboard'
 };
 
 app.get('/login/jawbone', function (req, res) {
@@ -46,83 +46,79 @@ app.get('/token', function (req, res) {
        
         up.updateSleeps(token, function(sleepsData) { 
 
-          console.log('got ' + sleepsData.length + ' sleep events');
-          for (var i = 0; i < sleepsData.length; i++) {
-              queries.insertSleep(sleepsData[i])
-          }
-          console.log('inserted sleeps')
+            console.log('got ' + sleepsData.length + ' sleep events');
+            for (var i = 0; i < sleepsData.length; i++) {
+                queries.insertSleep(sleepsData[i])
+            }
+            console.log('inserted sleeps')
         });
 
-    		up.updateMoves(token, function(movesData) {
-          console.log('got ' + movesData.length + ' move events');
-          for (var i = 0; i < movesData.length; i++) {
-              queries.insertMove(movesData[i])
-          }
-          console.log('inserted moves');
-    		});
+        up.updateMoves(token, function(movesData) {
+            console.log('got ' + movesData.length + ' move events');
+            for (var i = 0; i < movesData.length; i++) {
+                queries.insertMove(movesData[i])
+            }
+            console.log('inserted moves');
+        });
 
         up.updateWorkouts(token, function(workoutsData){
-          console.log('got' + workoutsData.length + ' workout events');
-          for (var i = 0; i < workoutsData.length; i++) {
-              queries.insertWorkout(workoutsData[i])
-          }
-          console.log('inserted workouts');
-        })
-
-
-        var hold = queries.getSleeps(1);
-
-        var stepsAverage;
-        var resultsTest = queries.getAverageSteps(function (err, results) {
-            if (err){
-                throw(err)
+            console.log('got' + workoutsData.length + ' workout events');
+            for (var i = 0; i < workoutsData.length; i++) {
+                queries.insertWorkout(workoutsData[i])
             }
-            else{
-                console.log(results);
-                stepsAverage = results; 
-                return results;
-            }
+            console.log('inserted workouts');
         });
 
-        console.log(stepsAverage);
+         var otherData = {date: null, 
+                         stepsAverage: null,
+                         sleepsAverage: null,
+                         stepsTotal: null,
+                         sleepsTotal: null
+                        };
+
+        queries.getStepsAggregation(function (results) {
+            otherData.stepsAverage = (results[0].movesAvg).toFixed(2);
+            otherData.stepsTotal = results[0].stepsTotal;
+        });
+
+        queries.getSleepsAggregation(function (results) {
+            var totalSecondsAve = results[0].sleepsAvg;
+            var totalSeconds = results[0].sleepsTotal;
+            otherData.sleepsTotal = secondsToTimeString(totalSeconds);
+            otherData.sleepsAverage = secondsToTimeString(totalSecondsAve);
+        });
 
         var returnDataSleeps = [];
-        var done = false;
-        //to go through the return of the query (array of objects)
-        hold.exec(function(err, sleeps){
-          if (err)
-            throw err
-          else {
-            for (var i = sleeps.length - 10; i < sleeps.length; i++){
-                  returnDataSleeps.push( 
-                    {
-                      title: sleeps[i].title,
-                      time_created: epochtoClockTime(sleeps[i].time_created),
-                      time_completed: epochtoClockTime(sleeps[i].time_completed)
 
-                    });
+        queries.getSleeps(1, function(sleeps) {
+            for (var i = sleeps.length - 10; i < sleeps.length; i++) {
+                returnDataSleeps.push({
+                    title: sleeps[i].title,
+                      awake_time: epochtoClockTime(sleeps[i].awake_time),
+                      asleep_time: epochtoClockTime(sleeps[i].asleep_time),
+                      awakenings: sleeps[i].awakenings,
+                      lightSleep: secondsToTimeString(sleeps[i].light),
+                      deepSleep: secondsToTimeString(sleeps[i].deep)
+                });
             }
-          }
-        });
-
-        var movesData = queries.getMoves(1);
-        var otherData = {date: null};
+        }); 
 
         var returnDataMoves = [];
-        movesData.exec(function(err, moves){
-          if (err)
-            throw err
-          else{
-            for (var i = moves.length - 10; i < moves.length; i++){
+
+        queries.getMoves(1, function(moves) {
+          for (var i = moves.length - 10; i < moves.length; i++){
                     returnDataMoves.push({
-                      steps: moves[i].steps
+                      steps: moves[i].steps,
+                      active_time: moves[i].active_time,
+                      distance: (metersToMiles(moves[i].distance)).toFixed(2),
+                      calories: (moves[i].calories).toFixed(2)
                     });
-            }
-            otherData.date = getFormattedDate('' + moves[moves.length - 1].date);
           }
+          otherData.date = getFormattedDate(moves[moves.length - 1].date);
         });
 
         function getFormattedDate(dateString) {
+          dateString = '' + dateString;
           var year = dateString.substring(0, 4)
           var month = dateString.substring(4, 6);
           var day = dateString.substring(6, 8);
@@ -130,21 +126,35 @@ app.get('/token', function (req, res) {
           return formattedDate
         }
 
-        var workoutsData = queries.getWorkouts(1);
+        function secondsToTimeString(secondsTotal){
+          hours = Math.floor(secondsTotal / 3600);
+          secondsTotal %= 3600;
+          minutes = Math.floor(secondsTotal / 60);
+          seconds = secondsTotal % 60;
+          return hours + "h " + minutes + "m";
+        }
+
+        function metersToMiles(meters){
+          return meters * 0.000621371192;
+        }
 
         var returnDataWorkouts = [];
-        workoutsData.exec(function(err, workouts){
-            if (err)
-              throw err
-            else {
-              for (var i = workouts.length - 10; i < workouts.length; i++){
-                returnDataWorkouts.push({
-                  title: workouts[i].title
-                });
-              }
-            }
 
-            app.get('/dashboard', function(req, res){
+        queries.getWorkouts(1, function(workouts) {
+          for (var i = workouts.length - 10; i < workouts.length; i++){
+                    returnDataWorkouts.push({
+              title: workouts[i].title,
+              steps: workouts[i].steps,
+              time: secondsToTimeString(workouts[i].time),
+              distance: metersToMiles(workouts[i].meters).toFixed(2),
+              calories: workouts[i].calories,
+              intensity: workouts[i].intensity,
+              date: getFormattedDate(workouts[i].date)
+
+            });
+          }
+
+          app.get('/dashboard', function(req, res){
             res.render('dashboard', 
               { sleeps: returnDataSleeps[returnDataSleeps.length - 1],
                 moves: returnDataMoves[returnDataMoves.length - 1],
@@ -153,30 +163,28 @@ app.get('/token', function (req, res) {
               });
             });
             res.redirect('/dashboard');
-
-            //console.log(returnDataWorkouts)
-        });          
+        });
     });
 });
 
 app.get('/', function(req, res) {
-	res.render('index');
+    res.render('index');
 });
 
 app.get('/levels', function(req, res){
-	res.render('levels');
+    res.render('levels');
 });
 
 app.get('/achievements', function(req,res){
-	res.render('achievements');
+    res.render('achievements');
 });
 
 app.get('/teamPage', function(req, res){
-	res.render('teamPage');
+    res.render('teamPage');
 });
 
 app.get('/weeklyChallenges', function(req,res){
-	res.render('weeklyChallenges');
+    res.render('weeklyChallenges');
 });
 
 function epochtoClockTime(epochTime){
@@ -198,17 +206,18 @@ function getClockTime(date){
    if (hour   < 10) { hour   = "0" + hour;   }
    if (minute < 10) { minute = "0" + minute; }
    if (second < 10) { second = "0" + second; }
-   var timeString = hour + ':' + minute + ':' + second + " " + ap;
+   //var timeString = hour + ':' + minute + ':' + second + " " + ap;
+   var timeString = hour + ':' + minute + ' ' + ap;
    return timeString;
 }
 
 var sslOptions= {
-	key: fs.readFileSync('./server.key'),
-	cert: fs.readFileSync('./server.crt')
+    key: fs.readFileSync('./server.key'),
+    cert: fs.readFileSync('./server.crt')
 };
 
 var server = https.createServer(sslOptions, app);
 server.listen(port, host, function() {
-	var host = server.address().address;
-	console.log('Up server listening on %s:%s', host, port);
+    var host = server.address().address;
+    console.log('Up server listening on %s:%s', host, port);
 });

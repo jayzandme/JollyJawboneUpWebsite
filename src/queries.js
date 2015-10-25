@@ -14,15 +14,40 @@ database.once('open', function() {
     console.log('mongodb connection open');
 });
 
-getAverageSteps = function(callback){
-    moves.aggregate([
-    { $group: {
-        _id: '$userID',
-        movesAvg: { $avg: '$steps'}
-    }}
-    ],
-    callback
+getStepsAggregation = function(callback){ 
+    moves.aggregate([ 
+        { $group: 
+            { _id: '$userID', 
+              movesAvg: { $avg: '$steps'},
+              stepsTotal: {$sum: '$steps'}
+            }
+        } ], function(err, results)  {
+            if (err){
+                throw err
+            }
+            else {
+                callback(results);
+            }
+        }
+    ); 
+}
 
+getSleepsAggregation = function(callback){
+    sleeps.aggregate([
+        { $group:
+            {_id: '$userID',
+             sleepsAvg: {$avg: '$duration'},
+             sleepsTotal: {$sum: '$duration'}
+            }
+
+        }], function (err, results){
+            if (err){
+                throw err
+            }
+            else {
+                callback(results);
+            }
+        }
     );
 }
 
@@ -39,7 +64,9 @@ insertSleep = function(sleep) {
         light: sleep.details.light,
         deep: sleep.details.deep,
         awake: sleep.details.awake,
-        duration: sleep.details.duration
+        duration: sleep.details.duration,
+        asleep_time: sleep.details.asleep_time,
+        awake_time: sleep.details.awake_time
    });
 
    newSleep.save(function (err, thor) {
@@ -50,17 +77,17 @@ insertSleep = function(sleep) {
 
 };
 
-getSleeps = function(userID) {
-    //made this a value so that it can be returned to be used in server file
-    var queryVals = sleeps.find({userID: userID}, function(err, sleeps) {
-        if (err) {
+getSleeps = function(userID, callback) {
+
+    var queryVals = sleeps.find({userID: userID});
+
+    queryVals.exec(function (err, sleeps) {
+        if (err) 
             throw err;
-        }
         else {
-            return sleeps;
+            callback(sleeps);
         }
     });
-    return queryVals;
 }
 
 getLatestSleep = function(userID, callback) {
@@ -99,17 +126,18 @@ insertMove = function(move) {
 
 };
 
-getMoves = function(userID) {
+getMoves = function(userID, callback) {
     //made this a value so that it can be returned to be used in server file
-    var queryVals = moves.find({userID: userID}, function(err, moves) {
+    var queryVals = moves.find({userID: userID});
+
+    queryVals.exec(function (err, moves){
         if (err) {
             throw err;
         }
         else {
-            return moves;
+            callback(moves);
         }
     });
-    return queryVals;
 }
 
 getLatestMove = function(userID, callback) {
@@ -150,17 +178,18 @@ insertWorkout = function(workout) {
 
 };
 
-getWorkouts = function(userID) {
+getWorkouts = function(userID, callback) {
     //made this a value so that it can be returned to be used in server file
-    var queryVals = workouts.find({userID: userID}, function(err, workouts) {
+    var queryVals = workouts.find({userID: userID});
+
+    queryVals.exec(function (err, workouts){
         if (err) {
             throw err;
         }
         else {
-            return workouts;
+            callback(workouts);
         }
     });
-    return queryVals;
 }
 
 getLatestWorkout = function(userID, callback) {
@@ -186,4 +215,5 @@ module.exports.getMoves = getMoves;
 module.exports.insertWorkout = insertWorkout;
 module.exports.getLatestWorkout = getLatestWorkout;
 module.exports.getWorkouts = getWorkouts;
-module.exports.getAverageSteps = getAverageSteps;
+module.exports.getStepsAggregation = getStepsAggregation;
+module.exports.getSleepsAggregation = getSleepsAggregation;

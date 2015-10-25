@@ -1,41 +1,89 @@
-
-.boxContainer
-{
-    margin:0px;
-    width:1500px;
-    height:auto;
-    background-color:blue}
-
-#column1, #column2, #column3, #column4 { 
-    list-style-type: none;
-    margin:9px 9px 9px 0px;
-    float:left;
-    height:auto;
-    width:250px;
+.navbar-trans {
+    background-color:#2b2b2b;
+    color:#cdcdcd;
+    border-width:0;
 }
 
-#column1 li, #column2 li, #column3 li, #column4 li { 
-    height:auto;
-    width:200px;
-}
-.box2, .box4, .box9 {
-    margin:0px 0px 9px 0px;
-    background-color:#409da5;
-    height = 100px;
+.navbar-trans .navbar-brand, .navbar-trans >.container-fluid .navbar-brand {
+    padding: 14px;
+    color:#f44d3c ;
 }
 
-.box10, .box1, .box5 {
-    margin:0px 0px 9px 0px;
-    background-color:#da8515;
-    height = 100px;
+.navbar-trans li>a:focus,.navbar-trans li.active {
+    background-color:#f44d3c ;
+    color:#333;
 }
-.box8, .box11, .box3 {
-    margin:0px 0px 9px 0px;
-    background-color:#4849a6;
-    height = 100px;
+
+.navbar-trans li>a:hover {
+    background-color:#f44d3c ;
+    color:#fff;
+    opacity:0.5;
 }
-.box6, .box7, .box12 {
-    margin:0px 0px 9px 0px;
-    background-color:#cd432d;
-    height=100px;
+
+.navbar-trans a{
+    color:white;
+    letter-spacing:1px;
+}
+
+.navbar-trans .form-control:focus {
+    border-color: blue;
+    outline: 0;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,0.075),0 0 8px rgba(100,100,100,0.6);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,0.075),0 0 8px rgba(100,100,100,0.6);
+}
+.col-md-4 {
+    margin:10px 10px 10px 10px;
+}
+
+.sleeps {
+    background-color: #5a9bfc;
+    margin:10px 10px 10px 10px;
+    padding: 20px;
+}
+
+body{
+    background:#2e2e2e !important;
+}
+
+.text-center{
+    color:white;
+}
+
+.circleBase {
+    width:120px;
+    height:120px;
+    background-color:#ff7245 ;
+    border-radius:100%;
+    text-align:center;
+    line-height:120px;
+}
+
+.circleSpan{
+    line-height: normal;
+    display:inline-block;
+    vertical-align: middle;
+}
+
+.moves {
+    background-color: #5a9bfc;
+    margin:10px 10px 10px 10px;
+    padding: 20px;
+}
+
+.workouts {
+    background-color: #5a9bfc;
+    margin:10px 10px 10px 10px;
+    padding: 20px;
+}
+
+.averages {
+    background-color: #5a9bfc;
+    margin:10px 10px 10px 10px;
+    padding: 20px;
+}
+
+.totals {
+    background-color: #5a9bfc;
+    margin:10px 10px 10px 10px;
+    padding: 20px;
 }
