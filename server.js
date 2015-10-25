@@ -110,7 +110,7 @@ app.get('/token', function (req, res) {
 
         var returnDataSleeps = [];
 
-        queries.getSortedSleeps(1, function(sleeps) {
+        queries.getSleeps(1, function(sleeps) {
             for (var i = 0; i < 10; i++) {
                 returnDataSleeps.push({
                     title: sleeps[i].title,
@@ -126,7 +126,7 @@ app.get('/token', function (req, res) {
 
         var returnDataMoves = [];
 
-        queries.getSortedMoves(1, function(moves) {
+        queries.getMoves(1, function(moves) {
           for (var i = 0; i < 10; i++){
                     returnDataMoves.push({
                       steps: addCommas(moves[i].steps),
@@ -140,7 +140,7 @@ app.get('/token', function (req, res) {
 
         var returnDataWorkouts = [];
 
-        queries.getSortedWorkouts(1, function(workouts) {
+        queries.getWorkouts(1, function(workouts) {
           for (var i = 0; i < 10; i++){
                     returnDataWorkouts.push({
               title: workouts[i].title,

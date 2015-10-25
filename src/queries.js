@@ -102,20 +102,7 @@ insertSleep = function(sleep) {
 
 };
 
-getSleeps = function(userID, callback) {
-
-    var queryVals = sleeps.find({userID: userID});
-
-    queryVals.exec(function (err, sleeps) {
-        if (err) 
-            throw err;
-        else {
-            callback(sleeps);
-        }
-    });
-}
-
-getSortedSleeps = function(userID, callback){
+getSleeps = function(userID, callback){
     var queryVals = sleeps.find({userID: userID}).sort({_id:-1});
 
     queryVals.exec(function (err, sleeps) {
@@ -164,20 +151,7 @@ insertMove = function(move) {
 
 };
 
-getMoves = function(userID, callback) {
-    var queryVals = moves.find({userID: userID});
-
-    queryVals.exec(function (err, moves){
-        if (err) {
-            throw err;
-        }
-        else {
-            callback(moves);
-        }
-    });
-}
-
-getSortedMoves = function(userID, callback){
+getMoves = function(userID, callback){
     var queryVals = moves.find({userID: userID}).sort({_id:-1});
 
     queryVals.exec(function (err, sleeps) {
@@ -227,20 +201,7 @@ insertWorkout = function(workout) {
 
 };
 
-getWorkouts = function(userID, callback) {
-    var queryVals = workouts.find({userID: userID});
-
-    queryVals.exec(function (err, workouts){
-        if (err) {
-            throw err;
-        }
-        else {
-            callback(workouts);
-        }
-    });
-}
-
-getSortedWorkouts = function(userID, callback){
+getWorkouts = function(userID, callback){
     var queryVals = workouts.find({userID: userID}).sort({_id:-1});
 
     queryVals.exec(function (err, sleeps) {
@@ -278,6 +239,3 @@ module.exports.getWorkouts = getWorkouts;
 module.exports.getStepsAggregation = getStepsAggregation;
 module.exports.getSleepsAggregation = getSleepsAggregation;
 module.exports.getWorkoutsAggregation = getWorkoutsAggregation;
-module.exports.getSortedSleeps = getSortedSleeps;
-module.exports.getSortedMoves = getSortedMoves;
-module.exports.getSortedWorkouts = getSortedWorkouts;
