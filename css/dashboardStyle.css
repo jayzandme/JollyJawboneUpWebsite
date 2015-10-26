@@ -37,17 +37,21 @@ body{
     background:#2e2e2e !important;
 }
 
-.text-center{
+.text-center h1 {
+    color:white;
+}
+
+.text-center h3 {
     color:white;
 }
 
 .circleBase {
-    width:120px;
-    height:120px;
+    width:100px;
+    height:100px;
     background-color:#ff7245 ;
     border-radius:100%;
     text-align:center;
-    line-height:120px;
+    line-height:100px;
 }
 
 .circleSpan{
@@ -60,6 +64,7 @@ body{
     background-color: #5a9bfc;
     margin-right:10px;
     padding: 20px;
+    font-size:15px;
 }
 
 .moves {
@@ -67,12 +72,14 @@ body{
     margin-left:10px;
     margin-right:10px;
     padding: 20px;
+    font-size:15px;
 }
 
 .workouts {
     background-color: #5a9bfc;
     margin-left:10px;
     padding: 20px;
+    font-size:15px;
 }
 
 .averages {
@@ -80,11 +87,42 @@ body{
     margin-top:20px;
     margin-bottom:10px;
     padding: 20px;
+    font-size:15px;
+    font-family:sans-serif;
 }
+
 
 .totals {
     background-color: #5a9bfc;
-    margin-top:10px;
+    margin-top:20px;
     margin-bottom:10px;
     padding: 20px;
+    font-size:15px;
+}
+
+.circleAndTextSleeps {
+    margin: 5px;
+    padding:5px;
+    
+}
+
+.parent{
+    text-align:center;
+}
+
+.insideCircle {
+    font-size: 18px
+}
+
+.child{
+    margin:10px;
+    display: inline-block;
+}
+
+.sideText{
+    color:white;
+}
+
+.addBorder{
+    border-bottom:2px solid white;
 }
