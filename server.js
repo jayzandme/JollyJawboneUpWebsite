@@ -238,7 +238,7 @@ app.get('/levels', function(req, res){
 
 app.get('/achievements', function(req,res){
 
-    var earnedAchievements = new Array();
+    earnedAchievements = new Array();
 
   if (returnMovesMax>10000){
     stepper1 = {name : "Stepper 1", description : "Take 10000 steps in a day"};
@@ -590,6 +590,8 @@ app.get('/achievements', function(req,res){
     asteps6 = {name : "Total Steps 6", description : "FAILED"};
     earnedAchievements.push("asteps6"); 
   }
+
+  console.log('earnedAchievements: %s', earnedAchievements);
     
   res.render('achievements', 
     earnedAchievements);

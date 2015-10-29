@@ -33,6 +33,22 @@
         <th>Description</th>
       </tr>
     </thead>
+
+
+    <tbody>
+    <% for(var i=0; i < earnedAchievements.length; i++) { %>
+   <tr>
+     <td> <%= earnedAchievements[i] %>.name </td>
+     <td><%= earnedAchievements[i] %>.description</td>
+   </tr>
+<% } %>
+</tbody>
+    <!--<thead>
+      <tr>
+        <th>Achievement</th>
+        <th>Description</th>
+      </tr>
+    </thead>
     <tbody>
      
       <tr>
@@ -248,8 +264,8 @@
         <td>Gym Hero 1</td>
         <td>Workout 2 times in a week</td>
       </tr>
--->
-    </tbody>
+
+    </tbody>-->
   </table>
 </div>
 
