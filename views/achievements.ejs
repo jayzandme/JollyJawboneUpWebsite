@@ -7,6 +7,7 @@
   <link href="/achievements.css" rel="stylesheet" type="text/css">
   <link rel ="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
   <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+  <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
 </head>
 
 <body>
@@ -26,7 +27,11 @@
         </div>
       </div>
   </nav>
-  <table class="table table-bordered">
+
+<table id="example" class="display" width="100%"></table>
+
+  <!--<table class="table table-bordered">-->
+<!--    <table id="myTable">
     <thead>
       <tr>
         <th>Achievement</th>
@@ -34,23 +39,23 @@
       </tr>
     </thead>
 
-
     <tbody>
-    <% for(var i=0; i < earnedAchievements.length; i++) { %>
-   <tr>
-     <td> <%= earnedAchievements[i] %>.name </td>
-     <td><%= earnedAchievements[i] %>.description</td>
-   </tr>
-<% } %>
-</tbody>
-    <!--<thead>
+      <% for(var i=0; i < earnedAchievements.length; i++) { %>
+        <tr>
+          <td> &lt;%= stepper1.description %&gt;</td>
+          <td><%= stepper1.description %></td>
+        </tr>
+      <% } %>-->
+
+<!--
+    <<thead>
       <tr>
         <th>Achievement</th>
         <th>Description</th>
       </tr>
     </thead>
-    <tbody>
-     
+    <tbody>-->
+<!--
       <tr>
         <td><%= stepper1.name %></td>
         <td><%= stepper1.description %></td>
@@ -247,27 +252,9 @@
       </tr>
 
 
-
-
-      <!--
-      <tr>
-        <td>Sleep 1</td>
-        <td>Sleep for 8 hours 2 days in a row</td>
-      </tr>
-
-      <tr>
-        <td>Sleep 2</td>
-        <td>Sleep for 8 hours 3 days in a row</td>
-      </tr>
-
-      <tr>
-        <td>Gym Hero 1</td>
-        <td>Workout 2 times in a week</td>
-      </tr>
-
-    </tbody>-->
+    </tbody>
   </table>
-</div>
+</div>-->
 
 
 

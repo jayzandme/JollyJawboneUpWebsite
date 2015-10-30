@@ -240,9 +240,43 @@ app.get('/achievements', function(req,res){
 
     earnedAchievements = new Array();
 
+    var dataSet = [
+    [ "Tiger Nixon", "System Architect", "Edinburgh", "5421", "2011/04/25", "$320,800" ],
+    [ "Garrett Winters", "Accountant", "Tokyo", "8422", "2011/07/25", "$170,750" ],
+    [ "Ashton Cox", "Junior Technical Author", "San Francisco", "1562", "2009/01/12", "$86,000" ],
+    [ "Cedric Kelly", "Senior Javascript Developer", "Edinburgh", "6224", "2012/03/29", "$433,060" ],
+    [ "Airi Satou", "Accountant", "Tokyo", "5407", "2008/11/28", "$162,700" ],
+    [ "Brielle Williamson", "Integration Specialist", "New York", "4804", "2012/12/02", "$372,000" ],
+    [ "Herrod Chandler", "Sales Assistant", "San Francisco", "9608", "2012/08/06", "$137,500" ],
+    [ "Rhona Davidson", "Integration Specialist", "Tokyo", "6200", "2010/10/14", "$327,900" ],
+];
+ 
+$(document).ready(function() {
+    $('#example').DataTable( {
+        data: dataSet,
+        columns: [
+            { title: "Name" },
+            { title: "Position" },
+            { title: "Office" },
+            { title: "Extn." },
+            { title: "Start date" },
+            { title: "Salary" }
+        ]
+    } );
+} );
+
+    
+
+
+
+
+
+/*
   if (returnMovesMax>10000){
+    s1=true;
     stepper1 = {name : "Stepper 1", description : "Take 10000 steps in a day"};
-    earnedAchievements.push("stepper1");
+    earnedAchievements.push("<%= stepper1.name %>");
+    earnedAchievements.push("<%= stepper1.description %>");
   }
   else{
     stepper1 = {name : "Stepper 1", description : "FAILED"};
@@ -257,6 +291,10 @@ app.get('/achievements', function(req,res){
     stepper2 = {name : "Stepper 2", description : "FAILED"};
     earnedAchievements.push("stepper2"); 
   }
+  if(true)
+    myFunction();
+  if(true)
+    myFunction();
   
   if (returnMovesMax>30000){
     stepper3 = {name : "Stepper 3", description : "Take 30000 steps in a day"};
@@ -590,6 +628,35 @@ app.get('/achievements', function(req,res){
     asteps6 = {name : "Total Steps 6", description : "FAILED"};
     earnedAchievements.push("asteps6"); 
   }
+*/
+var index;
+    var text = "<ul>";
+    var htmlTable = '';
+    var employee = [];
+    employee = [{
+        Id: 1,
+        Name: "Harshal",
+        Description: 22
+    }, {
+        Id: 2,
+        Name: "Bill",
+        Description: 44
+    }, {
+        Id: 3,
+        Name: "Thomas",
+        Description: 32
+    }, {
+        Id: 4,
+        Name: "Austin",
+        Description: 56
+    }];
+
+    for (index = 0; index < employee.length; index++) {
+        var nameTextBoxId = "nameTextBox" + index;
+        var descriptionTextBoxId = "descriptionTextBox" + index;
+
+        $("#tbNames tr:last").after("<tr><td>" + employee[index].Id + "</td> <td>" + "<input id='" + nameTextBoxId + "' type='text' value='" + employee[index].Name + "' />" + "</td> <td>" + "<input id='" + descriptionTextBoxId + "' type='text' value='" + employee[index].Description + "' />" + "</td> </tr>");
+    }
 
   console.log('earnedAchievements: %s', earnedAchievements);
     
