@@ -233,7 +233,31 @@ app.get('/', function(req, res) {
 });
 
 app.get('/levels', function(req, res){
-    res.render('levels');
+
+  goal1 = {
+    name: 'Goal1',
+    percentComplete: '50%',
+    leftToGo: '500 steps'
+  }
+  goal2 = {
+    name: 'Goal2',
+    percentComplete: '50%',
+    leftToGo: '500 steps'
+  }
+  goal3 = {
+    name: 'Goal3',
+    percentComplete: '50%',
+    leftToGo: '500 steps'
+  }
+  dataList = {
+    currentLevel: 3,
+    daysOnLevel: 7,
+    goal1: goal1,
+    goal2: goal2,
+    goal3: goal3
+
+  }
+    res.render('levels', dataList);
 });
 
 app.get('/achievements', function(req,res){

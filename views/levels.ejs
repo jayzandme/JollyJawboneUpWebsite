@@ -8,6 +8,45 @@
   <link rel ="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
   <script src="bower_components/jquery/dist/jquery.min.js"></script>
   <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+  <script src="bower_components/highcharts/highcharts.js"></script>
+  <script>
+    $(function () { 
+    $('#container').highcharts({
+        chart: {
+            type: 'bar'
+        },
+        title: {
+            text: '',
+            style:{
+              display:'none'
+            }
+        },
+        xAxis: {
+           visible:false
+        },
+        yAxis: {
+           visible:false
+        },
+        series: [{
+            data: [50]
+        },
+        {
+          data: [50]
+        }],
+        credits:{
+          enabled:false
+        },
+        legend:{
+          enabled:false
+        },
+        plotOptions: {
+            series: {
+                stacking: 'percent'
+            }
+        }
+    });
+});
+  </script>
 </head>
 <body>
 	<nav class="navbar navbar-trans">
@@ -28,10 +67,10 @@
   </nav>
     <div class="row">
       <div class="col-md-6">
-        <div class="text-center"><h3>Current Level: 3</h3></div>
+        <div class="text-center"><h3>Current Level: <%= currentLevel %></h3></div>
       </div>
       <div class="col-md-6">
-        <div class="text-center"> <h3>Days on Level: 7</h3></div>
+        <div class="text-center"> <h3>Days on Level: <%= daysOnLevel %></h3></div>
       </div>
     </div>
     <div class="row">
@@ -41,44 +80,44 @@
     </div>
     <div class="row">
       <div class="col-md-4">
-        <div class="text-center">Goal 1</div>
+        <div class="text-center"><%= goal1.name %></div>
       </div>
       <div class="col-md-4">
-        <div class="text-center">Bar</div>
+        <div class="text-center"><%= goal1.percentComplete %></div>
+        <div id="container" style="width:50%; height:100px"></div>
       </div>
       <div class="col-md-4">
-        <div class="text-center">Steps to go</div>
+        <div class="text-center"><%= goal1.leftToGo %></div>
       </div>
     </div>
     <div class="row">
       <div class="col-md-4">
-        <div class="text-center">Goal 2</div>
+        <div class="text-center"><%= goal2.name %></div>
       </div>
       <div class="col-md-4">
-        <div class="text-center">Bar</div>
+        <div class="text-center"><%= goal2.percentComplete %></div>
       </div>
       <div class="col-md-4">
-        <div class="text-center">Stuff</div>
+        <div class="text-center"><%= goal2.leftToGo %></div>
       </div>
     </div>
     <div class="row">
       <div class="col-md-4">
-        <div class="text-center">Goal 3</div>
+        <div class="text-center"><%= goal3.name %></div>
       </div>
       <div class="col-md-4">
-        <div class="text-center">Bar</div>
+        <div class="text-center"><%= goal3.percentComplete %></div>
       </div>
       <div class="col-md-4">
-        <div class="text-center">Stuff</div>
+        <div class="text-center"><%= goal3.leftToGo %></div>
       </div>
     </div>
     <div class="row">
-      <div class="col-md-2">
-        <div class="text-center">View Completed Level: </div>
+      <div class="col-md-4">
       </div>
       <div class = "col-md-2">
         <div class="dropdown">
-          <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">Previous Level
+          <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">View Completed Level
           <span class="caret"></span></button>
           <ul class="dropdown-menu">
             <li><a href="#">1</a></li>
@@ -86,9 +125,6 @@
             <li><a href="#">3</a></li>
           </ul>
         </div>
-      </div>
-      <div class="col-md-1">
-        <button class="btn"> View</button>
       </div>
     </div>
   </div>
