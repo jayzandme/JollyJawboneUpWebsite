@@ -258,6 +258,19 @@ insertLevel = function(level) {
 
 };
 
+getLevel = function(levelNum, callback) {
+    levels.findOne({levelNum: levelNum}).exec(
+        function(err, levels) {
+
+        if(err) {
+            throw err;
+        }
+        else {
+            callback(levels);
+        }
+    });
+}
+
 module.exports.insertSleep = insertSleep;
 module.exports.getSleeps = getSleeps;
 module.exports.getLatestSleep = getLatestSleep;
@@ -271,3 +284,4 @@ module.exports.getMovesAggregation = getMovesAggregation;
 module.exports.getSleepsAggregation = getSleepsAggregation;
 module.exports.getWorkoutsAggregation = getWorkoutsAggregation;
 module.exports.insertLevel = insertLevel;
+module.exports.getLevel = getLevel;

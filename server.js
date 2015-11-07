@@ -250,37 +250,119 @@ app.get('/token', function (req, res) {
     });
 });
 
+function goalProgress(value, type, attribute){
+  switch(type){
+    case 'sleeps':
+
+      switch(attribute){
+        case 'awake_time':
+          break;
+        case 'asleep_time':
+          break;
+        case 'awakenings':
+          break;
+        case 'light':
+          break;
+        case 'deep':
+          break;
+        default :
+          console.log("Error in sleeps attribute for getting goal progress");
+      }
+
+      break;
+    case 'moves' :
+
+      switch(attribute){
+        case 'steps':
+          break;
+        case 'active_time':
+          break;
+        case 'distance':
+          break;
+        case 'calories':
+          break;
+        default: 
+          console.log("Error in moves atrribute for getting goal progress");
+      }
+      break;
+
+    case 'workouts' :
+
+      switch(atrribute){
+        case 'steps':
+          break;
+        case 'time':
+          break;
+        case 'distance':
+          break;
+        case 'calories':
+          break;
+        case 'intensity':
+          break;
+        default:
+          console.log("Error in workouts attribute for getting goal progress");
+      }
+      break;
+
+    default:
+      console.log("Error in computing goalProgress");
+  }
+
+}
 app.get('/', function(req, res) {
     res.render('index');
 });
 
 app.get('/levels', function(req, res){
 
-  goal1 = {
-    name: 'Goal1',
-    percentComplete: '50%',
-    leftToGo: '500 steps'
-  }
-  goal2 = {
-    name: 'Goal2',
-    percentComplete: '50%',
-    leftToGo: '500 steps'
-  }
-  goal3 = {
-    name: 'Goal3',
-    percentComplete: '50%',
-    leftToGo: '500 steps'
-  }
-  dataList = {
-    currentLevel: 3,
-    daysOnLevel: 7,
-    goal1: goal1,
-    goal2: goal2,
-    goal3: goal3,
-    dataGraphTesting: [20]
+  //get user's current level from database
+  var currentLevel = 1;
 
-  }
-    res.render('levels', dataList);
+  //find that level in levels database
+  var goal1, goal2, goal3;
+  var currentLevel;
+  var daysOnLevel;
+  var goal1Name, goal2Name, goal3Name;
+
+  queries.getLevel(currentLevel, function(levels) {
+    currentLevel = levels.levelNum;
+    goal1Name = levels.firstGoal;
+    goal2Name = levels.secondGoal;
+    goal3Name = levels.thirdGoal;
+
+    var goal1Value = levels.firstGoalNum;
+    var goal1Type = levels.firstGoalType;
+    var goal1Attribute = levels.firstGoalDescriptor;
+
+    var currentProgress = goalProgress(goal1Value, goal1Type, goal1Attribute);
+
+
+    goal1 = {
+      name: goal1Name,
+      percentComplete: '50%',
+      leftToGo: '500 steps'
+    }
+    goal2 = {
+      name: goal2Name,
+      percentComplete: '50%',
+      leftToGo: '500 steps'
+    }
+    goal3 = {
+      name: goal3Name,
+      percentComplete: '50%',
+      leftToGo: '500 steps'
+    }
+    dataList = {
+      currentLevel: currentLevel,
+      daysOnLevel: 7,
+      goal1: goal1,
+      goal2: goal2,
+      goal3: goal3,
+      dataGraphTesting: [20]
+
+    }
+      res.render('levels', dataList);
+  });
 });
 
 app.get('/achievements', function(req,res){
