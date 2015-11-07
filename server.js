@@ -238,427 +238,166 @@ app.get('/levels', function(req, res){
 
 app.get('/achievements', function(req,res){
 
-    earnedAchievements = new Array();
-
-    var dataSet = [
-    [ "Tiger Nixon", "System Architect", "Edinburgh", "5421", "2011/04/25", "$320,800" ],
-    [ "Garrett Winters", "Accountant", "Tokyo", "8422", "2011/07/25", "$170,750" ],
-    [ "Ashton Cox", "Junior Technical Author", "San Francisco", "1562", "2009/01/12", "$86,000" ],
-    [ "Cedric Kelly", "Senior Javascript Developer", "Edinburgh", "6224", "2012/03/29", "$433,060" ],
-    [ "Airi Satou", "Accountant", "Tokyo", "5407", "2008/11/28", "$162,700" ],
-    [ "Brielle Williamson", "Integration Specialist", "New York", "4804", "2012/12/02", "$372,000" ],
-    [ "Herrod Chandler", "Sales Assistant", "San Francisco", "9608", "2012/08/06", "$137,500" ],
-    [ "Rhona Davidson", "Integration Specialist", "Tokyo", "6200", "2010/10/14", "$327,900" ],
-];
- 
-$(document).ready(function() {
-    $('#example').DataTable( {
-        data: dataSet,
-        columns: [
-            { title: "Name" },
-            { title: "Position" },
-            { title: "Office" },
-            { title: "Extn." },
-            { title: "Start date" },
-            { title: "Salary" }
-        ]
-    } );
-} );
-
+  earnedAchievements = new Array();
     
-
-
-
-
-
-/*
-  if (returnMovesMax>10000){
-    s1=true;
-    stepper1 = {name : "Stepper 1", description : "Take 10000 steps in a day"};
-    earnedAchievements.push("<%= stepper1.name %>");
-    earnedAchievements.push("<%= stepper1.description %>");
+ if (returnMovesMax>10000){
+    earnedAchievements.push("Stepper 1");
+    earnedAchievements.push("Take 10000 steps in a day");
   }
-  else{
-    stepper1 = {name : "Stepper 1", description : "FAILED"};
-    earnedAchievements.push("stepper1"); 
-  }
-  
   if (returnMovesMax>20000){
-    stepper2 = {name : "Stepper 2", description : "Take 20000 steps in a day"};
-    earnedAchievements.push("stepper2");
+    earnedAchievements.push("Stepper 2");
+    earnedAchievements.push("Take 20000 steps in a day");
   }
-  else{
-    stepper2 = {name : "Stepper 2", description : "FAILED"};
-    earnedAchievements.push("stepper2"); 
-  }
-  if(true)
-    myFunction();
-  if(true)
-    myFunction();
-  
   if (returnMovesMax>30000){
-    stepper3 = {name : "Stepper 3", description : "Take 30000 steps in a day"};
-    earnedAchievements.push("stepper3");
+    earnedAchievements.push("Stepper 3");
+    earnedAchievements.push("Take 30000 steps in a day");
   }
-  else{
-    stepper3 = {name : "Stepper 3", description : "FAILED"};
-    earnedAchievements.push("stepper3"); 
-  }
-
   if (returnMovesMax>40000){
-    stepper4 = {name : "Stepper 4", description : "Take 40000 steps in a day"};
-    earnedAchievements.push("stepper4");
+    earnedAchievements.push("Stepper 4");
+    earnedAchievements.push("Take 40000 steps in a day");
   }
-  else{
-    stepper4 = {name : "Stepper 4", description : "FAILED"};
-    earnedAchievements.push("stepper4"); 
-  }
-
   if (returnMovesMax>50000){
-    stepper3 = {name : "Stepper 5", description : "Take 50000 steps in a day"};
-    earnedAchievements.push("stepper5");
+    earnedAchievements.push("Stepper 5");
+    earnedAchievements.push("Take 50000 steps in a day");
   }
-  else{
-    stepper5 = {name : "Stepper 5", description : "FAILED"};
-    earnedAchievements.push("stepper5"); 
+  if (returnMovesMax>60*60*7){
+    earnedAchievements.push("Sleeper 1");
+    earnedAchievements.push("Sleep at least 7 hours in a day");
   }
-
-  if (returnSleepsMax>60*60*7){
-    sleeper1 = {name : "Sleeper 1", description : "Sleep at least 7 hours in a day"};
-    earnedAchievements.push("sleeper1");
+  if (returnMovesMax>60*60*8){
+    earnedAchievements.push("Sleeper 2");
+    earnedAchievements.push("Sleep at least 8 hours in a day");
   }
-  else{
-    sleeper1 = {name : "Sleeper 1", description : "FAILED"};
-    earnedAchievements.push("sleeper1"); 
+  if (returnMovesMax>60*60){
+    earnedAchievements.push("Workout 1");
+    earnedAchievements.push("Workout for 1 hour in a day");
   }
-
-  if (returnSleepsMax>60*60*8){
-    sleeper2 = {name : "Sleeper 2", description : "Sleep at least 8 hours in a day"};
-    earnedAchievements.push("sleeper2");
+  if (returnMovesMax>60*60*2){
+    earnedAchievements.push("Workout 2");
+    earnedAchievements.push("Workout for 2 hours in a day");
   }
-  else{
-    sleeper2 = {name : "Sleeper 2", description : "FAILED"};
-    earnedAchievements.push("sleeper2"); 
+  if (returnMovesMax>60*60*3){
+    earnedAchievements.push("Workout 3");
+    earnedAchievements.push("Workout for 3 hours in a day");
   }
-
-  if (returnWorkoutsMax>60*60){
-    workout1 = {name : "Workout 1", description : "Workout for 1 hour in a day"};
-    earnedAchievements.push("workout1");
+  if (returnMovesMax>60*60*5){
+    earnedAchievements.push("Workout 4");
+    earnedAchievements.push("Workout for 5 hours in a day");
   }
-  else{
-    workout1 = {name : "Workout 1", description : "FAILED"};
-    earnedAchievements.push("workout1"); 
+  if (returnMovesMax>60*60*10){
+    earnedAchievements.push("Workout 5");
+    earnedAchievements.push("Workout for 10 hours in a day");
   }
-
-  if (returnWorkoutsMax>60*60*2){
-    workout2 = {name : "Workout 2", description : "Workout for 2 hours in a day"};
-    earnedAchievements.push("workout2");
-  }
-  else{
-    workout2 = {name : "Workout 2", description : "FAILED"};
-    earnedAchievements.push("workout2"); 
-  }
-
-  if (returnWorkoutsMax>60*60*3){
-    workout3 = {name : "Workout 3", description : "Workout for 3 hours in a day"};
-    earnedAchievements.push("workout3");
-  }
-  else{
-    workout3 = {name : "Workout 3", description : "FAILED"};
-    earnedAchievements.push("workout3"); 
-  }
-
-  if (returnWorkoutsMax>60*60*5){
-    workout5 = {name : "Workout 5", description : "Workout for 5 hours in a day"};
-    earnedAchievements.push("workout5");
-  }
-  else{
-    workout5 = {name : "Workout 5", description : "FAILED"};
-    earnedAchievements.push("workout5"); 
-  }
-
-  if (returnWorkoutsMax>60*60*10){
-    workout8 = {name : "Workout 10", description : "Workout for 10 hours in a day"};
-    earnedAchievements.push("workout10");
-  }
-  else{
-    workout10 = {name : "Workout 10", description : "FAILED"};
-    earnedAchievements.push("workout10"); 
-  }
-
   if (consecutiveStepMax>=2){
-    cstepper1 = {name : "Consecutive Stepper 1", description : "Take 10000 steps 2 days in a row"};
-    earnedAchievements.push("cstepper1");
+    earnedAchievements.push("Consecutive Stepper 1");
+    earnedAchievements.push("Take 10000 steps 2 days in a row");
   }
-  else{
-    cstepper1 = {name : "Consecutive Stepper 1", description : "FAILED"};
-    earnedAchievements.push("cstepper1"); 
-  }
-
   if (consecutiveStepMax>=3){
-    cstepper2 = {name : "Consecutive Stepper 2", description : "Take 10000 steps 3 days in a row"};
-    earnedAchievements.push("cstepper1");
+    earnedAchievements.push("Consecutive Stepper 2");
+    earnedAchievements.push("Take 10000 steps 3 days in a row");
   }
-  else{
-    cstepper2 = {name : "Consecutive Stepper 2", description : "FAILED"};
-    earnedAchievements.push("cstepper2"); 
-  }
-
   if (consecutiveStepMax>=5){
-    cstepper3 = {name : "Consecutive Stepper 3", description : "Take 10000 steps 5 days in a row"};
-    earnedAchievements.push("cstepper3");
+    earnedAchievements.push("Consecutive Stepper 3");
+    earnedAchievements.push("Take 10000 steps 5 days in a row");
   }
-  else{
-    cstepper3 = {name : "Consecutive Stepper 3", description : "FAILED"};
-    earnedAchievements.push("cstepper3"); 
-  }
-
   if (consecutiveStepMax>=7){
-    cstepper4 = {name : "Consecutive Stepper 4", description : "Take 10000 steps every day for a week"};
-    earnedAchievements.push("cstepper4");
+    earnedAchievements.push("Consecutive Stepper 4");
+    earnedAchievements.push("Take 10000 steps every day for a week");
   }
-  else{
-    cstepper4 = {name : "Consecutive Stepper 4", description : "FAILED"};
-    earnedAchievements.push("cstepper4"); 
-  }
-
   if (consecutiveStepMax>=14){
-    cstepper5 = {name : "Consecutive Stepper 5", description : "Take 10000 steps every day for 2 weeks"};
-    earnedAchievements.push("cstepper5");
+    earnedAchievements.push("Consecutive Stepper 5");
+    earnedAchievements.push("Take 10000 steps every day for 2 weeks");
   }
-  else{
-    cstepper5 = {name : "Consecutive Stepper 5", description : "FAILED"};
-    earnedAchievements.push("cstepper5"); 
-  }
-
   if (consecutiveStepMax>=30){
-    cstepper6 = {name : "Consecutive Stepper 6", description : "Take 10000 steps every day for a month"};
-    earnedAchievements.push("cstepper6");
+    earnedAchievements.push("Consecutive Stepper 6");
+    earnedAchievements.push("Take 10000 steps every day for a month");
   }
-  else{
-    cstepper6 = {name : "Consecutive Stepper 6", description : "FAILED"};
-    earnedAchievements.push("cstepper6"); 
-  }
-
   if (consecutiveStepMax>=365){
-    cstepper7 = {name : "Consecutive Stepper 7", description : "Take 10000 steps every day for a year"};
-    earnedAchievements.push("cstepper7");
+    earnedAchievements.push("Consecutive Stepper 7");
+    earnedAchievements.push("Take 10000 steps every day for a year");
   }
-  else{
-    cstepper7 = {name : "Consecutive Stepper 7", description : "FAILED"};
-    earnedAchievements.push("cstepper7"); 
-  }
-
   if (consecutiveSleepMax>=2){
-    csleeper1 = {name : "Consecutive Sleeper 1", description : "Sleep at least 8 hours for 2 days in a row"};
-    earnedAchievements.push("csleeper1");
+    earnedAchievements.push("Consecutive Sleeper 1");
+    earnedAchievements.push("Sleep at least 8 hours for 2 days in a row");
   }
-  else{
-    csleeper1 = {name : "Consecutive Sleeper 1", description : "FAILED"};
-    earnedAchievements.push("csleeper1"); 
-  }
-
   if (consecutiveSleepMax>=3){
-    csleeper2 = {name : "Consecutive Sleeper 2", description : "Sleep at least 8 hours for 3 days in a row"};
-    earnedAchievements.push("csleeper1");
+    earnedAchievements.push("Consecutive Sleeper 2");
+    earnedAchievements.push("Sleep at least 8 hours for 3 days in a row");
   }
-  else{
-    csleeper2 = {name : "Consecutive Sleeper 2", description : "FAILED"};
-    earnedAchievements.push("csleeper2"); 
-  }
-
   if (consecutiveSleepMax>=5){
-    csleeper3 = {name : "Consecutive Sleeper 3", description : "Sleep at least 8 hours for 5 days in a row"};
-    earnedAchievements.push("csleeper3");
+    earnedAchievements.push("Consecutive Sleeper 3");
+    earnedAchievements.push("Sleep at least 8 hours for 5 days in a row");
   }
-  else{
-    csleeper3 = {name : "Consecutive Sleeper 3", description : "FAILED"};
-    earnedAchievements.push("csleeper3"); 
-  }
-
   if (consecutiveSleepMax>=7){
-    csleeper4 = {name : "Consecutive Sleeper 4", description : "Sleep at least 8 hours every day for a week"};
-    earnedAchievements.push("csleeper4");
+    earnedAchievements.push("Consecutive Sleeper 4");
+    earnedAchievements.push("Sleep at least 8 hours every day for a week");
   }
-  else{
-    csleeper4 = {name : "Consecutive Sleeper 4", description : "FAILED"};
-    earnedAchievements.push("csleeper4"); 
-  }
-
   if (consecutiveSleepMax>=14){
-    csleeper5 = {name : "Consecutive Sleeper 5", description : "Sleep at least 8 hours every day for 2 weeks"};
-    earnedAchievements.push("csleeper5");
+    earnedAchievements.push("Consecutive Sleeper 5");
+    earnedAchievements.push("Sleep at least 8 hours every day for 2 weeks");
   }
-  else{
-    csleeper5 = {name : "Consecutive Sleeper 5", description : "FAILED"};
-    earnedAchievements.push("csleeper5"); 
-  }
-
   if (consecutiveSleepMax>=30){
-    csleeper6 = {name : "Consecutive Sleeper 6", description : "Sleep at least 8 hours every day for a month"};
-    earnedAchievements.push("csleeper6");
+    earnedAchievements.push("Consecutive Sleeper 6");
+    earnedAchievements.push("Sleep at least 8 hours every day for a month");
   }
-  else{
-    csleeper6 = {name : "Consecutive Sleeper 6", description : "FAILED"};
-    earnedAchievements.push("csleeper6"); 
-  }
-
   if (consecutiveSleepMax>=365){
-    csleeper7 = {name : "Consecutive Sleeper 7", description : "Sleep at least 8 hours every day for a year"};
-    earnedAchievements.push("csleeper7");
+    earnedAchievements.push("Consecutive Sleeper 7");
+    earnedAchievements.push("Sleep at least 8 hours every day for a year");
   }
-  else{
-    csleeper7 = {name : "Consecutive Sleeper 7", description : "FAILED"};
-    earnedAchievements.push("csleeper7"); 
-  }
-
   if (consecutiveWorkoutMax>=2){
-    cworkout1 = {name : "Consecutive Workout 1", description : "Log a workout at least 1 hour long for 2 days in a row"};
-    earnedAchievements.push("cworkout1");
+    earnedAchievements.push("Consecutive Workout 1");
+    earnedAchievements.push("Log a workout at least 1 hour long for 2 days in a row");
   }
-  else{
-    cworkout1 = {name : "Consecutive Workout 1", description : "FAILED"};
-    earnedAchievements.push("cworkout1"); 
-  }
-
   if (consecutiveWorkoutMax>=3){
-    cworkout2 = {name : "Consecutive Workout 2", description : "Log a workout at least 1 hour long for 3 days in a row"};
-    earnedAchievements.push("cworkout2");
+    earnedAchievements.push("Consecutive Workout 2");
+    earnedAchievements.push("Log a workout at least 1 hour long for 2 days in a row");
   }
-  else{
-    cworkout2 = {name : "Consecutive SleeWorkouter 2", description : "FAILED"};
-    earnedAchievements.push("cworkout2"); 
-  }
-
   if (consecutiveWorkoutMax>=5){
-    cworkout3 = {name : "Consecutive Workout 3", description : "Log a workout at least 1 hour long for 5 days in a row"};
-    earnedAchievements.push("cworkout3");
+    earnedAchievements.push("Consecutive Workout 3");
+    earnedAchievements.push("Log a workout at least 1 hour long for 2 days in a row");
   }
-  else{
-    cworkout3 = {name : "Consecutive Workout 3", description : "FAILED"};
-    earnedAchievements.push("cworkout3"); 
-  }
-
   if (consecutiveWorkoutMax>=7){
-    cworkout4 = {name : "Consecutive Workout 4", description : "Log a workout at least 1 hour long every day for a week"};
-    earnedAchievements.push("cworkout4");
+    earnedAchievements.push("Consecutive Workout 4");
+    earnedAchievements.push("Log a workout at least 1 hour long every day for a week");
   }
-  else{
-    cworkout4 = {name : "Consecutive Workout 4", description : "FAILED"};
-    earnedAchievements.push("cworkout4"); 
-  }
-
   if (consecutiveWorkoutMax>=14){
-    cworkout5 = {name : "Consecutive Workout 5", description : "Log a workout at least 1 hour long every day for 2 weeks"};
-    earnedAchievements.push("cworkout5");
+    earnedAchievements.push("Consecutive Workout 5");
+    earnedAchievements.push("Log a workout at least 1 hour long every day for 2 weeks");
   }
-  else{
-    cworkout5 = {name : "Consecutive Workout 5", description : "FAILED"};
-    earnedAchievements.push("cworkout5"); 
-  }
-
   if (consecutiveWorkoutMax>=30){
-    cworkout6 = {name : "Consecutive Workout 6", description : "Log a workout at least 1 hour long every day for a month"};
-    earnedAchievements.push("cworkout6");
+    earnedAchievements.push("Consecutive Workout 6");
+    earnedAchievements.push("Log a workout at least 1 hour long every day for a month");
   }
-  else{
-    cworkout6 = {name : "Consecutive Workout 6", description : "FAILED"};
-    earnedAchievements.push("cworkout6"); 
-  }
-
   if (consecutiveWorkoutMax>=365){
-    cworkout7 = {name : "Consecutive Workout 7", description : "Log a workout at least 1 hour long every day for a year"};
-    earnedAchievements.push("cworkout7");
+    earnedAchievements.push("Consecutive Workout 7");
+    earnedAchievements.push("Log a workout at least 1 hour long every day for a year");
   }
-  else{
-    cworkout7 = {name : "Consecutive Workout 7", description : "FAILED"};
-    earnedAchievements.push("cworkout7"); 
-  }
-
   if (returnAllTimeMoves>=1000){
-    asteps1 = {name : "Total Steps 1", description : "Reached 1,000 total steps"};
-    earnedAchievements.push("asteps1");
+    earnedAchievements.push("Total Steps 1");
+    earnedAchievements.push("Reached 1,000 total steps");
   }
-  else{
-    asteps1 = {name : "Total Steps 1", description : "FAILED"};
-    earnedAchievements.push("asteps1"); 
-  }
-
   if (returnAllTimeMoves>=10000){
-    asteps2 = {name : "Total Steps 2", description : "Reached 10,000 total steps"};
-    earnedAchievements.push("asteps2");
+    earnedAchievements.push("Total Steps 2");
+    earnedAchievements.push("Reached 10,000 total steps");
   }
-  else{
-    asteps2 = {name : "Total Steps 2", description : "FAILED"};
-    earnedAchievements.push("asteps2"); 
-  }
-
   if (returnAllTimeMoves>=100000){
-    asteps3 = {name : "Total Steps 3", description : "Reached 100,000 total steps"};
-    earnedAchievements.push("asteps3");
+    earnedAchievements.push("Total Steps 3");
+    earnedAchievements.push("Reached 100,000 total steps");
   }
-  else{
-    asteps3 = {name : "Total Steps 3", description : "FAILED"};
-    earnedAchievements.push("asteps3"); 
-  }
-
   if (returnAllTimeMoves>=1000000){
-    asteps4 = {name : "Total Steps 4", description : "Reached 1,000,000 total steps"};
-    earnedAchievements.push("asteps4");
+    earnedAchievements.push("Total Steps 4");
+    earnedAchievements.push("Reached 1,000,000 total steps");
   }
-  else{
-    asteps4 = {name : "Total Steps 4", description : "FAILED"};
-    earnedAchievements.push("asteps4"); 
-  }
-
   if (returnAllTimeMoves>=5000000){
-    asteps5 = {name : "Total Steps 5", description : "Reached 5,000,000 total steps"};
-    earnedAchievements.push("asteps5");
+    earnedAchievements.push("Total Steps 5");
+    earnedAchievements.push("Reached 5,000,000 total steps");
   }
-  else{
-    asteps5 = {name : "Total Steps 5", description : "FAILED"};
-    earnedAchievements.push("asteps5"); 
-  }
-
   if (returnAllTimeMoves>=10000000){
-    asteps6 = {name : "Total Steps 6", description : "Reached 10,000,000 total steps"};
-    earnedAchievements.push("asteps6");
+    earnedAchievements.push("Total Steps 6");
+    earnedAchievements.push("Reached 10,000,000 total steps");
   }
-  else{
-    asteps6 = {name : "Total Steps 6", description : "FAILED"};
-    earnedAchievements.push("asteps6"); 
-  }
-*/
-var index;
-    var text = "<ul>";
-    var htmlTable = '';
-    var employee = [];
-    employee = [{
-        Id: 1,
-        Name: "Harshal",
-        Description: 22
-    }, {
-        Id: 2,
-        Name: "Bill",
-        Description: 44
-    }, {
-        Id: 3,
-        Name: "Thomas",
-        Description: 32
-    }, {
-        Id: 4,
-        Name: "Austin",
-        Description: 56
-    }];
 
-    for (index = 0; index < employee.length; index++) {
-        var nameTextBoxId = "nameTextBox" + index;
-        var descriptionTextBoxId = "descriptionTextBox" + index;
-
-        $("#tbNames tr:last").after("<tr><td>" + employee[index].Id + "</td> <td>" + "<input id='" + nameTextBoxId + "' type='text' value='" + employee[index].Name + "' />" + "</td> <td>" + "<input id='" + descriptionTextBoxId + "' type='text' value='" + employee[index].Description + "' />" + "</td> </tr>");
-    }
-
-  console.log('earnedAchievements: %s', earnedAchievements);
+  //console.log('earnedAchievements: %s', earnedAchievements);
     
   res.render('achievements', 
     earnedAchievements);
