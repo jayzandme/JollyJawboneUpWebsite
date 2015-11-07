@@ -12,8 +12,10 @@
   <script>
     $(function () { 
     $('#container').highcharts({
+        colors: ['#2f7ed8','#910000'],
         chart: {
-            type: 'bar'
+            type: 'bar',
+            backgroundColor: null
         },
         title: {
             text: '',
@@ -31,7 +33,7 @@
             data: [<%= dataGraphTesting%>]
         },
         {
-          data: [50]
+          data: [100 - <%= dataGraphTesting%>]
         }],
         credits:{
           enabled:false

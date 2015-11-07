@@ -255,7 +255,7 @@ app.get('/levels', function(req, res){
     goal1: goal1,
     goal2: goal2,
     goal3: goal3,
-    dataGraphTesting: [50]
+    dataGraphTesting: [20]
 
   }
     res.render('levels', dataList);
