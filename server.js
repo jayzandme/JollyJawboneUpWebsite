@@ -6,6 +6,7 @@ var fs = require('fs');
 var up = require ('./src/upAPI.js');
 var queries = require('./src/queries.js');
 var mongoose = require('mongoose');
+var cookie = require('cookie');
 
 var returnMovesMax = 0;
 var returnSleepsMax = 0;
