@@ -3,6 +3,7 @@ var sleeps = require('../databaseSchema/sleeps.js');
 var moves = require('../databaseSchema/moves.js');
 var workouts = require('../databaseSchema/workouts.js');
 var users = require('../databaseSchema/users.js');
+var levels = require('../databaseSchema/levels.js');
 var database 
     = mongoose.connect('mongodb://localhost:27017/myappdatabase').connection;
 
@@ -227,6 +228,36 @@ getLatestWorkout = function(userID, callback) {
 }
 
 
+insertLevel = function(level) {
+
+   var newLevel = new levels({
+      levelNum: level.levelNum,
+      levelName: level.levelName,          
+      firstGoal: level.firstGoal,        //description of goal
+      firstGoalNum: level.firstGoalNum,     //how to quantify the goal
+      firstGoalType: level.firstGoalType,  //sleeps, moves, or workouts
+      firstGoalDescriptor: level.firstGoalDescriptor, //for example - steps or active_time (use this when referencing moves object)
+      firstGoalProgressTemplate: level.firstGoalProgressTemplate,    //for displaying in the html what is left to complete this goal
+      secondGoal: level.secondGoal,
+      secondGoalNum: level.secondGoalNum,
+      secondGoalType: level.secondGoalType,  //sleeps, moves, or workouts
+      secondGoalDescriptor: level.secondGoalDescriptor, //for example - steps or active_time (use this when referencing moves object)
+      secondGoalProgressTemplate: level.secondGoalProgressTemplate,
+      thirdGoal: level.thirdGoal,
+      thirdGoalNum: level.thirdGoalNum,
+      thirdGoalType: level.thirdGoalType,  //sleeps, moves, or workouts
+      thirdGoalDescriptor: level.thirdGoalDescriptor, //for example - steps or active_time (use this when referencing moves object)
+      thirdGoalProgressTemplate: level.thirdGoalProgressTemplate
+   });
+
+   newLevel.save(function (err, thor) {
+        if (err) {
+            return console.error(err);
+        }
+   });
+
+};
+
 module.exports.insertSleep = insertSleep;
 module.exports.getSleeps = getSleeps;
 module.exports.getLatestSleep = getLatestSleep;
@@ -239,3 +270,4 @@ module.exports.getWorkouts = getWorkouts;
 module.exports.getMovesAggregation = getMovesAggregation;
 module.exports.getSleepsAggregation = getSleepsAggregation;
 module.exports.getWorkoutsAggregation = getWorkoutsAggregation;
+module.exports.insertLevel = insertLevel;

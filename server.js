@@ -72,6 +72,28 @@ app.get('/token', function (req, res) {
             console.log('inserted workouts');
         });
 
+        /*level1 = {
+          levelNum: 1,
+          levelName: "First Level!",          
+          firstGoal: "Get 2,000 steps",    //description of goal
+          firstGoalNum: 2000,   //how to quantify the goal
+          firstGoalType: "moves",  //sleeps, moves, or workouts
+          firstGoalDescriptor: "steps", //for example - steps or active_time (use this when referencing moves object)
+          firstGoalProgressTemplate: null,  //for displaying in the html what is left to complete this goal
+          secondGoal: "30 Minute Workout",
+          secondGoalNum: 1800,  //seconds
+          secondGoalType: "workouts",
+          secondGoalDescriptor: "time",
+          secondGoalProgressTemplate: null,
+          thirdGoal: "Sleep 8 hours",
+          thirdGoalNum: 8,  //hours
+          thirdGoalType: "sleeps",
+          thirdGoalDescriptor: "asleep_time",
+          thirdGoalProgressTemplate: null
+        }
+        queries.insertLevel(level1);*/
+
+
         var otherData = {date: null, 
                          stepsAverage: null,
                          sleepsAverage: null,
