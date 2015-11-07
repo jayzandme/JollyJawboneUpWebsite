@@ -16,6 +16,12 @@ var consecutiveSleepMax = 0;
 var consecutiveWorkoutMax = 0;
 var returnAllTimeMoves = 0;
 
+// data for frontend
+var otherdata;
+var returnDataSleeps = [];
+var returnDataMoves = [];
+var returnDataWorkouts = [];
+
 var host = 'localhost'
 var port = 5000;
 var app = express()
@@ -48,6 +54,7 @@ app.get('/token', function (req, res) {
     up.getToken(req.query.code, function(token) {    
         console.log("user logging in with token:\n" + token);
        
+        // update the sleeps
         up.updateSleeps(token, function(sleepsData) { 
 
             console.log('got ' + sleepsData.length + ' sleep events');
@@ -55,178 +62,52 @@ app.get('/token', function (req, res) {
                 queries.insertSleep(sleepsData[i])
             }
             console.log('inserted sleeps')
-        });
 
-        up.updateMoves(token, function(movesData) {
-            console.log('got ' + movesData.length + ' move events');
-            for (var i = 0; i < movesData.length; i++) {
-                queries.insertMove(movesData[i])
-            }
-            console.log('inserted moves');
-        });
+            // update the moves
+            up.updateMoves(token, function(movesData) {
+                console.log('got ' + movesData.length + ' move events');
+                for (var i = 0; i < movesData.length; i++) {
+                    queries.insertMove(movesData[i])
+                }
+                console.log('inserted moves');
 
-        up.updateWorkouts(token, function(workoutsData){
-            console.log('got' + workoutsData.length + ' workout events');
-            for (var i = 0; i < workoutsData.length; i++) {
-                queries.insertWorkout(workoutsData[i])
-            }
-            console.log('inserted workouts');
-        });
+                // update the workouts
+                up.updateWorkouts(token, function(workoutsData){
+                    console.log('got' + workoutsData.length + ' workout events');
+                    for (var i = 0; i < workoutsData.length; i++) {
+                        queries.insertWorkout(workoutsData[i])
+                    }
+                    console.log('inserted workouts');
 
-        var otherData = {date: null, 
-                         stepsAverage: null,
-                         sleepsAverage: null,
-                         stepsTotal: null,
-                         sleepsTotal: null,
-                         workoutsStepsAverage: null,
-                         workoutsStepsTotal: null,
-                         workoutsCaloriesAverage: null,
-                         workoutsCaloriesTotal: null,
-                         workoutsTimeAverage: null,
-                         workoutsTimeTotal: null,
-                         workoutsDistanceAverage: null,
-                         workoutsDistanceTotal: null,
-                        };
+                    // load all the data fro frontend
+                    
+                    loadAggregateData(function () {
+                        loadSleepsData(function () {
+                            loadMovesData(function () {
+                                loadWorkoutsData(function() {
 
-        queries.getMovesAggregation(function (results) {
-            otherData.stepsAverage = addCommas((results[0].movesAvg).toFixed(2));
-            otherData.stepsTotal = addCommas(results[0].stepsTotal);
-        });
-
-        queries.getSleepsAggregation(function (results) {
-            var totalSecondsAve = results[0].sleepsAvg;
-            var totalSeconds = results[0].sleepsTotal;
-            otherData.sleepsTotal = secondsToTimeString(totalSeconds);
-            otherData.sleepsAverage = secondsToTimeString(totalSecondsAve);
-        });
-
-        queries.getWorkoutsAggregation(function (results){
-            otherData.workoutsStepsAverage = addCommas((results[0].workoutsStepsAvg).toFixed(2));
-            otherData.workoutsStepsTotal = addCommas(results[0].workoutsStepsTotal);
-            otherData.workoutsCaloriesAverage = addCommas((results[0].workoutsCaloriesAvg).toFixed(2));
-            otherData.workoutsCaloriesTotal = addCommas((results[0].workoutsCaloriesTotal).toFixed(2));
-            otherData.workoutsTimeAverage = secondsToTimeString(results[0].workoutsTimeAvg);
-            otherData.workoutsTimeTotal = secondsToTimeString(results[0].workoutsTimeTotal);
-            otherData.workoutsDistanceAverage = (metersToMiles(results[0].workoutsDistanceAvg)).toFixed(2);
-            otherData.workoutsDistanceTotal = addCommas((metersToMiles(results[0].workoutsDistanceTotal)).toFixed(2));
-
-        });
-
-        var returnDataSleeps = [];
-
-        queries.getSleeps(1, function(sleeps) {
-            for (var i = 0; i < 10; i++) {
-                returnDataSleeps.push({
-                    title: sleeps[i].title,
-                      awake_time: epochtoClockTime(sleeps[i].awake_time),
-                      asleep_time: epochtoClockTime(sleeps[i].asleep_time),
-                      awakenings: sleeps[i].awakenings,
-                      lightSleep: secondsToTimeString(sleeps[i].light),
-                      deepSleep: secondsToTimeString(sleeps[i].deep),
-                      date: getFormattedDate(sleeps[i].date)
-                });
-            }
-          // getSleepAmount
-          for (var i = 0; i < sleeps.length; i++){
-            if(sleeps[i].duration>returnSleepsMax)
-              returnSleepsMax=sleeps[i].duration;
-          }
-          //consecutiveSleepAmount
-          var consecutiveSleepCount=0;
-          for (var i = 0; i < sleeps.length; i++){
-            if(sleeps[i].duration>60*60*8){
-              consecutiveSleepCount++;
-            }
-            else{
-              consecutiveSleepCount=0;
-            }
-            if (consecutiveSleepCount>consecutiveSleepMax){
-              consecutiveSleepMax=consecutiveSleepCount;
-            }
-          }
-        }); 
-
-        var returnDataMoves = [];
-
-        queries.getMoves(1, function(moves) {
-          for (var i = 0; i < 10; i++){
-                    returnDataMoves.push({
-                      steps: addCommas(moves[i].steps),
-                      active_time: secondsToTimeString(moves[i].active_time),
-                      distance: (metersToMiles(moves[i].distance)).toFixed(2),
-                      calories: addCommas((moves[i].calories).toFixed(2))
+                                    // display the dashboard
+                                    setTimeout(function(){
+                                    app.get('/dashboard', function(req, res){
+                                        res.render('dashboard', 
+                                            { sleeps: returnDataSleeps[0],
+                                            moves: returnDataMoves[0],
+                                            workouts: returnDataWorkouts[0],
+                                            otherData: otherData
+                                            });
+                                           });
+                                        res.redirect('/dashboard');
+                                    }, 1000);
+                                });
+                            });
+                        });
                     });
-          }
-          otherData.date = getFormattedDate(moves[0].date);
-
-          //getStepAmount and consectiveStepCount
-           var consecutiveStepCount=0;
-          for (var i = 0; i < moves.length; i++){
-            if(moves[i].steps>returnMovesMax)
-              returnMovesMax=moves[i].steps;
-
-            if(moves[i].steps>10000){
-              consecutiveStepCount++;
-            }
-            else{
-              consecutiveStepCount=0;
-            }
-            if (consecutiveStepCount>consecutiveStepMax){
-              consecutiveStepMax=consecutiveStepCount;
-            }
-
-            //alltimemoves
-            returnAllTimeMoves+=moves[i].steps;
-          }
+                });
+            });
 
         });
 
-        var returnDataWorkouts = [];
-
-        queries.getWorkouts(1, function(workouts) {
-          for (var i = 0; i < 10; i++){
-                    returnDataWorkouts.push({
-              title: workouts[i].title,
-              steps: addCommas(workouts[i].steps),
-              time: secondsToTimeString(workouts[i].time),
-              distance: metersToMiles(workouts[i].meters).toFixed(2),
-              calories: workouts[i].calories,
-              intensity: workouts[i].intensity,
-              date: getFormattedDate(workouts[i].date)
-
-            });
-          }
-
-          //getWorkoutAmount and consecutive
-          var consecutiveWorkoutCount=0;
-          for (var i = 0; i < workouts.length; i++){
-            if(workouts[i].time>returnWorkoutsMax)
-              returnWorkoutsMax=workouts[i].time;
-
-            if(workouts[i].time>60*60){
-              consecutiveWorkoutCount++;
-            }
-            else{
-              consecutiveWorkoutCount=0;
-            }
-            if (consecutiveWorkoutCount>consecutiveWorkoutMax){
-              consecutiveWorkoutMax=consecutiveWorkoutCount;
-            }
-          }
-
-          setTimeout(function(){
-          app.get('/dashboard', function(req, res){
-            res.render('dashboard', 
-              { sleeps: returnDataSleeps[0],
-                moves: returnDataMoves[0],
-                workouts: returnDataWorkouts[0],
-                otherData: otherData
-              });
-            });
-            res.redirect('/dashboard');
-          }, 1000);
-        }); 
-    });
+    }); 
 });
 
 app.get('/', function(req, res) {
@@ -460,6 +341,193 @@ function secondsToTimeString(secondsTotal){
 
 function metersToMiles(meters){
   return meters * 0.000621371192;
+}
+
+// loads the aggregate data for the front end
+function loadAggregateData(callback) {
+
+    otherData = {date: null, 
+                 stepsAverage: null,
+                 sleepsAverage: null,
+                 stepsTotal: null,
+                 sleepsTotal: null,
+                 workoutsStepsAverage: null,
+                 workoutsStepsTotal: null,
+                 workoutsCaloriesAverage: null,
+                 workoutsCaloriesTotal: null,
+                 workoutsTimeAverage: null,
+                 workoutsTimeTotal: null,
+                 workoutsDistanceAverage: null,
+                 workoutsDistanceTotal: null,
+                };
+
+    // get the moves aggregations
+    queries.getMovesAggregation(function (results) {
+        otherData.stepsAverage = addCommas((results[0].movesAvg).toFixed(2));
+        otherData.stepsTotal = addCommas(results[0].stepsTotal);
+
+        // get the sleeps aggregations
+        queries.getSleepsAggregation(function (results) {
+            var totalSecondsAve = results[0].sleepsAvg;
+            var totalSeconds = results[0].sleepsTotal;
+            otherData.sleepsTotal = secondsToTimeString(totalSeconds);
+            otherData.sleepsAverage = secondsToTimeString(totalSecondsAve);
+
+            // get the workouts agregations 
+            queries.getWorkoutsAggregation(function (results){
+
+                otherData.workoutsStepsAverage = 
+                    addCommas((results[0].workoutsStepsAvg).toFixed(2));
+
+                otherData.workoutsStepsTotal = 
+                    addCommas(results[0].workoutsStepsTotal);
+
+                otherData.workoutsCaloriesAverage = 
+                    addCommas((results[0].workoutsCaloriesAvg).toFixed(2));
+
+                otherData.workoutsCaloriesTotal = 
+                    addCommas((results[0].workoutsCaloriesTotal).toFixed(2));
+
+                otherData.workoutsTimeAverage = 
+                    secondsToTimeString(results[0].workoutsTimeAvg);
+
+                otherData.workoutsTimeTotal = 
+                    secondsToTimeString(results[0].workoutsTimeTotal);
+
+                otherData.workoutsDistanceAverage = 
+                    (metersToMiles(results[0].workoutsDistanceAvg)).toFixed(2);
+
+                otherData.workoutsDistanceTotal = 
+                    addCommas((metersToMiles(results[0].workoutsDistanceTotal)).toFixed(2));
+
+                    // done with getting aggrgations, call callback
+                    callback();
+
+            });
+        });
+    });
+
+
+}
+
+// load the sleep data for the frontend
+function loadSleepsData(callback) {
+
+    queries.getSleeps(1, function(sleeps) {
+        for (var i = 0; i < 10; i++) {
+            returnDataSleeps.push({
+                  title: sleeps[i].title,
+                  awake_time: epochtoClockTime(sleeps[i].awake_time),
+                  asleep_time: epochtoClockTime(sleeps[i].asleep_time),
+                  awakenings: sleeps[i].awakenings,
+                  lightSleep: secondsToTimeString(sleeps[i].light),
+                  deepSleep: secondsToTimeString(sleeps[i].deep),
+                  date: getFormattedDate(sleeps[i].date)
+            });
+        }
+        
+        // getSleepAmount
+        for (var i = 0; i < sleeps.length; i++){
+            if(sleeps[i].duration>returnSleepsMax)
+            returnSleepsMax=sleeps[i].duration;
+        }
+        //consecutiveSleepAmount
+        var consecutiveSleepCount=0;
+        for (var i = 0; i < sleeps.length; i++){
+            if(sleeps[i].duration>60*60*8){
+              consecutiveSleepCount++;
+            }
+            else{
+              consecutiveSleepCount=0;
+            }
+            if (consecutiveSleepCount>consecutiveSleepMax){
+              consecutiveSleepMax=consecutiveSleepCount;
+            }
+        }
+
+        // done getting sleeps data call the callback
+        callback();
+
+    }); 
+}
+
+// load moves data for the frontend
+function loadMovesData(callback) {
+
+    queries.getMoves(1, function(moves) {
+        for (var i = 0; i < 10; i++) {
+            returnDataMoves.push({
+              steps: addCommas(moves[i].steps),
+              active_time: secondsToTimeString(moves[i].active_time),
+              distance: (metersToMiles(moves[i].distance)).toFixed(2),
+              calories: addCommas((moves[i].calories).toFixed(2))
+            });
+        }
+        otherData.date = getFormattedDate(moves[0].date);
+
+        //getStepAmount and consectiveStepCount
+        var consecutiveStepCount=0;
+        for (var i = 0; i < moves.length; i++){
+            if(moves[i].steps>returnMovesMax)
+                returnMovesMax=moves[i].steps;
+
+            if(moves[i].steps>10000){
+                consecutiveStepCount++;
+            }
+            else{
+                consecutiveStepCount=0;
+            }
+            if (consecutiveStepCount>consecutiveStepMax){
+                consecutiveStepMax=consecutiveStepCount;
+            }
+
+            //alltimemoves
+            returnAllTimeMoves+=moves[i].steps;
+        }
+
+        // done getting moves data call the callback
+        callback();
+
+    });
+}
+
+// loads the workout data for the front end
+function loadWorkoutsData(callback) {
+
+    queries.getWorkouts(1, function(workouts) {
+        for (var i = 0; i < 10; i++){
+            returnDataWorkouts.push({
+              title: workouts[i].title,
+              steps: addCommas(workouts[i].steps),
+              time: secondsToTimeString(workouts[i].time),
+              distance: metersToMiles(workouts[i].meters).toFixed(2),
+              calories: workouts[i].calories,
+              intensity: workouts[i].intensity,
+              date: getFormattedDate(workouts[i].date)
+
+            });
+        }
+
+        //getWorkoutAmount and consecutive
+        var consecutiveWorkoutCount=0;
+        for (var i = 0; i < workouts.length; i++){
+            if(workouts[i].time>returnWorkoutsMax)
+                returnWorkoutsMax=workouts[i].time;
+
+            if(workouts[i].time>60*60){
+                consecutiveWorkoutCount++;
+            }
+            else{
+                consecutiveWorkoutCount=0;
+            }
+            if (consecutiveWorkoutCount>consecutiveWorkoutMax){
+                consecutiveWorkoutMax=consecutiveWorkoutCount;
+            }
+        }
+        
+        // done getting workouts data, call callback
+        callback();
+    });
 }
 
 var sslOptions= {
