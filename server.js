@@ -7,6 +7,7 @@ var up = require ('./src/upAPI.js');
 var queries = require('./src/queries.js');
 var mongoose = require('mongoose');
 
+//Variables for Achievements Page
 var returnMovesMax = 0;
 var returnSleepsMax = 0;
 var returnWorkoutsMax = 0;
@@ -14,6 +15,10 @@ var consecutiveStepMax = 0;
 var consecutiveSleepMax = 0;
 var consecutiveWorkoutMax = 0;
 var returnAllTimeMoves = 0;
+
+//Timer Variables for Weekly Challenges Page
+var Timer;
+var TotalSeconds;
 
 var host = 'localhost'
 var port = 5000;
