@@ -413,6 +413,20 @@ app.get('/teamPage', function(req, res){
 });
 
 app.get('/weeklyChallenges', function(req,res){
+   userProgress = new Array();
+    
+ if (true){
+    userProgress.push("Friend 1");
+    userProgress.push("30,000 steps");
+  }
+  if (true){
+    userProgress.push("Friend 2");
+    userProgress.push("12,000 steps");
+  }
+  if (true){
+    userProgress.push("Friend 3");
+    userProgress.push("1,000 steps");
+  }
     res.render('weeklyChallenges');
 });
 

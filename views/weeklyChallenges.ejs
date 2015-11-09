@@ -7,6 +7,45 @@
   <link href="/weeklyChallenges.css" rel="stylesheet" type="text/css">
   <link rel ="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
   <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+<script language="JavaScript" type="text/javascript">
+<!-- Copyright 2001, Sandeep Gangadharan -->
+<!-- For more free scripts go to http://sivamdesign.com/scripts/ -->
+<!--
+
+function count2() {
+
+itIs = document.month.count1.value + ' ' + document.date.count1.value + ' ' + document.year.count1.value
+
+  now4=new Date();
+  setdate2=new Date(itIs);
+
+  timer1 = (setdate2 - now4) / 1000 / 60 / 60 / 24;
+  timer1 = Math.round(timer1);
+  theHour = (setdate2 - now4) / 1000 / 60 / 60;
+  theHour = Math.round(theHour);
+  theMinute = (setdate2 - now4) / 1000 / 60;
+  theMinute = Math.round(theMinute);
+  theSecond = (setdate2 - now4) / 1000;
+  theSecond = Math.round(theSecond);
+
+  document.days4.count1.value = timer1;
+  document.hours4.count1.value = theHour;
+  document.minutes4.count1.value = theMinute;
+  document.seconds4.count1.value = theSecond;
+
+ if (document.days4.count1.value == "NaN" || document.hours4.count1.value == "NaN" ||
+     document.minutes4.count1.value == "NaN" || document.seconds4.count1.value == "NaN")
+ { alert('You have typed a field incorrectly!'); return false; window.clearTimeout(SD); }
+
+SD=setTimeout("count2()", 1000);
+  }
+
+// -->
+</script>
+
+
+
 </head>
 <body>
 	<nav class="navbar navbar-trans">
@@ -26,19 +65,132 @@
       </div>
   </nav>
 
+
+
+
+
+  <table border="0" align="center" cellpadding="0" cellspacing="0">
+    <tr>
+      <td align="center">
+        <font face="verdana, arial, helvetica, sans-serif" size="1">
+           Month
+        </font>
+      </td>
+      <td align="center">
+        <font face="verdana, arial, helvetica, sans-serif" size="1">
+           Date
+        </font>
+      </td>
+      <td align="center">
+        <font face="verdana, arial, helvetica, sans-serif" size="1">
+           Year
+        </font>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <form name="month">
+           <input type="text" size="4" name="count1" value="Nov" />
+        </form>
+      </td>
+      <td>
+        <form name="date">
+           <input type="text" size="2" name="count1" value="30" />
+        </form>
+      </td>
+      <td>
+        <form name="year">
+           <input type="text" size="4" name="count1" value="2015" />
+        </form>
+      </td>
+    </tr>
+    <tr>
+      <td align="center" colspan="3">
+        <form>
+           <input type="button" value="Submit" onClick="count2();" />
+        </form>
+      </td>
+    </tr>
+  </table>
+
+  <table border="0" align="center" cellpadding="0" cellspacing="0">
+    <tr>
+      <td align="center" colspan="4" height="20">
+        <font face="verdana, arial, helvetica, sans-serif" size="1">
+           <b>To go:<b>
+        </font>
+      <td>
+      </td>
+    </tr>
+    <tr>
+      <td align="center">
+        <font face="verdana, arial, helvetica, sans-serif" size="1">
+           Days
+        </font>
+      </td>
+      <td align="center">
+        <font face="verdana, arial, helvetica, sans-serif" size="1">
+           Hours
+        </font>
+      </td>
+      <td align="center">
+        <font face="verdana, arial, helvetica, sans-serif" size="1">
+           Minutes
+        </font>
+      </td>
+      <td align="center">
+        <font face="verdana, arial, helvetica, sans-serif" size="1">
+           Seconds
+        </font>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <form name="days4">
+           &nbsp;<input type="text" size="5" name="count1" />
+        </form>
+      </td>
+      <td>
+   <form name="hours4">
+           <input type="text" size="6" name="count1" />
+         </form>
+      </td>
+      <td>
+         <form name="minutes4">
+           <input type="text" size="8" name="count1" />
+         </form>
+      </td>
+      <td>
+         <form name="seconds4">
+           <input type="text" size="10" name="count1" />&nbsp;
+         </form>
+      </td>
+    </tr>
+  </table>
+
+   </td>
+ </tr>
+</table>
+
+
+
+
+
+  <body onload="timer()">
+
   <div class="titleChallenges"> <h2> Weekly Challenges Page </h2>
   </div>
 
   <head>
-   
       <script type="text/javascript">
       var Timer;
       var TotalSeconds;
          <!--
             function timer() {
+              var d = new Date();
               var seconds_left = 60;
               var interval = setInterval(function() {
-                document.getElementById('timer_div').innerHTML = --seconds_left;
+                document.getElementById('timer_div').innerHTML = "Current Date: "+d+"<br />Time remaining: "+ --seconds_left;
                 if (seconds_left <= 0)
                 {
                   document.getElementById('timer_div').innerHTML = "Weekly Challenge Expired!";
@@ -47,16 +199,33 @@
               }, 1000); 
             }
          //-->
-      </script>
-      
+      </script>      
    </head>
    
-   <body onload="timer()">
+   
 
-
-
-  <body>
-  <div id="timer_div"></div>
+  <body> <div id="timer_div"></div>
   </body>
+
+
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Leaderboard</th>
+        <th>Progress</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% for(var i=0; i < userProgress.length; i+=2) { %>
+      <tr>
+        <td> <%= userProgress[i] %> </td>
+        <td><%= userProgress[i+1] %></td>
+      </tr>
+      <% } %>
+    </tbody>
+  </table>
+
+
+
 
 </body>
