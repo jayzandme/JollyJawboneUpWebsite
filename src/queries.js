@@ -272,8 +272,8 @@ getLevel = function(levelNum, callback) {
 }
 
 //returns all days steps since the user started the level, in order of most steps to least steps
-levelsGetNumSteps = function(userID, value, startedLevelDate, callback){
-    var queryVals = moves.find({$and: [{userID: userID}, {steps: {$gt: value}}, {date: {$gt: startedLevelDate}}]}).sort({_id:-1});
+levelsGetNumSteps = function(userID, startedLevelDate, callback){
+    var queryVals = moves.find({$and: [{userID: userID}, {date: {$gt: startedLevelDate}}]}).sort({steps:-1});
 
     queryVals.exec(function (err, moves) {
         if (err) 

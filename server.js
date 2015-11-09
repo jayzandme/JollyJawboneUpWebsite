@@ -294,8 +294,6 @@ function goalProgress(value, type, attribute, startedLevelDate){
               progress.percentComplete = ((value - stepsRemaining)/value) * 100;
               progress.leftToGoString ="Only " + stepsRemaining + "steps to go";
             }
-            console.log(progress)
-            //return progress;
           }); 
           break;
         case 'active_time':
@@ -330,8 +328,12 @@ function goalProgress(value, type, attribute, startedLevelDate){
     default:
       console.log("Error in computing goalProgress");
   }
-  console.log(progress)
-  return progress
+  //console.log(progress)
+  setTimeout(function(){
+    console.log(progress);
+    return progress;
+  }, 300);
+  //return progress
 
 }
 app.get('/', function(req, res) {
@@ -344,31 +346,31 @@ app.get('/levels', function(req, res){
   var currentLevel = 1;
   var startedLevelDate = "20151019";
   var daysOnLevel = 4;
+  var goal1Value, goal1Type, goal1Attribute;
+  var goal1, goal2, goal3;
+  var goal1Name, goal2Name, goal3Name;
+  var goal1CurrentProgress;
+  var progress = {
+    goalCompleted:null,
+    percentComplete: null,
+    leftToGoString: null
+  };
 
   //find that level in levels database
   queries.getLevel(currentLevel, function(levels) {
-
-    var goal1, goal2, goal3;
-    var goal1Name, goal2Name, goal3Name;
 
     currentLevel = levels.levelNum;
     goal1Name = levels.firstGoal;
     goal2Name = levels.secondGoal;
     goal3Name = levels.thirdGoal;
 
-    var goal1Value = levels.firstGoalNum;
-    var goal1Type = levels.firstGoalType;
-    var goal1Attribute = levels.firstGoalDescriptor;
+    goal1Value = levels.firstGoalNum;
+    goal1Type = levels.firstGoalType;
+    goal1Attribute = levels.firstGoalDescriptor;
 
-    var progress = {
-    goalCompleted:null,
-    percentComplete: null,
-    leftToGoString: null
-  };
-
-    //var goal1CurrentProgress = goalProgress(goal1Value, goal1Type, goal1Attribute, startedLevelDate);
+    //goal1CurrentProgress = goalProgress(goal1Value, goal1Type, goal1Attribute, startedLevelDate);
     value = goal1Value;
-    queries.levelsGetNumSteps(1, value, startedLevelDate, function(moves){
+    queries.levelsGetNumSteps(1, startedLevelDate, function(moves){
       var stepsTaken = moves[0].steps;
       var stepsRemaining = value - stepsTaken;
       if (stepsRemaining <= 0){
@@ -379,12 +381,12 @@ app.get('/levels', function(req, res){
       else{
         progress.goalCompleted = false;
         progress.percentComplete = ((value - stepsRemaining)/value) * 100;
-        progress.leftToGoString ="Only " + stepsRemaining + "steps to go";
+        progress.leftToGoString ="Only " + addCommas(stepsRemaining) + " steps to go";
       }
     }); 
     /*if (goal1CurrentProgress.goalCompleted && goal2CurrentProgress.goalCompleted && goal3CurrentProgress.goalCompleted){
       //this level is complete - go to next level
-    }*/
+    }*/ 
 
     goal1CurrentProgress = progress;
 
@@ -399,7 +401,9 @@ app.get('/levels', function(req, res){
       leftToGo: '500 steps'
     }
 
-    setTimeout(function(){
+  });
+
+  setTimeout(function(){
       res.render('levels', 
         { currentLevel: currentLevel,
           daysOnLevel: daysOnLevel,
@@ -412,8 +416,7 @@ app.get('/levels', function(req, res){
           goal3: goal3,
           dataGraphTesting: goal1CurrentProgress.percentComplete
         });
-    }, 1000);
-  });
+    }, 500);
 });
 
 app.get('/achievements', function(req,res){
