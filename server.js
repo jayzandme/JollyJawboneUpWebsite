@@ -176,9 +176,11 @@ app.get('/token', function (req, res) {
                       steps: addCommas(moves[i].steps),
                       active_time: secondsToTimeString(moves[i].active_time),
                       distance: (metersToMiles(moves[i].distance)).toFixed(2),
-                      calories: addCommas((moves[i].calories).toFixed(2))
+                      calories: addCommas((moves[i].calories).toFixed(2)),
+                      percentOfGoal: (moves[i].steps / 10000) * 100
                     });
           }
+          
           otherData.date = getFormattedDate(moves[0].date);
 
           //getStepAmount and consectiveStepCount
