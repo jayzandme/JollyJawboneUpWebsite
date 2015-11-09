@@ -72,6 +72,7 @@ app.get('/token', function (req, res) {
             console.log('inserted workouts');
         });
 
+        //this inserted a level into the database to initialize it 
         /*level1 = {
           levelNum: 1,
           levelName: "First Level!",          
@@ -250,7 +251,13 @@ app.get('/token', function (req, res) {
     });
 });
 
-function goalProgress(value, type, attribute){
+function goalProgress(value, type, attribute, startedLevelDate){
+  var progress = {
+    goalCompleted:null,
+    percentComplete: null,
+    leftToGoString: null
+  };
+
   switch(type){
     case 'sleeps':
 
@@ -274,6 +281,22 @@ function goalProgress(value, type, attribute){
 
       switch(attribute){
         case 'steps':
+          queries.levelsGetNumSteps(1, value, startedLevelDate, function(moves){
+            var stepsTaken = moves[0].steps;
+            var stepsRemaining = value - stepsTaken;
+            if (stepsRemaining <= 0){
+              progress.goalCompleted = true;
+              progress.percentComplete = 100;
+              progress.leftToGoString = "Complete!";
+            }
+            else{
+              progress.goalCompleted = false;
+              progress.percentComplete = ((value - stepsRemaining)/value) * 100;
+              progress.leftToGoString ="Only " + stepsRemaining + "steps to go";
+            }
+            console.log(progress)
+            //return progress;
+          }); 
           break;
         case 'active_time':
           break;
@@ -307,6 +330,8 @@ function goalProgress(value, type, attribute){
     default:
       console.log("Error in computing goalProgress");
   }
+  console.log(progress)
+  return progress
 
 }
 app.get('/', function(req, res) {
@@ -315,16 +340,17 @@ app.get('/', function(req, res) {
 
 app.get('/levels', function(req, res){
 
-  //get user's current level from database
+  //get user's current level from database and when the user started this level
   var currentLevel = 1;
+  var startedLevelDate = "20151019";
+  var daysOnLevel = 4;
 
   //find that level in levels database
-  var goal1, goal2, goal3;
-  var currentLevel;
-  var daysOnLevel;
-  var goal1Name, goal2Name, goal3Name;
-
   queries.getLevel(currentLevel, function(levels) {
+
+    var goal1, goal2, goal3;
+    var goal1Name, goal2Name, goal3Name;
+
     currentLevel = levels.levelNum;
     goal1Name = levels.firstGoal;
     goal2Name = levels.secondGoal;
@@ -334,14 +360,34 @@ app.get('/levels', function(req, res){
     var goal1Type = levels.firstGoalType;
     var goal1Attribute = levels.firstGoalDescriptor;
 
-    var currentProgress = goalProgress(goal1Value, goal1Type, goal1Attribute);
+    var progress = {
+    goalCompleted:null,
+    percentComplete: null,
+    leftToGoString: null
+  };
 
+    //var goal1CurrentProgress = goalProgress(goal1Value, goal1Type, goal1Attribute, startedLevelDate);
+    value = goal1Value;
+    queries.levelsGetNumSteps(1, value, startedLevelDate, function(moves){
+      var stepsTaken = moves[0].steps;
+      var stepsRemaining = value - stepsTaken;
+      if (stepsRemaining <= 0){
+        progress.goalCompleted = true;
+        progress.percentComplete = 100;
+        progress.leftToGoString = "Complete!";
+      }
+      else{
+        progress.goalCompleted = false;
+        progress.percentComplete = ((value - stepsRemaining)/value) * 100;
+        progress.leftToGoString ="Only " + stepsRemaining + "steps to go";
+      }
+    }); 
+    /*if (goal1CurrentProgress.goalCompleted && goal2CurrentProgress.goalCompleted && goal3CurrentProgress.goalCompleted){
+      //this level is complete - go to next level
+    }*/
 
-    goal1 = {
-      name: goal1Name,
-      percentComplete: '50%',
-      leftToGo: '500 steps'
-    }
+    goal1CurrentProgress = progress;
+
     goal2 = {
       name: goal2Name,
       percentComplete: '50%',
@@ -352,16 +398,21 @@ app.get('/levels', function(req, res){
       percentComplete: '50%',
       leftToGo: '500 steps'
     }
-    dataList = {
-      currentLevel: currentLevel,
-      daysOnLevel: 7,
-      goal1: goal1,
-      goal2: goal2,
-      goal3: goal3,
-      dataGraphTesting: [20]
 
-    }
-      res.render('levels', dataList);
+    setTimeout(function(){
+      res.render('levels', 
+        { currentLevel: currentLevel,
+          daysOnLevel: daysOnLevel,
+          goal1: {
+            name: goal1Name,
+            percentComplete: goal1CurrentProgress.percentComplete,
+            leftToGo: goal1CurrentProgress.leftToGoString
+          },
+          goal2: goal2,
+          goal3: goal3,
+          dataGraphTesting: goal1CurrentProgress.percentComplete
+        });
+    }, 1000);
   });
 });
 

@@ -155,11 +155,11 @@ insertMove = function(move) {
 getMoves = function(userID, callback){
     var queryVals = moves.find({userID: userID}).sort({_id:-1});
 
-    queryVals.exec(function (err, sleeps) {
+    queryVals.exec(function (err, moves) {
         if (err) 
             throw err;
         else {
-            callback(sleeps);
+            callback(moves);
         }
     });
 }
@@ -271,6 +271,19 @@ getLevel = function(levelNum, callback) {
     });
 }
 
+//returns all days steps since the user started the level, in order of most steps to least steps
+levelsGetNumSteps = function(userID, value, startedLevelDate, callback){
+    var queryVals = moves.find({$and: [{userID: userID}, {steps: {$gt: value}}, {date: {$gt: startedLevelDate}}]}).sort({_id:-1});
+
+    queryVals.exec(function (err, moves) {
+        if (err) 
+            throw err;
+        else {
+            callback(moves);
+        }
+    });
+}
+
 module.exports.insertSleep = insertSleep;
 module.exports.getSleeps = getSleeps;
 module.exports.getLatestSleep = getLatestSleep;
@@ -285,3 +298,4 @@ module.exports.getSleepsAggregation = getSleepsAggregation;
 module.exports.getWorkoutsAggregation = getWorkoutsAggregation;
 module.exports.insertLevel = insertLevel;
 module.exports.getLevel = getLevel;
+module.exports.levelsGetNumSteps = levelsGetNumSteps;
