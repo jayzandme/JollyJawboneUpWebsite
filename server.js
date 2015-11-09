@@ -427,6 +427,15 @@ app.get('/weeklyChallenges', function(req,res){
     userProgress.push("Friend 3");
     userProgress.push("1,000 steps");
   }
+
+  challenges = new Array();
+    
+  if (true){
+    challenges.push("Take the most steps this week!");
+    challenges.push("Log the most sleep this week!");
+    challenges.push("Log the most workouts this week!");
+  }
+
     res.render('weeklyChallenges');
 });
 
