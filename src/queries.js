@@ -284,6 +284,31 @@ levelsGetNumSteps = function(userID, startedLevelDate, callback){
     });
 }
 
+levelsGetTimeWorkouts = function(userID, startedLevelDate, callback){
+    var queryVals = workouts.find({$and: [{userID: userID}, {date: {$gt: startedLevelDate}}]}).sort({time:-1});
+
+    queryVals.exec(function (err, workouts) {
+        if (err) 
+            throw err;
+        else {
+            callback(workouts);
+        }
+    });
+}
+
+levelsGetTimeSleeps = function(userID, startedLevelDate, callback){
+    var queryVals = sleeps.find({$and: [{userID: userID}, {date: {$gt: startedLevelDate}}]}).sort({duration:-1});
+
+    queryVals.exec(function (err, sleeps) {
+        if (err) 
+            throw err;
+        else {
+            callback(sleeps);
+        }
+    });
+}
+
+
 module.exports.insertSleep = insertSleep;
 module.exports.getSleeps = getSleeps;
 module.exports.getLatestSleep = getLatestSleep;
@@ -299,3 +324,5 @@ module.exports.getWorkoutsAggregation = getWorkoutsAggregation;
 module.exports.insertLevel = insertLevel;
 module.exports.getLevel = getLevel;
 module.exports.levelsGetNumSteps = levelsGetNumSteps;
+module.exports.levelsGetTimeWorkouts = levelsGetTimeWorkouts;
+module.exports.levelsGetTimeSleeps = levelsGetTimeSleeps;

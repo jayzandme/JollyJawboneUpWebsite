@@ -11,44 +11,118 @@
   <script src="bower_components/highcharts/highcharts.js"></script>
   <script>
     $(function () { 
-    $('#container').highcharts({
-        colors: ['red','green'],
-        chart: {
-            type: 'bar',
-            backgroundColor: null
-        },
-        title: {
-            text: '',
-            style:{
-              display:'none'
-            }
-        },
-        xAxis: {
-           visible:false
-        },
-        yAxis: {
-           visible:false
-        },
-        series: [{
-            data: [100 - <%= dataGraphTesting%>]
-        },
-        {
-          data: [<%= dataGraphTesting%>]
-        }],
-        credits:{
-          enabled:false
-        },
-        legend:{
-          enabled:false
-        },
-        plotOptions: {
-            series: {
-                stacking: 'percent',
-                enableMouseTracking: false
-            }
-        }
-    });
-});
+      $('#container').highcharts({
+          colors: ['red','green'],
+          chart: {
+              type: 'bar',
+              backgroundColor: null
+          },
+          title: {
+              text: '',
+              style:{
+                display:'none'
+              }
+          },
+          xAxis: {
+             visible:false
+          },
+          yAxis: {
+             visible:false
+          },
+          series: [{
+              data: [100 - <%= goal1.percentComplete%>]
+          },
+          {
+            data: [<%= goal1.percentComplete%>]
+          }],
+          credits:{
+            enabled:false
+          },
+          legend:{
+            enabled:false
+          },
+          plotOptions: {
+              series: {
+                  stacking: 'percent',
+                  enableMouseTracking: false
+              }
+          }
+      });
+      $('#container2').highcharts({
+          colors: ['red','green'],
+          chart: {
+              type: 'bar',
+              backgroundColor: null
+          },
+          title: {
+              text: '',
+              style:{
+                display:'none'
+              }
+          },
+          xAxis: {
+             visible:false
+          },
+          yAxis: {
+             visible:false
+          },
+          series: [{
+              data: [100 - <%= goal2.percentComplete%>]
+          },
+          {
+            data: [<%= goal2.percentComplete%>]
+          }],
+          credits:{
+            enabled:false
+          },
+          legend:{
+            enabled:false
+          },
+          plotOptions: {
+              series: {
+                  stacking: 'percent',
+                  enableMouseTracking: false
+              }
+          }
+      });
+      $('#container3').highcharts({
+          colors: ['red','green'],
+          chart: {
+              type: 'bar',
+              backgroundColor: null
+          },
+          title: {
+              text: '',
+              style:{
+                display:'none'
+              }
+          },
+          xAxis: {
+             visible:false
+          },
+          yAxis: {
+             visible:false
+          },
+          series: [{
+              data: [100 - <%= goal3.percentComplete%>]
+          },
+          {
+            data: [<%= goal3.percentComplete%>]
+          }],
+          credits:{
+            enabled:false
+          },
+          legend:{
+            enabled:false
+          },
+          plotOptions: {
+              series: {
+                  stacking: 'percent',
+                  enableMouseTracking: false
+              }
+          }
+      });
+  });
   </script>
 </head>
 <body>
@@ -98,7 +172,8 @@
         <div class="text-center"><%= goal2.name %></div>
       </div>
       <div class="col-md-4">
-        <div class="text-center"><%= goal2.percentComplete %></div>
+        <div class="text-center"><%= goal2.percentComplete %> %</div>
+        <div id="container2" style="width:50%; height:100px"></div>
       </div>
       <div class="col-md-4">
         <div class="text-center"><%= goal2.leftToGo %></div>
@@ -109,7 +184,8 @@
         <div class="text-center"><%= goal3.name %></div>
       </div>
       <div class="col-md-4">
-        <div class="text-center"><%= goal3.percentComplete %></div>
+        <div class="text-center"><%= goal3.percentComplete %> %</div>
+        <div id="container3" style="width:50%; height:100px"></div>
       </div>
       <div class="col-md-4">
         <div class="text-center"><%= goal3.leftToGo %></div>
