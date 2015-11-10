@@ -296,8 +296,11 @@ app.get('/teamPage', function(req, res){
     up.getFriends(userToken, function(friends) {
         
         for (var i = 0; i < friends.length; i++) {
-            console.log(friend[i]);
+            console.log('friend: ' + i);
+            console.log(friend[i].xid);
         }
+
+        console.log('printed all friends');
 
         res.render('teamPage');
     });
