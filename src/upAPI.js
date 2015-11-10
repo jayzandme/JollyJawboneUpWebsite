@@ -343,8 +343,9 @@ getFriends = function(token, callback) {
 
     var options = {
         host: 'jawbone.com',
-        path: 'nudge/api/v.1.1/users/@me/friends',
-        headers: {'Authorization': 'Bearer ' + token}
+        path: '/nudge/api/v.1.1/users/@me/friends',
+        headers: {'Authorization': 'Bearer ' + token,
+                  'Accept': 'application/json'}
     };
 
     https.request(options, function(response) {
