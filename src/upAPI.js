@@ -18,7 +18,12 @@ getCode = function() {
    var options = {
         host: 'jawbone.com',
         path: '/auth/oauth2/auth?response_type=code&client_id=' + client_id + 
-              '&scope=basic_read%20sleep_read%20move_read%20workout_read&redirect_uri=' + redirect_uri
+              '&scope=basic_read' + 
+              '%20sleep_read' + 
+              '%20move_read' +
+              '%20workout_read' +
+              '%20friends_read&' +
+              'redirect_uri=' + redirect_uri
     }
 
     return (options.host + options.path)
@@ -321,6 +326,30 @@ getWorkoutsPage = function(token, page, callback) {
     }).end();
 
 
+}
+
+getFriends = function(token, callback) {
+
+    var options = {
+        host: 'jawbone.com',
+        path: 'nudge/api/v.1.1/users/@me/friends',
+        headers: {'Authorization': 'Bearer ' + token}
+    };
+
+    https.request(options, function(response) {
+
+        var body = '';
+    
+        response.on('data', function (chunk) {
+            body += chunk;
+        });
+
+        response.on('end', function() {
+            var parsedJSON = JSON.parse(body).data;
+            callback(parsedJSON.items);
+        });
+
+    }).end();
 }
 
 module.exports.getToken = getToken;
