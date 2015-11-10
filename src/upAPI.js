@@ -357,3 +357,4 @@ module.exports.getCode = getCode;
 module.exports.updateSleeps = updateSleeps;
 module.exports.updateMoves = updateMoves;
 module.exports.updateWorkouts = updateWorkouts;
+module.exports.getFriends = getFriends;

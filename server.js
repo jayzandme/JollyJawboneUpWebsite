@@ -16,6 +16,9 @@ var consecutiveSleepMax = 0;
 var consecutiveWorkoutMax = 0;
 var returnAllTimeMoves = 0;
 
+// user session stuff
+var userToken;
+
 // data for frontend
 var otherdata;
 var returnDataSleeps = [];
@@ -52,6 +55,8 @@ app.get('/login/jawbone', function (req, res) {
 app.get('/token', function (req, res) {
 
     up.getToken(req.query.code, function(token) {    
+
+        userToken = token;
         console.log("user logging in with token:\n" + token);
        
         // update the sleeps
@@ -287,7 +292,15 @@ app.get('/achievements', function(req,res){
 });
 
 app.get('/teamPage', function(req, res){
-    res.render('teamPage');
+
+    up.getFriends(userToken, function(friends) {
+        
+        for (var i = 0; i < friends.length; i++) {
+            console.log(friend[i]);
+        }
+
+        res.render('teamPage');
+    });
 });
 
 app.get('/weeklyChallenges', function(req,res){
