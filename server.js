@@ -73,7 +73,7 @@ app.get('/token', function (req, res) {
 
                 // update the workouts
                 up.updateWorkouts(token, function(workoutsData){
-                    console.log('got' + workoutsData.length + ' workout events');
+                    console.log('got ' + workoutsData.length + ' workout events');
                     for (var i = 0; i < workoutsData.length; i++) {
                         queries.insertWorkout(workoutsData[i])
                     }
@@ -84,6 +84,7 @@ app.get('/token', function (req, res) {
                     loadAggregateData(function () {
                         loadSleepsData(function () {
                             loadMovesData(function () {
+                                console.log("moves " + returnAllTimeMoves);
                                 loadWorkoutsData(function() {
 
                                     // display the dashboard
@@ -454,6 +455,7 @@ function loadSleepsData(callback) {
 // load moves data for the frontend
 function loadMovesData(callback) {
 
+    returnAllTimeMoves = 0;
     queries.getMoves(1, function(moves) {
         for (var i = 0; i < 10; i++) {
             returnDataMoves.push({
