@@ -122,12 +122,6 @@
               }
           }
       });
-
-      console.log(!<%= showNextLevelButton %> )
-
-      if (!<%= showNextLevelButton %>){
-        $('#nextLevelButton').hide();
-      }
   });
   </script>
 </head>
@@ -148,6 +142,7 @@
         </div>
       </div>
   </nav>
+  <div>Wecome to your new level!</div>
     <div class="row">
       <div class="col-md-6">
         <div class="text-center"><h3>Current Level: <%= currentLevel %></h3></div>
@@ -212,7 +207,7 @@
         </div>
       </div>
       <div class="col-md-4">
-        <a href="/newLevel" class="btn btn-primary" id="nextLevelButton">View Next Level!</a>
+        <button class="btn btn-primary" type="button" href="views/newLevel.ejs">View Next Level!</button>
       </div>
     </div>
   </div>

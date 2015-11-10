@@ -180,7 +180,7 @@ app.get('/token', function (req, res) {
                       percentOfGoal: (moves[i].steps / 10000) * 100
                     });
           }
-          
+
           otherData.date = getFormattedDate(moves[0].date);
 
           //getStepAmount and consectiveStepCount
@@ -347,7 +347,7 @@ app.get('/levels', function(req, res){
 
   //get user's current level from database and when the user started this level
   var currentLevel = 1;
-  var startedLevelDate = "20151019";
+  var startedLevelDate = "2014419";
   var daysOnLevel = 4;
   var goal1Value, goal1Type, goal1Attribute;
   var goal1, goal2, goal3;
@@ -368,6 +368,7 @@ app.get('/levels', function(req, res){
     percentComplete: null,
     leftToGoString: null
   };
+  var showNextLevelButton = false;
 
   //find that level in levels database
   queries.getLevel(currentLevel, function(levels) {
@@ -407,6 +408,8 @@ app.get('/levels', function(req, res){
       }
     }); 
 
+    goal1CurrentProgress = progress;
+
     queries.levelsGetTimeWorkouts(1, startedLevelDate, function(workouts){
       if (workouts[0] != null){
         var workoutTimeValue = levels.secondGoalNum;
@@ -434,9 +437,7 @@ app.get('/levels', function(req, res){
     queries.levelsGetTimeSleeps(1, startedLevelDate, function(sleeps){
       if (sleeps[0] != null){
         var sleepTimeValue = levels.thirdGoalNum * 3600;
-        console.log(sleepTimeValue);
         var sleepTime = sleeps[0].duration;
-        console.log(sleepTime)
         var sleepTimeRemaining = sleepTimeValue - sleepTime;
         if (sleepTimeRemaining <= 0){
           goal3Progress.goalCompleted = true;
@@ -455,17 +456,13 @@ app.get('/levels', function(req, res){
         goal3Progress.percentComplete = 0;
         goal3Progress.leftToGoString = "You haven't started this goal!"
       }
-    });
 
-
-
-
-    /*if (goal1CurrentProgress.goalCompleted && goal2CurrentProgress.goalCompleted && goal3CurrentProgress.goalCompleted){
+      if (goal1CurrentProgress.goalCompleted && goal2Progress.goalCompleted && goal3Progress.goalCompleted){
       //this level is complete - go to next level
       //set new level start date
-    }*/ 
-
-    goal1CurrentProgress = progress;
+      showNextLevelButton = true;
+    }
+    });
 
   });
 
@@ -488,9 +485,14 @@ app.get('/levels', function(req, res){
             percentComplete: goal3Progress.percentComplete,
             leftToGo: goal3Progress.leftToGoString
           },
-          dataGraphTesting: goal1CurrentProgress.percentComplete
+          dataGraphTesting: goal1CurrentProgress.percentComplete,
+          showNextLevelButton: showNextLevelButton
         });
     }, 500);
+});
+
+app.get('/newLevel', function(req, res){
+  res.render('newLevel');
 });
 
 app.get('/achievements', function(req,res){

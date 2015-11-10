@@ -94,7 +94,6 @@
   		</div>
 	</nav>
 	<div class = "text-center addBorder"> <h1>Dashboard Data for <%= otherData.date %></h1> </div>
-  <div id="my-chart" style="width: 200px; height: 200px"></div>
 
   <div class="container">
     <div class="row">
@@ -124,8 +123,12 @@
         </div>
         <div class="col-md-4 parent">
           <div class ="circleAndTextMoves parent"> 
-            <div class="sideText child">Todays Steps </div>
-            <div class="circleBase text-center child"><span class="insideCircle"> <%= moves.steps %></span></div>
+              <div class="sideText child" style:"float:left">Today's Steps
+                <span>  
+                  <div id="my-chart" style="width: 125px; height: 150px; float: right"> 
+                  </div>
+                </span>
+              </div>
         </div>
           <div class="moves img-rounded">
             <div>Active Time: <%= moves.active_time %></div>
