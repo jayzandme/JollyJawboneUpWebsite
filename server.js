@@ -297,10 +297,8 @@ app.get('/teamPage', function(req, res){
         
         for (var i = 0; i < friends.length; i++) {
             console.log('friend: ' + i);
-            console.log(friend[i].xid);
+            console.log(friends[i].xid);
         }
-
-        console.log('printed all friends');
 
         res.render('teamPage');
     });
