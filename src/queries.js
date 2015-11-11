@@ -272,38 +272,38 @@ getLevel = function(levelNum, callback) {
 }
 
 //returns all days steps since the user started the level, in order of most steps to least steps
-levelsGetNumSteps = function(userID, startedLevelDate, value, callback){
+levelsGetNumSteps = function(userID, startedLevelDate, value, name, callback){
     var queryVals = moves.find({$and: [{userID: userID}, {date: {$gt: startedLevelDate}}]}).sort({steps:-1});
 
     queryVals.exec(function (err, moves) {
         if (err) 
             throw err;
         else {
-            callback(moves, value);
+            callback(moves, value, name);
         }
     });
 }
 
-levelsGetTimeWorkouts = function(userID, startedLevelDate, value, callback){
+levelsGetTimeWorkouts = function(userID, startedLevelDate, value, name, callback){
     var queryVals = workouts.find({$and: [{userID: userID}, {date: {$gt: startedLevelDate}}]}).sort({time:-1});
 
     queryVals.exec(function (err, workouts) {
         if (err) 
             throw err;
         else {
-            callback(workouts, value);
+            callback(workouts, value, name);
         }
     });
 }
 
-levelsGetTimeSleeps = function(userID, startedLevelDate, value, callback){
+levelsGetTimeSleeps = function(userID, startedLevelDate, value, name, callback){
     var queryVals = sleeps.find({$and: [{userID: userID}, {date: {$gt: startedLevelDate}}]}).sort({duration:-1});
 
     queryVals.exec(function (err, sleeps) {
         if (err) 
             throw err;
         else {
-            callback(sleeps, value);
+            callback(sleeps, value, name);
         }
     });
 }
@@ -321,14 +321,14 @@ levelsGetUserLevel = function(userID, callback){
     });
 }
 
-levelsGetDistance = function(userID, startedLevelDate, value, callback){
+levelsGetDistance = function(userID, startedLevelDate, value, name, callback){
     var queryVals = moves.find({$and: [{userID: userID}, {date: {$gt: startedLevelDate}}]}).sort({distance:-1});
 
     queryVals.exec(function (err, moves) {
         if (err) 
             throw err;
         else {
-            callback(moves,value);
+            callback(moves,value, name);
         }
     });
 }

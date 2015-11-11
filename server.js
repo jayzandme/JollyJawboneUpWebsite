@@ -300,6 +300,7 @@ app.get('/levels', function(req, res){
     var daysOnLevel = computeDaysOnLevel(startedLevelDate);
     var goalInfo = [];
     var progress = [];
+    var progressNames = [];
     var showNextLevelButton = false;
 
     //find that level in levels database
@@ -326,9 +327,10 @@ app.get('/levels', function(req, res){
       //this will only work for level 1 currently
       for (var i = 0; i < 3; i++){
         var value = goalInfo[i].value;
+        var name = goalInfo[i].name
         if (goalInfo[i].type == "moves"){
           if (goalInfo[i].attribute == "steps"){
-             queries.levelsGetNumSteps(1, startedLevelDate, value, function(moves, value){
+             queries.levelsGetNumSteps(1, startedLevelDate, value, name, function(moves, value, name){
 
               if (moves[0] != null){
                 var stepsTaken = moves[0].steps;
@@ -336,6 +338,7 @@ app.get('/levels', function(req, res){
                 var stepsRemaining = value - stepsTaken;
                 if (stepsRemaining <= 0){
                   progress.push({
+                    name: name,
                     goalCompleted: true,
                     percentCompleted: 100,
                     leftToGoString: "Complete!"
@@ -343,6 +346,7 @@ app.get('/levels', function(req, res){
                 }
                 else{
                   progress.push({
+                    name: name,
                     goalCompleted: false,
                     percentCompleted: ((value - stepsRemaining)/value) * 100,
                     leftToGoString: "Only " + addCommas(stepsRemaining) + " steps to go"
@@ -351,6 +355,7 @@ app.get('/levels', function(req, res){
               }
               else{
                 progress.push({
+                  name: name,
                   goalCompleted: false,
                   percentCompleted: 0,
                   leftToGoString: "You haven't started this goal!"
@@ -359,7 +364,7 @@ app.get('/levels', function(req, res){
             });
           }
           else if (goalInfo[i].attribute == "distance"){
-            queries.levelsGetDistance(1, 20151107, value, function(moves, value){
+            queries.levelsGetDistance(1, 20151107, value, name, function(moves, value, name){
               if (moves[0] != null){
                 var distanceTraveled = moves[0].distance;
                 console.log(distanceTraveled)
@@ -367,6 +372,7 @@ app.get('/levels', function(req, res){
                 var distanceRemaining = value - distanceTraveled;
                 if (distanceRemaining <= 0){
                   progress.push({
+                    name: name,
                     goalCompleted: true,
                     percentCompleted: 100,
                     leftToGoString: "Complete!"
@@ -374,6 +380,7 @@ app.get('/levels', function(req, res){
                 }
                 else{
                   progress.push({
+                    name: name,
                     goalCompleted: false,
                     percentCompleted: ((value - distanceRemaining)/value) * 100,
                     leftToGoString: "Only " + metersToMiles(distanceRemaining) + " miles to move"
@@ -382,6 +389,7 @@ app.get('/levels', function(req, res){
               }
               else{
                 progress.push({
+                  name: name,
                   goalCompleted: false,
                   percentCompleted: 0,
                   leftToGoString: "You haven't started this goal!"
@@ -392,7 +400,7 @@ app.get('/levels', function(req, res){
           
         }
         else if (goalInfo[i].type == "workouts"){
-          queries.levelsGetTimeWorkouts(1, startedLevelDate, value, function(workouts, value){
+          queries.levelsGetTimeWorkouts(1, startedLevelDate, value, name, function(workouts, value, name){
             if (workouts[0] != null){
               var workoutTimeValue = value;
               console.log(value);
@@ -400,6 +408,7 @@ app.get('/levels', function(req, res){
               var workoutTimeRemaining = workoutTimeValue - workoutTime;
               if (workoutTimeRemaining <= 0){
                 progress.push({
+                  name: name,
                   goalCompleted: true,
                   percentCompleted: 100,
                   leftToGoString: "Complete!"
@@ -408,6 +417,7 @@ app.get('/levels', function(req, res){
               else{
                 var remaining = workoutTimeRemaining % 60;
                 progress.push({
+                  name: name,
                   goalCompleted: false,
                   percentCompleted: ((workoutTimeValue - workoutTimeRemaining)/workoutTimeValue) * 100,
                   leftToGoString: "Workout for " + remaining + "more minutes"
@@ -416,6 +426,7 @@ app.get('/levels', function(req, res){
             }
             else{
               progress.push({
+                name: name,
                 goalCompleted: false,
                 percentCompleted: 0,
                 leftToGoString: "You haven't started this goal!"
@@ -425,13 +436,14 @@ app.get('/levels', function(req, res){
 
         }
         else if (goalInfo[i].type == "sleeps"){
-          queries.levelsGetTimeSleeps(1, startedLevelDate, value, function(sleeps, value){
+          queries.levelsGetTimeSleeps(1, startedLevelDate, value, name, function(sleeps, value, name){
             if (sleeps[0] != null){
               var sleepTimeValue = value * 3600;
               var sleepTime = sleeps[0].duration;
               var sleepTimeRemaining = sleepTimeValue - sleepTime;
               if (sleepTimeRemaining <= 0){
                 progress.push({
+                  name: name,
                   goalCompleted: true,
                   percentCompleted: 100,
                   leftToGoString: "Complete!"
@@ -440,6 +452,7 @@ app.get('/levels', function(req, res){
               else{
                 var remaining = sleepTimeRemaining % 60;
                 progress.push({
+                  name: name,
                   goalCompleted: false,
                   percentCompleted: ((sleepTimeValue - sleepTimeRemaining)/sleepTimeValue) * 100,
                   leftToGoString: remaining + "more minutes of sleep to complete this goal!"
@@ -448,6 +461,7 @@ app.get('/levels', function(req, res){
             }
             else{
               progress.push({
+                name: name,
                 goalCompleted: false,
                 percentCompleted: 0,
                 leftToGoString: "You haven't started this goal!"
@@ -468,17 +482,17 @@ app.get('/levels', function(req, res){
           { currentLevel: currentLevel,
             daysOnLevel: daysOnLevel,
             goal1: {
-              name: goalInfo[0].name,
+              name: progress[0].name,
               percentComplete: progress[0].percentCompleted,
               leftToGo: progress[0].leftToGoString
             },
             goal2: {
-              name: goalInfo[1].name,
+              name: progress[1].name,
               percentComplete: progress[1].percentCompleted,
               leftToGo: progress[1].leftToGoString
             },
             goal3: {
-              name: goalInfo[2].name,
+              name: progress[2].name,
               percentComplete: progress[2].percentCompleted,
               leftToGo: progress[2].leftToGoString
             },
