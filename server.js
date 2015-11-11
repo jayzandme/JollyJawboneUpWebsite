@@ -312,11 +312,13 @@ app.get('/achievements', function(req,res){
 
 app.get('/teamPage', function(req, res){
 
+    var foundFriends = new Array();
+
     up.getFriends(userToken, function(friends) {
         
         loadFriends(friends, function() {
 
-            res.render('teamPage');
+            res.render('teamPage', { friends: userFriends });
         });
     });
 });
