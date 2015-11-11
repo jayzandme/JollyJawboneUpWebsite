@@ -26,14 +26,19 @@ var returnDataSleeps = [];
 var returnDataMoves = [];
 var returnDataWorkouts = [];
 
+// team
+var userFriends = [];
+
 //Timer Variables for Weekly Challenges Page
 var Timer;
 var TotalSeconds;
 
+// hosting the server
 var host = 'localhost'
 var port = 5000;
 var app = express()
 
+// frontend rendering 
 app.use(bodyParser.json());
 app.use(express.static(__dirname + '/css'));
 app.use('/bower_components',  express.static(__dirname + '/bower_components'));
@@ -309,12 +314,10 @@ app.get('/teamPage', function(req, res){
 
     up.getFriends(userToken, function(friends) {
         
-        for (var i = 0; i < friends.length; i++) {
-            console.log('friend: ' + i);
-            console.log(friends[i].xid);
-        }
+        loadFriends(friends, function() {
 
-        res.render('teamPage');
+            res.render('teamPage');
+        });
     });
 });
 
@@ -459,7 +462,6 @@ function loadAggregateData(callback) {
         });
     });
 
-
 }
 
 // load the sleep data for the frontend
@@ -581,6 +583,25 @@ function loadWorkoutsData(callback) {
         // done getting workouts data, call callback
         callback();
     });
+}
+
+// loads the friends of a user
+function loadFriends(friends, callback) {
+
+    friend = friends.shift();
+
+    if (friend) {
+
+        queries.findUser(friend.xid, function(user) {
+            if (user) {
+                userFriends.push(user);
+            }
+            loadFriends(friends, callback);
+        });
+    }
+    else {
+        callback();
+    }
 }
 
 var sslOptions= {
