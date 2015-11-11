@@ -242,7 +242,7 @@ getLatestWorkout = function(userID, callback) {
 }
 
 // inserts a user into the database
-insertUser = function(user) {
+insertUser = function(user, callback) {
 
     var newUser = new users({
         userID = nextUserID,
@@ -268,7 +268,15 @@ insertUser = function(user) {
 
 // determines if a user is in the database from their xid
 // returns their ID
-findUser = function(xid) {
+findUser = function(xid, callback) {
+
+    users.findOne({xid: xid}).exec(function(err, user) {
+        if (err) {
+            throw err;
+        } else {
+            callback(user);
+        }
+    });
 
 }
 
