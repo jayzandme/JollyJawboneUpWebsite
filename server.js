@@ -325,42 +325,77 @@ app.get('/levels', function(req, res){
       //going to have to make queries for daily steps vs. aggregrate steps and such
       //this will only work for level 1 currently
       for (var i = 0; i < 3; i++){
-        var value = goalInfo[i].value
+        var value = goalInfo[i].value;
         if (goalInfo[i].type == "moves"){
-          
-          queries.levelsGetNumSteps(1, startedLevelDate, function(moves){
+          if (goalInfo[i].attribute == "steps"){
+             queries.levelsGetNumSteps(1, startedLevelDate, value, function(moves, value){
 
-            if (moves[0] != null){
-              var stepsTaken = moves[0].steps;
-              var stepsRemaining = value - stepsTaken;
-              if (stepsRemaining <= 0){
-                progress.push({
-                  goalCompleted: true,
-                  percentCompleted: 100,
-                  leftToGoString: "Complete!"
-                });
+              if (moves[0] != null){
+                var stepsTaken = moves[0].steps;
+                console.log(value)
+                var stepsRemaining = value - stepsTaken;
+                if (stepsRemaining <= 0){
+                  progress.push({
+                    goalCompleted: true,
+                    percentCompleted: 100,
+                    leftToGoString: "Complete!"
+                  });
+                }
+                else{
+                  progress.push({
+                    goalCompleted: false,
+                    percentCompleted: ((value - stepsRemaining)/value) * 100,
+                    leftToGoString: "Only " + addCommas(stepsRemaining) + " steps to go"
+                  })
+                }
               }
               else{
                 progress.push({
                   goalCompleted: false,
-                  percentCompleted: ((value - stepsRemaining)/value) * 100,
-                  leftToGoString: "Only " + addCommas(stepsRemaining) + " steps to go"
-                })
+                  percentCompleted: 0,
+                  leftToGoString: "You haven't started this goal!"
+                });
               }
-            }
-            else{
-              progress.push({
-                goalCompleted: false,
-                percentCompleted: 0,
-                leftToGoString: "You haven't started this goal!"
-              });
-            }
-          });
+            });
+          }
+          else if (goalInfo[i].attribute == "distance"){
+            queries.levelsGetDistance(1, 20151107, value, function(moves, value){
+              if (moves[0] != null){
+                var distanceTraveled = moves[0].distance;
+                console.log(distanceTraveled)
+                console.log(value); 
+                var distanceRemaining = value - distanceTraveled;
+                if (distanceRemaining <= 0){
+                  progress.push({
+                    goalCompleted: true,
+                    percentCompleted: 100,
+                    leftToGoString: "Complete!"
+                  });
+                }
+                else{
+                  progress.push({
+                    goalCompleted: false,
+                    percentCompleted: ((value - distanceRemaining)/value) * 100,
+                    leftToGoString: "Only " + metersToMiles(distanceRemaining) + " miles to move"
+                  })
+                }
+              }
+              else{
+                progress.push({
+                  goalCompleted: false,
+                  percentCompleted: 0,
+                  leftToGoString: "You haven't started this goal!"
+                });
+              }
+            });
+          }
+          
         }
         else if (goalInfo[i].type == "workouts"){
-          queries.levelsGetTimeWorkouts(1, startedLevelDate, function(workouts){
+          queries.levelsGetTimeWorkouts(1, startedLevelDate, value, function(workouts, value){
             if (workouts[0] != null){
               var workoutTimeValue = value;
+              console.log(value);
               var workoutTime = workouts[0].time;
               var workoutTimeRemaining = workoutTimeValue - workoutTime;
               if (workoutTimeRemaining <= 0){
@@ -390,7 +425,7 @@ app.get('/levels', function(req, res){
 
         }
         else if (goalInfo[i].type == "sleeps"){
-          queries.levelsGetTimeSleeps(1, startedLevelDate, function(sleeps){
+          queries.levelsGetTimeSleeps(1, startedLevelDate, value, function(sleeps, value){
             if (sleeps[0] != null){
               var sleepTimeValue = value * 3600;
               var sleepTime = sleeps[0].duration;
@@ -423,6 +458,7 @@ app.get('/levels', function(req, res){
       }
 
       setTimeout(function(){
+        console.log(progress)
         if (progress[0].goalCompleted && progress[1].goalCompleted && progress[2].goalCompleted){
           showNextLevelButton = true;
           var finishedLevelDate = getDateNumber();

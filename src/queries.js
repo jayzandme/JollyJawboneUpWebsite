@@ -272,38 +272,38 @@ getLevel = function(levelNum, callback) {
 }
 
 //returns all days steps since the user started the level, in order of most steps to least steps
-levelsGetNumSteps = function(userID, startedLevelDate, callback){
+levelsGetNumSteps = function(userID, startedLevelDate, value, callback){
     var queryVals = moves.find({$and: [{userID: userID}, {date: {$gt: startedLevelDate}}]}).sort({steps:-1});
 
     queryVals.exec(function (err, moves) {
         if (err) 
             throw err;
         else {
-            callback(moves);
+            callback(moves, value);
         }
     });
 }
 
-levelsGetTimeWorkouts = function(userID, startedLevelDate, callback){
+levelsGetTimeWorkouts = function(userID, startedLevelDate, value, callback){
     var queryVals = workouts.find({$and: [{userID: userID}, {date: {$gt: startedLevelDate}}]}).sort({time:-1});
 
     queryVals.exec(function (err, workouts) {
         if (err) 
             throw err;
         else {
-            callback(workouts);
+            callback(workouts, value);
         }
     });
 }
 
-levelsGetTimeSleeps = function(userID, startedLevelDate, callback){
+levelsGetTimeSleeps = function(userID, startedLevelDate, value, callback){
     var queryVals = sleeps.find({$and: [{userID: userID}, {date: {$gt: startedLevelDate}}]}).sort({duration:-1});
 
     queryVals.exec(function (err, sleeps) {
         if (err) 
             throw err;
         else {
-            callback(sleeps);
+            callback(sleeps, value);
         }
     });
 }
@@ -317,6 +317,18 @@ levelsGetUserLevel = function(userID, callback){
         }
         else {
             callback(user);
+        }
+    });
+}
+
+levelsGetDistance = function(userID, startedLevelDate, value, callback){
+    var queryVals = moves.find({$and: [{userID: userID}, {date: {$gt: startedLevelDate}}]}).sort({distance:-1});
+
+    queryVals.exec(function (err, moves) {
+        if (err) 
+            throw err;
+        else {
+            callback(moves,value);
         }
     });
 }
@@ -374,3 +386,4 @@ module.exports.levelsGetTimeSleeps = levelsGetTimeSleeps;
 module.exports.levelsGetUserLevel = levelsGetUserLevel;
 module.exports.insertUser = insertUser;
 module.exports.updateUserLevelInfo = updateUserLevelInfo;
+module.exports.levelsGetDistance = levelsGetDistance;
