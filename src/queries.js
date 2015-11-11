@@ -250,7 +250,6 @@ insertUser = function(user, callback) {
         xid: user.xid,
         first: user.first,
         last: user.last,
-        username: user.username,
         level: 0,
         challengeProgress: 0,
         dashboard: ""
@@ -292,3 +291,5 @@ module.exports.getWorkouts = getWorkouts;
 module.exports.getMovesAggregation = getMovesAggregation;
 module.exports.getSleepsAggregation = getSleepsAggregation;
 module.exports.getWorkoutsAggregation = getWorkoutsAggregation;
+module.exports.insertUser = insertUser;
+module.exports.findUser = findUser;

@@ -60,6 +60,17 @@ app.get('/token', function (req, res) {
         console.log("user logging in with token:\n" + token);
 
         // update the user
+        up.getUserInfo(token, function(userInfo){
+        
+            // insert the user info if not already in the database
+            queries.findUser(userInfo.xid, function(user) {
+
+                if (!user) {
+                    console.log('new user!');
+                    queries.insertUser(userInfo, function(){});
+                }
+            });
+        });
        
         // update the sleeps
         up.updateSleeps(token, function(sleepsData) { 
@@ -110,9 +121,7 @@ app.get('/token', function (req, res) {
                     });
                 });
             });
-
         });
-
     }); 
 });
 
@@ -128,7 +137,7 @@ app.get('/achievements', function(req,res){
 
   earnedAchievements = new Array();
     
- if (returnMovesMax>10000){
+  if (returnMovesMax>10000){
     earnedAchievements.push("Stepper 1");
     earnedAchievements.push("Take 10000 steps in a day");
   }

@@ -367,6 +367,7 @@ getFriends = function(token, callback) {
 // get user info
 getUserInfo = function(token, callback) {
 
+    console.log('upAPI');
     var options = {
         host: 'jawbone.com',
         path: '/nudge/api/v.1.1/users/@me',
@@ -386,7 +387,7 @@ getUserInfo = function(token, callback) {
             var parsedJSON = JSON.parse(body).data;
             callback(parsedJSON);
         });
-    });
+    }).end();
 }
 
 module.exports.getToken = getToken;
@@ -395,3 +396,4 @@ module.exports.updateSleeps = updateSleeps;
 module.exports.updateMoves = updateMoves;
 module.exports.updateWorkouts = updateWorkouts;
 module.exports.getFriends = getFriends;
+module.exports.getUserInfo = getUserInfo;
