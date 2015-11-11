@@ -379,17 +379,11 @@ app.get('/', function(req, res) {
 
 app.get('/levels', function(req, res){
 
-
-  /*var currentLevel = 1;
-  var startedLevelDate = "2014419";
-  var daysOnLevel = 4;*/
-
   //get user's current level from database and when the user started this level
   queries.levelsGetUserLevel(1, function(users){
     var currentLevel = users.level;
     var startedLevelDate = users.dateStartedLevel;
     var daysOnLevel = computeDaysOnLevel(startedLevelDate);
-    //var daysOnLevel = 4;
 
     var goal1Value, goal1Type, goal1Attribute;
     var goal1, goal2, goal3;
@@ -500,10 +494,12 @@ app.get('/levels', function(req, res){
           goal3Progress.leftToGoString = "You haven't started this goal!"
         }
 
+        var hold = getDateNumber();
+
         if (goal1CurrentProgress.goalCompleted && goal2Progress.goalCompleted && goal3Progress.goalCompleted){
           showNextLevelButton = true;
-          queries.updateUserLevelInfo(1, currentLevel + 1, 20151101); 
-          //get today's date in number form
+          var finishedLevelDate = getDateNumber();
+          queries.updateUserLevelInfo(1, currentLevel + 1, finishedLevelDate); 
         }
       });
 
@@ -1000,6 +996,25 @@ function computeDaysOnLevel(startedLevelDate){
   var diff =  Math.floor(( Date.parse(today) - Date.parse(formattedStartedLevelDate) ) / 86400000);
   
   return diff;
+}
+
+function getDateNumber(){
+  var today = new Date();
+  var todayDay = today.getDate();
+  var todayMonth = today.getMonth()+1; //January is 0
+  var todayYear = today.getFullYear();
+
+  if(todayDay<10) {
+      todayDay='0'+todayDay
+  } 
+
+  if(todayMonth<10) {
+      todayMonth='0'+todayMonth
+  } 
+
+
+  var todayNumber = parseInt(todayYear, 10) * 10000 + parseInt(todayMonth, 10) * 100 + parseInt(todayDay, 10);
+  return todayNumber
 }
 
 var sslOptions= {
