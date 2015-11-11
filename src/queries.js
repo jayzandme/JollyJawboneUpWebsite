@@ -6,8 +6,6 @@ var users = require('../databaseSchema/users.js');
 var database 
     = mongoose.connect('mongodb://localhost:27017/myappdatabase').connection;
 
-var nextUserID = 1;
-
 database.on('error', function(err) {
     console.log(err.message);
 });
@@ -244,25 +242,27 @@ getLatestWorkout = function(userID, callback) {
 // inserts a user into the database
 insertUser = function(user, callback) {
 
-    var newUser = new users({
-        userID: nextUserID,
-        token: user.token,
-        xid: user.xid,
-        first: user.first,
-        last: user.last,
-        level: 0,
-        challengeProgress: 0,
-        dashboard: ""
-    });
+    nextID(function(nextUserID) {
 
-    nextUserID++;
+        var newUser = new users({
+            userID: nextUserID,
+            token: user.token,
+            xid: user.xid,
+            first: user.first,
+            last: user.last,
+            level: 0,
+            challengeProgress: 0,
+            dashboard: ""
+        });
 
-    newUser.save(function (err, thor) {
-        if (err) {
-            return console.error(err);
-        }
-    });
-    
+        nextUserID++;
+
+        newUser.save(function (err, thor) {
+            if (err) {
+                return console.error(err);
+            }
+        });
+    });    
 }
 
 // determines if a user is in the database from their xid
@@ -277,6 +277,22 @@ findUser = function(xid, callback) {
         }
     });
 
+}
+
+// returns the next userID
+function nextID (callback) {
+    
+    users.findOne({}).sort({userID: -1}).exec(function(err, user) {
+        if (err) {
+            throw err;
+        } else {
+            if (user) {
+                callback(user.userID + 1);
+            } else {
+                callback(0);
+            }
+        }
+    });
 }
 
 module.exports.insertSleep = insertSleep;
