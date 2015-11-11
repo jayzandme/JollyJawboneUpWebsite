@@ -8,6 +8,7 @@ var queries = require('./src/queries.js');
 var mongoose = require('mongoose');
 var cookie = require('cookie');
 
+//Variables for Achievements Page
 var returnMovesMax = 0;
 var returnSleepsMax = 0;
 var returnWorkoutsMax = 0;
@@ -24,6 +25,10 @@ var otherdata;
 var returnDataSleeps = [];
 var returnDataMoves = [];
 var returnDataWorkouts = [];
+
+//Timer Variables for Weekly Challenges Page
+var Timer;
+var TotalSeconds;
 
 var host = 'localhost'
 var port = 5000;
@@ -314,6 +319,29 @@ app.get('/teamPage', function(req, res){
 });
 
 app.get('/weeklyChallenges', function(req,res){
+   userProgress = new Array();
+    
+ if (true){
+    userProgress.push("Friend 1");
+    userProgress.push("30,000 steps");
+  }
+  if (true){
+    userProgress.push("Friend 2");
+    userProgress.push("12,000 steps");
+  }
+  if (true){
+    userProgress.push("Friend 3");
+    userProgress.push("1,000 steps");
+  }
+
+  challenges = new Array();
+    
+  if (true){
+    challenges.push("Take the most steps this week!");
+    challenges.push("Log the most sleep this week!");
+    challenges.push("Log the most workouts this week!");
+  }
+
     res.render('weeklyChallenges');
 });
 
