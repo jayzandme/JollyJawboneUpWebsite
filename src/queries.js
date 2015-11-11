@@ -245,15 +245,15 @@ getLatestWorkout = function(userID, callback) {
 insertUser = function(user, callback) {
 
     var newUser = new users({
-        userID = nextUserID,
-        token = user.token,
-        xid = user.xid,
-        first = user.first,
-        last = user.last,
-        username = user.username,
-        level = 0,
-        challengeProgress = 0,
-        dashboard = ""
+        userID: nextUserID,
+        token: user.token,
+        xid: user.xid,
+        first: user.first,
+        last: user.last,
+        username: user.username,
+        level: 0,
+        challengeProgress: 0,
+        dashboard: ""
     });
 
     nextUserID++;
