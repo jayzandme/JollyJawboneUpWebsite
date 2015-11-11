@@ -319,8 +319,17 @@ app.get('/teamPage', function(req, res){
 });
 
 app.get('/weeklyChallenges', function(req,res){
-   userProgress = new Array();
-    
+  up.getFriends(userToken, function(friends) {
+    userProgress = new Array();     
+    for (var i = 0; i < friends.length; i++) {
+        console.log('friend: ' + i);
+        console.log(friends[i].xid);
+        userProgress.push('friend: ' + i);
+        userProgress.push(friends[i].xid);
+    }
+
+   
+ /*   
  if (true){
     userProgress.push("Friend 1");
     userProgress.push("30,000 steps");
@@ -333,7 +342,7 @@ app.get('/weeklyChallenges', function(req,res){
     userProgress.push("Friend 3");
     userProgress.push("1,000 steps");
   }
-
+  */
   challenges = new Array();
     
   if (true){
@@ -343,6 +352,7 @@ app.get('/weeklyChallenges', function(req,res){
   }
 
     res.render('weeklyChallenges');
+    });
 });
 
 function epochtoClockTime(epochTime){
