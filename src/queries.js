@@ -6,6 +6,8 @@ var users = require('../databaseSchema/users.js');
 var database 
     = mongoose.connect('mongodb://localhost:27017/myappdatabase').connection;
 
+var nextUserID = 1;
+
 database.on('error', function(err) {
     console.log(err.message);
 });
@@ -188,7 +190,7 @@ getLatestMove = function(userID, callback) {
 // inserts a workout into the database
 insertWorkout = function(workout) {
 
-   var newWorkout= new workouts({
+   var newWorkout = new workouts({
         userID: 1,
         xid: workout.xid,
         date: workout.date,
@@ -212,6 +214,7 @@ insertWorkout = function(workout) {
 
 // gets all the workouts in the database for the given userID
 getWorkouts = function(userID, callback){
+
     var queryVals = workouts.find({userID: userID}).sort({_id:-1});
 
     queryVals.exec(function (err, sleeps) {
@@ -225,21 +228,42 @@ getWorkouts = function(userID, callback){
 
 // gets the most recent workout for a user in the database
 getLatestWorkout = function(userID, callback) {
+
     workouts.findOne({userID: userID}).sort({time_completed: -1}).exec(
         function(err, workouts) {
 
-        if(err) {
-            throw err;
-        }
-        else {
-            callback(workouts);
-        }
+            if(err) {
+                throw err;
+            }
+            else {
+                callback(workouts);
+            }
     });
 }
 
 // inserts a user into the database
 insertUser = function(user) {
 
+    var newUser = new users({
+        userID = nextUserID,
+        token = user.token,
+        xid = user.xid,
+        first = user.first,
+        last = user.last,
+        username = user.username,
+        level = 0,
+        challengeProgress = 0,
+        dashboard = ""
+    });
+
+    nextUserID++;
+
+    newUser.save(function (err, thor) {
+        if (err) {
+            return console.error(err);
+        }
+    });
+    
 }
 
 // determines if a user is in the database from their xid
