@@ -58,6 +58,8 @@ app.get('/token', function (req, res) {
 
         userToken = token;
         console.log("user logging in with token:\n" + token);
+
+        // update the user
        
         // update the sleeps
         up.updateSleeps(token, function(sleepsData) { 
@@ -84,12 +86,10 @@ app.get('/token', function (req, res) {
                     }
                     console.log('inserted workouts');
 
-                    // load all the data fro frontend
-                    
+                    // load all the data for frontend
                     loadAggregateData(function () {
                         loadSleepsData(function () {
                             loadMovesData(function () {
-                                console.log("moves " + returnAllTimeMoves);
                                 loadWorkoutsData(function() {
 
                                     // display the dashboard

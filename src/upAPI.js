@@ -357,12 +357,36 @@ getFriends = function(token, callback) {
         });
 
         response.on('end', function() {
-            console.log(body);
             var parsedJSON = JSON.parse(body).data;
             callback(parsedJSON.items);
         });
 
     }).end();
+}
+
+// get user info
+getUserInfo = function(token, callback) {
+
+    var options = {
+        host: 'jawbone.com',
+        path: '/nudge/api/v.1.1/users/@me',
+        headers: {'Authorization': 'Bearer ' + token,
+                  'Accept': 'application/json'}
+    };
+
+    https.request(options, function(response) {
+
+        var body = '';
+        
+        response.on('data', function (chunk) {
+            body += chunk;
+        });
+
+        response.on('end', function() {
+            var parsedJSON = JSON.parse(body).data;
+            callback(parsedJSON);
+        });
+    });
 }
 
 module.exports.getToken = getToken;
