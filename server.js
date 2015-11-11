@@ -93,6 +93,40 @@ app.get('/token', function (req, res) {
           thirdGoalProgressTemplate: null
         }
         queries.insertLevel(level1);*/
+        /*level2 = {
+          levelNum: 2,
+          levelName: "Second Level!",          
+          firstGoal: "Move 3 miles in a day",    //description of goal
+          firstGoalNum: 4828, //this is the number of meters  //how to quantify the goal
+          firstGoalType: "moves",  //sleeps, moves, or workouts
+          firstGoalDescriptor: "distance", //for example - steps or active_time (use this when referencing moves object)
+          firstGoalProgressTemplate: null,  //for displaying in the html what is left to complete this goal
+          secondGoal: "Take 5,000 steps during a workout",
+          secondGoalNum: 5000,  //steps
+          secondGoalType: "workouts",
+          secondGoalDescriptor: "stpes",
+          secondGoalProgressTemplate: null,
+          thirdGoal: "Wake up zero times in the night",
+          thirdGoalNum: 0,  
+          thirdGoalType: "sleeps",
+          thirdGoalDescriptor: "awakenings",
+          thirdGoalProgressTemplate: null
+        }
+        queries.insertLevel(level2);*/
+
+        /*firstUser = {
+          userID: 1,
+          token: 'test',
+          xid: 'test',
+          first: 'john',
+          last: 'doe',
+          username: 'testuser',
+          level: 1,
+          challengeProgress: 4,
+          dashboard: 'test',
+          dateStartedLevel: 20140419
+        };
+        queries.insertUser(firstUser);*/
 
 
         var otherData = {date: null, 
@@ -458,10 +492,10 @@ app.get('/levels', function(req, res){
       }
 
       if (goal1CurrentProgress.goalCompleted && goal2Progress.goalCompleted && goal3Progress.goalCompleted){
-      //this level is complete - go to next level
-      //set new level start date
-      showNextLevelButton = true;
-    }
+        showNextLevelButton = true;
+        queries.updateUserLevelInfo(1, currentLevel + 1, 20151101); 
+        //get today's date in number form
+      }
     });
 
   });
@@ -492,7 +526,26 @@ app.get('/levels', function(req, res){
 });
 
 app.get('/newLevel', function(req, res){
-  res.render('newLevel');
+  var nextLevelData = {
+    goal1Name: null,
+    goal2Name: null,
+    goal3Name: null,
+    newLevelNum: null
+  };
+
+  queries.levelsGetUserLevel(1, function(users){
+    nextLevelData.newLevelNum = users.level;
+    queries.getLevel(nextLevelData.newLevelNum, function(levels){
+      nextLevelData.goal1Name = levels.firstGoal;
+      nextLevelData.goal2Name = levels.secondGoal;
+      nextLevelData.goal3Name = levels.thirdGoal;
+    }); 
+  });
+
+  setTimeout(function(){
+    res.render('newLevel', nextLevelData);
+  }, 500)
+
 });
 
 app.get('/achievements', function(req,res){

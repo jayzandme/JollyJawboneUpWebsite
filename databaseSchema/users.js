@@ -11,7 +11,8 @@ var userSchema = new mongoose.Schema({
   username: String,
   level: Number,
   challengeProgress: Number,
-  dashboard: String
+  dashboard: String,
+  dateStartedLevel: Number
 });
 
 var User = mongoose.model('User', userSchema);

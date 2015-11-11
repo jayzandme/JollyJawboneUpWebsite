@@ -308,6 +308,51 @@ levelsGetTimeSleeps = function(userID, startedLevelDate, callback){
     });
 }
 
+levelsGetUserLevel = function(userID, callback){
+    users.findOne({userID: userID}).exec(
+        function(err, user) {
+
+        if(err) {
+            throw err;
+        }
+        else {
+            callback(user);
+        }
+    });
+}
+
+insertUser = function(user) {
+
+   var newUser= new users({
+      userID: user.userID,
+      token: user.token,
+      xid: user.xid,
+      first: user.first,
+      last: user.last,
+      username: user.username,
+      level: user.level,
+      challengeProgress: user.challengeProgress,
+      dashboard: user.dashboard,
+      dateStartedLevel: user.dateStartedLevel
+   });
+
+   newUser.save(function (err, thor) {
+        if (err) {
+            return console.error(err);
+        }
+   });
+
+};
+
+updateUserLevelInfo = function(userID, newLevel, startedLevelDate){
+    users.update({userID: userID}, {$set:{level: newLevel, dateStartedLevel: startedLevelDate}}).exec(
+        function(err, user) {
+            if(err) {
+                throw err;
+            }
+    });
+}
+
 
 module.exports.insertSleep = insertSleep;
 module.exports.getSleeps = getSleeps;
@@ -326,3 +371,6 @@ module.exports.getLevel = getLevel;
 module.exports.levelsGetNumSteps = levelsGetNumSteps;
 module.exports.levelsGetTimeWorkouts = levelsGetTimeWorkouts;
 module.exports.levelsGetTimeSleeps = levelsGetTimeSleeps;
+module.exports.levelsGetUserLevel = levelsGetUserLevel;
+module.exports.insertUser = insertUser;
+module.exports.updateUserLevelInfo = updateUserLevelInfo;

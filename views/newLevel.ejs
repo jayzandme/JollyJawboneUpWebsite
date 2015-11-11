@@ -9,121 +9,6 @@
   <script src="bower_components/jquery/dist/jquery.min.js"></script>
   <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
   <script src="bower_components/highcharts/highcharts.js"></script>
-  <script>
-    $(function () { 
-      $('#container').highcharts({
-          colors: ['red','green'],
-          chart: {
-              type: 'bar',
-              backgroundColor: null
-          },
-          title: {
-              text: '',
-              style:{
-                display:'none'
-              }
-          },
-          xAxis: {
-             visible:false
-          },
-          yAxis: {
-             visible:false
-          },
-          series: [{
-              data: [100 - <%= goal1.percentComplete%>]
-          },
-          {
-            data: [<%= goal1.percentComplete%>]
-          }],
-          credits:{
-            enabled:false
-          },
-          legend:{
-            enabled:false
-          },
-          plotOptions: {
-              series: {
-                  stacking: 'percent',
-                  enableMouseTracking: false
-              }
-          }
-      });
-      $('#container2').highcharts({
-          colors: ['red','green'],
-          chart: {
-              type: 'bar',
-              backgroundColor: null
-          },
-          title: {
-              text: '',
-              style:{
-                display:'none'
-              }
-          },
-          xAxis: {
-             visible:false
-          },
-          yAxis: {
-             visible:false
-          },
-          series: [{
-              data: [100 - <%= goal2.percentComplete%>]
-          },
-          {
-            data: [<%= goal2.percentComplete%>]
-          }],
-          credits:{
-            enabled:false
-          },
-          legend:{
-            enabled:false
-          },
-          plotOptions: {
-              series: {
-                  stacking: 'percent',
-                  enableMouseTracking: false
-              }
-          }
-      });
-      $('#container3').highcharts({
-          colors: ['red','green'],
-          chart: {
-              type: 'bar',
-              backgroundColor: null
-          },
-          title: {
-              text: '',
-              style:{
-                display:'none'
-              }
-          },
-          xAxis: {
-             visible:false
-          },
-          yAxis: {
-             visible:false
-          },
-          series: [{
-              data: [100 - <%= goal3.percentComplete%>]
-          },
-          {
-            data: [<%= goal3.percentComplete%>]
-          }],
-          credits:{
-            enabled:false
-          },
-          legend:{
-            enabled:false
-          },
-          plotOptions: {
-              series: {
-                  stacking: 'percent',
-                  enableMouseTracking: false
-              }
-          }
-      });
-  });
-  </script>
 </head>
 <body>
 	<nav class="navbar navbar-trans">
@@ -145,10 +30,10 @@
   <div>Wecome to your new level!</div>
     <div class="row">
       <div class="col-md-6">
-        <div class="text-center"><h3>Current Level: <%= currentLevel %></h3></div>
+        <div class="text-center"><h3>Current Level: <%= newLevelNum %></h3></div>
       </div>
       <div class="col-md-6">
-        <div class="text-center"> <h3>Days on Level: <%= daysOnLevel %></h3></div>
+        <div class="text-center"> <h3>Days on Level: 0</h3></div>
       </div>
     </div>
     <div class="row">
@@ -158,56 +43,17 @@
     </div>
     <div class="row">
       <div class="col-md-4">
-        <div class="text-center"><%= goal1.name %></div>
-      </div>
-      <div class="col-md-4">
-        <div class="text-center"> <%= goal1.percentComplete %> %</div>
-        <div id="container" style="width:50%; height:100px"></div>
-      </div>
-      <div class="col-md-4">
-        <div class="text-center"><%= goal1.leftToGo %></div>
+        <div class="text-center"><%= goal1Name %></div>
       </div>
     </div>
     <div class="row">
       <div class="col-md-4">
-        <div class="text-center"><%= goal2.name %></div>
-      </div>
-      <div class="col-md-4">
-        <div class="text-center"><%= goal2.percentComplete %> %</div>
-        <div id="container2" style="width:50%; height:100px"></div>
-      </div>
-      <div class="col-md-4">
-        <div class="text-center"><%= goal2.leftToGo %></div>
+        <div class="text-center"><%= goal2Name %></div>
       </div>
     </div>
     <div class="row">
       <div class="col-md-4">
-        <div class="text-center"><%= goal3.name %></div>
-      </div>
-      <div class="col-md-4">
-        <div class="text-center"><%= goal3.percentComplete %> %</div>
-        <div id="container3" style="width:50%; height:100px"></div>
-      </div>
-      <div class="col-md-4">
-        <div class="text-center"><%= goal3.leftToGo %></div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-md-4">
-      </div>
-      <div class = "col-md-2">
-        <div class="dropdown">
-          <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">View Completed Level
-          <span class="caret"></span></button>
-          <ul class="dropdown-menu">
-            <li><a href="#">1</a></li>
-            <li><a href="#">2</a></li>
-            <li><a href="#">3</a></li>
-          </ul>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <button class="btn btn-primary" type="button" href="views/newLevel.ejs">View Next Level!</button>
+        <div class="text-center"><%= goal3Name %></div>
       </div>
     </div>
   </div>
