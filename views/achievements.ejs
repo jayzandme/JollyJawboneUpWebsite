@@ -26,6 +26,7 @@
         </div>
       </div>
   </nav>
+
   <table class="table table-bordered">
     <thead>
       <tr>
@@ -34,16 +35,14 @@
       </tr>
     </thead>
     <tbody>
-    <% for(var i=0; i < earnedAchievements.length; i+=2) { %>
-   <tr>
-     <td> <%= earnedAchievements[i] %> </td>
-     <td><%= earnedAchievements[i+1] %></td>
-   </tr>
-<% } %>
-</tbody>
+      <% for(var i=0; i < earnedAchievements.length; i+=2) { %>
+      <tr>
+        <td> <%= earnedAchievements[i] %> </td>
+        <td><%= earnedAchievements[i+1] %></td>
+      </tr>
+      <% } %>
+    </tbody>
   </table>
-</div>
 
-
-
+  </div>
 </body>
