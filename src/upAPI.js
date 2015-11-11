@@ -367,7 +367,6 @@ getFriends = function(token, callback) {
 // get user info
 getUserInfo = function(token, callback) {
 
-    console.log('upAPI');
     var options = {
         host: 'jawbone.com',
         path: '/nudge/api/v.1.1/users/@me',
