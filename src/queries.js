@@ -14,6 +14,7 @@ database.once('open', function() {
     console.log('mongodb connection open');
 });
 
+// gets aggregate data for the Moves in the database 
 getMovesAggregation = function(callback){ 
     moves.aggregate([ 
         { $group: 
@@ -32,6 +33,7 @@ getMovesAggregation = function(callback){
     ); 
 }
 
+// gets aggregate data for the Sleeps in the database
 getSleepsAggregation = function(callback){
     sleeps.aggregate([
         { $group:
@@ -51,6 +53,7 @@ getSleepsAggregation = function(callback){
     );
 }
 
+// gets aggregate data for the Workouts in the database
 getWorkoutsAggregation = function(callback) {
     workouts.aggregate([
         { $group:
@@ -76,6 +79,7 @@ getWorkoutsAggregation = function(callback) {
     );
 }
 
+// inserts a sleep into the database
 insertSleep = function(sleep) {
 
    var newSleep = new sleeps({
@@ -102,6 +106,7 @@ insertSleep = function(sleep) {
 
 };
 
+// gets all the sleeps for a user in the database
 getSleeps = function(userID, callback){
     var queryVals = sleeps.find({userID: userID}).sort({_id:-1});
 
@@ -114,6 +119,7 @@ getSleeps = function(userID, callback){
     });
 }
 
+// gets the most recent sleep for a user in the database
 getLatestSleep = function(userID, callback) {
     sleeps.findOne({userID: userID}).sort({time_completed: -1}).exec(
         function(err, sleeps) {
@@ -127,7 +133,7 @@ getLatestSleep = function(userID, callback) {
     });
 }
 
-
+// inserts a move into the database
 insertMove = function(move) {
 
    var newMove = new moves({
@@ -151,6 +157,7 @@ insertMove = function(move) {
 
 };
 
+// gets all the moves for a user in the database
 getMoves = function(userID, callback){
     var queryVals = moves.find({userID: userID}).sort({_id:-1});
 
@@ -163,6 +170,7 @@ getMoves = function(userID, callback){
     });
 }
 
+// get the most recent move for a user
 getLatestMove = function(userID, callback) {
 
     moves.findOne({userID: userID}).sort({time_completed: -1}).exec(
@@ -177,6 +185,7 @@ getLatestMove = function(userID, callback) {
     });
 }
 
+// inserts a workout into the database
 insertWorkout = function(workout) {
 
    var newWorkout= new workouts({
@@ -201,6 +210,7 @@ insertWorkout = function(workout) {
 
 };
 
+// gets all the workouts in the database for the given userID
 getWorkouts = function(userID, callback){
     var queryVals = workouts.find({userID: userID}).sort({_id:-1});
 
@@ -213,6 +223,7 @@ getWorkouts = function(userID, callback){
     });
 }
 
+// gets the most recent workout for a user in the database
 getLatestWorkout = function(userID, callback) {
     workouts.findOne({userID: userID}).sort({time_completed: -1}).exec(
         function(err, workouts) {
@@ -226,6 +237,16 @@ getLatestWorkout = function(userID, callback) {
     });
 }
 
+// inserts a user into the database
+insertUser = function(user) {
+
+}
+
+// determines if a user is in the database from their xid
+// returns their ID
+findUser = function(xid) {
+
+}
 
 module.exports.insertSleep = insertSleep;
 module.exports.getSleeps = getSleeps;
