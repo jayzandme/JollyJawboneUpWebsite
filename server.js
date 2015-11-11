@@ -388,8 +388,8 @@ app.get('/levels', function(req, res){
   queries.levelsGetUserLevel(1, function(users){
     var currentLevel = users.level;
     var startedLevelDate = users.dateStartedLevel;
-    //var daysOnLevel = computeDaysOnLevel(startedLevelDate);
-    var daysOnLevel = 4;
+    var daysOnLevel = computeDaysOnLevel(startedLevelDate);
+    //var daysOnLevel = 4;
 
     var goal1Value, goal1Type, goal1Attribute;
     var goal1, goal2, goal3;
@@ -975,6 +975,31 @@ function secondsToTimeString(secondsTotal){
 
 function metersToMiles(meters){
   return meters * 0.000621371192;
+}
+
+function computeDaysOnLevel(startedLevelDate){
+  var formattedStartedLevelDate = getFormattedDate(startedLevelDate);
+
+  var daysOnLevel = 0;
+
+  var today = new Date();
+  var todayDay = today.getDate();
+  var todayMonth = today.getMonth()+1; //January is 0
+  var todayYear = today.getFullYear();
+
+  if(todayDay<10) {
+      todayDay='0'+todayDay
+  } 
+
+  if(todayMonth<10) {
+      todayMonth='0'+todayMonth
+  } 
+  
+  today = todayMonth+'/'+todayDay+'/'+todayYear;
+
+  var diff =  Math.floor(( Date.parse(today) - Date.parse(formattedStartedLevelDate) ) / 86400000);
+  
+  return diff;
 }
 
 var sslOptions= {
