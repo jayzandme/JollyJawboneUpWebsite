@@ -382,8 +382,8 @@ app.get('/levels', function(req, res){
                   progress.push({
                     name: name,
                     goalCompleted: false,
-                    percentCompleted: ((value - distanceRemaining)/value) * 100,
-                    leftToGoString: "Only " + metersToMiles(distanceRemaining) + " miles to move"
+                    percentCompleted: (((value - distanceRemaining)/value) * 100).toFixed(2),
+                    leftToGoString: "Only " + (metersToMiles(distanceRemaining)).toFixed(2) + " miles to move"
                   })
                 }
               }
@@ -450,12 +450,13 @@ app.get('/levels', function(req, res){
                 });
               }
               else{
-                var remaining = sleepTimeRemaining % 60;
+                var remaining = (sleepTimeRemaining / 60).toFixed(0);
+                console.log(remaining)
                 progress.push({
                   name: name,
                   goalCompleted: false,
                   percentCompleted: ((sleepTimeValue - sleepTimeRemaining)/sleepTimeValue) * 100,
-                  leftToGoString: remaining + "more minutes of sleep to complete this goal!"
+                  leftToGoString: remaining + " more minutes of sleep to complete this goal!"
                 });
               }
             }
