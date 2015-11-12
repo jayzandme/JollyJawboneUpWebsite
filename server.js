@@ -5,8 +5,8 @@ var bodyParser = require('body-parser');
 var fs = require('fs');
 var up = require ('./src/upAPI.js');
 var queries = require('./src/queries.js');
-var mongoose = require('mongoose');
 var cookie = require('cookie');
+var _ = require('underscore');
 
 //Variables for Achievements Page
 var returnMovesMax = 0;
@@ -84,6 +84,7 @@ app.get('/dashboard', function(req, res){
 
     var token = req.query.token;
     var updating = 3;
+    var doneUpdating = _.after(3, loadData);
 
     // update the sleeps
     up.updateSleeps(token, function(sleepsData) { 
@@ -92,9 +93,9 @@ app.get('/dashboard', function(req, res){
 
             updating--;
             console.log('inserted sleeps')
+            doneUpdating();
         });
-    })
-
+    }), 
     // update the moves
     up.updateMoves(token, function(movesData) {
         console.log('got ' + movesData.length + ' move events');
@@ -102,9 +103,9 @@ app.get('/dashboard', function(req, res){
 
             updating--;
             console.log('inserted moves');
+            doneUpdating();
         });
-    });
-
+    }),
     // update the workouts
     up.updateWorkouts(token, function(workoutsData){
         console.log('got ' + workoutsData.length + ' workout events');
@@ -112,29 +113,29 @@ app.get('/dashboard', function(req, res){
 
             updating--;
             console.log('inserted workouts');
+            doneUpdating();
         });
-    });
+    })
 
-    // wait to get update the database
-    console.log('waiting for: ' + updating);
-    while (updating > 0) {}
+    function loadData() {
+        console.log('loading data');
+        // load all the data for frontend
+        loadAggregateData(function () {
+            loadSleepsData(function () {
+                loadMovesData(function () {
+                    loadWorkoutsData(function() {
 
-    // load all the data for frontend
-    loadAggregateData(function () {
-        loadSleepsData(function () {
-            loadMovesData(function () {
-                loadWorkoutsData(function() {
-
-                    res.render('dashboard', 
-                                { sleeps: returnDataSleeps[0],
-                                moves: returnDataMoves[0],
-                                workouts: returnDataWorkouts[0],
-                                otherData: otherData
-                                });
+                        res.render('dashboard', 
+                                    { sleeps: returnDataSleeps[0],
+                                    moves: returnDataMoves[0],
+                                    workouts: returnDataWorkouts[0],
+                                    otherData: otherData
+                                    });
+                    });
                 });
             });
         });
-    });
+    }
 
 });
 

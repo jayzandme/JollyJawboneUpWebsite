@@ -3,6 +3,7 @@ var sleeps = require('../databaseSchema/sleeps.js');
 var moves = require('../databaseSchema/moves.js');
 var workouts = require('../databaseSchema/workouts.js');
 var users = require('../databaseSchema/users.js');
+var _ = require('underscore');
 var database 
     = mongoose.connect('mongodb://localhost:27017/myappdatabase').connection;
 
@@ -82,19 +83,13 @@ getWorkoutsAggregation = function(callback) {
 // inserts an array of sleeps into the database
 insertSleeps = function(sleeps, callback) {
     
-    var numSleeps = sleeps.length;
+    var inserted = _.after(sleeps.length, callback);
 
     for (var i = 0; i < sleeps.length; i++) {
         insertSleep(sleeps[i], function() {
-            numSleeps--;
+            inserted();
         });
     }
-
-    // wait until all sleeps are inserted
-    while (numSleeps > 0) {
-    }
-
-    callback();
 }
 
 // inserts a sleep into the database
@@ -140,39 +135,37 @@ getSleeps = function(userID, callback){
 
 // gets the most recent sleep for a user in the database
 getLatestSleep = function(userID, callback) {
+
     sleeps.findOne({userID: userID}).sort({time_completed: -1}).exec(
         function(err, sleeps) {
-
-        if(err) {
-            throw err;
-        }
-        else {
-            callback(sleeps);
-        }
+            if(err) {
+                console.log('error');
+                throw err;
+            }
+            else {
+                callback(sleeps);
+            }
     });
 }
 
 
 // inserts an array of moves into the database
 insertMoves = function(moves, callback) {
+    console.log('inserMoves');
     
-    var numMoves = moves.length;
+    var inserted = _.after(moves.length, callback);
 
     for (var i = 0; i < moves.length; i++) {
         insertMove(moves[i], function() {
-            numMoves--;
+            inserted();
+            console.log('move: ' + i + 'out of: ' + moves.length);
         });
     }
-
-    // wait until all moves are inserted
-    while (numMoves > 0) {
-    }
-
-    callback();
 }
 
 // inserts a move into the database
 insertMove = function(move) {
+    console.log('insertMove');
 
    var newMove = new moves({
         userID: 1,
@@ -226,19 +219,14 @@ getLatestMove = function(userID, callback) {
 // inserts an array of workouts into the database
 insertWorkouts = function(workouts, callback) {
     
-    var numWorkouts = workouts.length;
+    var inserted = _.after(workouts.length, callback);
 
     for (var i = 0; i < workouts.length; i++) {
         insertWorkout(workouts[i], function() {
-            numWorkouts--;
+            inserted();
         });
     }
 
-    // wait until all workouts are inserted
-    while (numWorkouts > 0) {
-    }
-
-    callback();
 }
 
 // inserts a workout into the database
