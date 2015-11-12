@@ -54,7 +54,6 @@ app.get('/login/jawbone', function (req, res) {
 
     res.redirect('https://' + up.getCode());
     res.end;
-
 });
 
 app.get('/token', function (req, res) {
@@ -84,51 +83,59 @@ app.get('/token', function (req, res) {
 app.get('/dashboard', function(req, res){
 
     var token = req.query.token;
+    var updating = 3;
 
     // update the sleeps
     up.updateSleeps(token, function(sleepsData) { 
-
         console.log('got ' + sleepsData.length + ' sleep events');
-        for (var i = 0; i < sleepsData.length; i++) {
-            queries.insertSleep(sleepsData[i])
-        }
-        console.log('inserted sleeps')
+        queries.insertSleeps(sleepsData, function() {
 
-        // update the moves
-        up.updateMoves(token, function(movesData) {
-            console.log('got ' + movesData.length + ' move events');
-            for (var i = 0; i < movesData.length; i++) {
-                queries.insertMove(movesData[i])
-            }
+            updating--;
+            console.log('inserted sleeps')
+        });
+    })
+
+    // update the moves
+    up.updateMoves(token, function(movesData) {
+        console.log('got ' + movesData.length + ' move events');
+        queries.insertMoves(movesData, function() {
+
+            updating--;
             console.log('inserted moves');
+        });
+    });
 
-            // update the workouts
-            up.updateWorkouts(token, function(workoutsData){
-                console.log('got ' + workoutsData.length + ' workout events');
-                for (var i = 0; i < workoutsData.length; i++) {
-                    queries.insertWorkout(workoutsData[i])
-                }
-                console.log('inserted workouts');
+    // update the workouts
+    up.updateWorkouts(token, function(workoutsData){
+        console.log('got ' + workoutsData.length + ' workout events');
+        queries.insertWorkouts(workoutsData, function() {
 
-                // load all the data for frontend
-                loadAggregateData(function () {
-                    loadSleepsData(function () {
-                        loadMovesData(function () {
-                            loadWorkoutsData(function() {
+            updating--;
+            console.log('inserted workouts');
+        });
+    });
 
-                                res.render('dashboard', 
-                                            { sleeps: returnDataSleeps[0],
-                                            moves: returnDataMoves[0],
-                                            workouts: returnDataWorkouts[0],
-                                            otherData: otherData
-                                            });
-                            });
-                        });
-                    });
+    // wait to get update the database
+    console.log('waiting for: ' + updating);
+    while (updating > 0) {}
+
+    // load all the data for frontend
+    loadAggregateData(function () {
+        loadSleepsData(function () {
+            loadMovesData(function () {
+                loadWorkoutsData(function() {
+
+                    res.render('dashboard', 
+                                { sleeps: returnDataSleeps[0],
+                                moves: returnDataMoves[0],
+                                workouts: returnDataWorkouts[0],
+                                otherData: otherData
+                                });
                 });
             });
         });
     });
+
 });
 
 app.get('/', function(req, res) {

@@ -79,8 +79,26 @@ getWorkoutsAggregation = function(callback) {
     );
 }
 
+// inserts an array of sleeps into the database
+insertSleeps = function(sleeps, callback) {
+    
+    var numSleeps = sleeps.length;
+
+    for (var i = 0; i < sleeps.length; i++) {
+        insertSleep(sleeps[i], function() {
+            numSleeps--;
+        });
+    }
+
+    // wait until all sleeps are inserted
+    while (numSleeps > 0) {
+    }
+
+    callback();
+}
+
 // inserts a sleep into the database
-insertSleep = function(sleep) {
+insertSleep = function(sleep, callback) {
 
    var newSleep = new sleeps({
         userID: 1,
@@ -104,6 +122,7 @@ insertSleep = function(sleep) {
         }
    });
 
+   callback();
 };
 
 // gets all the sleeps for a user in the database
@@ -131,6 +150,25 @@ getLatestSleep = function(userID, callback) {
             callback(sleeps);
         }
     });
+}
+
+
+// inserts an array of moves into the database
+insertMoves = function(moves, callback) {
+    
+    var numMoves = moves.length;
+
+    for (var i = 0; i < moves.length; i++) {
+        insertMove(moves[i], function() {
+            numMoves--;
+        });
+    }
+
+    // wait until all moves are inserted
+    while (numMoves > 0) {
+    }
+
+    callback();
 }
 
 // inserts a move into the database
@@ -183,6 +221,24 @@ getLatestMove = function(userID, callback) {
             callback(moves);
         }
     });
+}
+
+// inserts an array of workouts into the database
+insertWorkouts = function(workouts, callback) {
+    
+    var numWorkouts = workouts.length;
+
+    for (var i = 0; i < workouts.length; i++) {
+        insertWorkout(workouts[i], function() {
+            numWorkouts--;
+        });
+    }
+
+    // wait until all workouts are inserted
+    while (numWorkouts > 0) {
+    }
+
+    callback();
 }
 
 // inserts a workout into the database
@@ -296,14 +352,17 @@ function nextID (callback) {
 }
 
 module.exports.insertSleep = insertSleep;
+module.exports.insertSleeps = insertSleeps;
+module.exports.insertMove = insertMove;
+module.exports.insertMoves = insertMoves;
+module.exports.insertWorkout = insertWorkout;
+module.exports.insertWorkouts = insertWorkouts;
 module.exports.getSleeps = getSleeps;
 module.exports.getLatestSleep = getLatestSleep;
-module.exports.insertMove = insertMove;
-module.exports.getLatestMove = getLatestMove;
 module.exports.getMoves = getMoves;
-module.exports.insertWorkout = insertWorkout;
-module.exports.getLatestWorkout = getLatestWorkout;
+module.exports.getLatestMove = getLatestMove;
 module.exports.getWorkouts = getWorkouts;
+module.exports.getLatestWorkout = getLatestWorkout;
 module.exports.getMovesAggregation = getMovesAggregation;
 module.exports.getSleepsAggregation = getSleepsAggregation;
 module.exports.getWorkoutsAggregation = getWorkoutsAggregation;
