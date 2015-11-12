@@ -8,6 +8,9 @@ var queries = require('./src/queries.js');
 var cookie = require('cookie');
 var _ = require('underscore');
 
+// user session stuff
+var userToken;
+
 //Variables for Achievements Page
 var returnMovesMax = 0;
 var returnSleepsMax = 0;
@@ -96,7 +99,8 @@ app.get('/token', function (req, res) {
 
 app.get('/dashboard', function(req, res){
 
-    var token = req.query.token;
+    // var token = req.query.token;
+    var token = userToken;
     var updating = 3;
     var doneUpdating = _.after(3, loadData);
 
