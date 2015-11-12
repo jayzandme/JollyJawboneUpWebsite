@@ -237,17 +237,14 @@ insertLevel = function(level) {
       firstGoalNum: level.firstGoalNum,     //how to quantify the goal
       firstGoalType: level.firstGoalType,  //sleeps, moves, or workouts
       firstGoalDescriptor: level.firstGoalDescriptor, //for example - steps or active_time (use this when referencing moves object)
-      firstGoalProgressTemplate: level.firstGoalProgressTemplate,    //for displaying in the html what is left to complete this goal
       secondGoal: level.secondGoal,
       secondGoalNum: level.secondGoalNum,
       secondGoalType: level.secondGoalType,  //sleeps, moves, or workouts
       secondGoalDescriptor: level.secondGoalDescriptor, //for example - steps or active_time (use this when referencing moves object)
-      secondGoalProgressTemplate: level.secondGoalProgressTemplate,
       thirdGoal: level.thirdGoal,
       thirdGoalNum: level.thirdGoalNum,
       thirdGoalType: level.thirdGoalType,  //sleeps, moves, or workouts
       thirdGoalDescriptor: level.thirdGoalDescriptor, //for example - steps or active_time (use this when referencing moves object)
-      thirdGoalProgressTemplate: level.thirdGoalProgressTemplate
    });
 
    newLevel.save(function (err, thor) {
