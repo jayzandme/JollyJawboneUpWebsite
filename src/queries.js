@@ -85,6 +85,10 @@ insertSleeps = function(sleeps, callback) {
     
     var inserted = _.after(sleeps.length, callback);
 
+    if (sleeps.length < 1) {
+        callback();
+    }
+
     for (var i = 0; i < sleeps.length; i++) {
         insertSleep(sleeps[i], function() {
             inserted();
@@ -151,21 +155,24 @@ getLatestSleep = function(userID, callback) {
 
 // inserts an array of moves into the database
 insertMoves = function(moves, callback) {
-    console.log('inserMoves');
     
     var inserted = _.after(moves.length, callback);
+
+    if (moves.length < 1) {
+        callback();
+    }
 
     for (var i = 0; i < moves.length; i++) {
         insertMove(moves[i], function() {
             inserted();
-            console.log('move: ' + i + 'out of: ' + moves.length);
+            console.log('inserted: ' + i + ' of ' + moves.length);
         });
     }
+
 }
 
 // inserts a move into the database
-insertMove = function(move) {
-    console.log('insertMove');
+insertMove = function(move, callback) {
 
    var newMove = new moves({
         userID: 1,
@@ -185,6 +192,8 @@ insertMove = function(move) {
             return console.error(err);
         }
    });
+
+   callback();
 
 };
 
@@ -221,6 +230,10 @@ insertWorkouts = function(workouts, callback) {
     
     var inserted = _.after(workouts.length, callback);
 
+    if (workouts.length < 1) {
+        callback();
+    }
+
     for (var i = 0; i < workouts.length; i++) {
         insertWorkout(workouts[i], function() {
             inserted();
@@ -230,7 +243,7 @@ insertWorkouts = function(workouts, callback) {
 }
 
 // inserts a workout into the database
-insertWorkout = function(workout) {
+insertWorkout = function(workout, callback) {
 
    var newWorkout = new workouts({
         userID: 1,
@@ -251,6 +264,8 @@ insertWorkout = function(workout) {
             return console.error(err);
         }
    });
+
+    callback();
 
 };
 

@@ -95,7 +95,8 @@ app.get('/dashboard', function(req, res){
             console.log('inserted sleeps')
             doneUpdating();
         });
-    }), 
+    });
+
     // update the moves
     up.updateMoves(token, function(movesData) {
         console.log('got ' + movesData.length + ' move events');
@@ -105,7 +106,8 @@ app.get('/dashboard', function(req, res){
             console.log('inserted moves');
             doneUpdating();
         });
-    }),
+    });
+
     // update the workouts
     up.updateWorkouts(token, function(workoutsData){
         console.log('got ' + workoutsData.length + ' workout events');
@@ -115,11 +117,10 @@ app.get('/dashboard', function(req, res){
             console.log('inserted workouts');
             doneUpdating();
         });
-    })
+    });
 
+    // load all the data for frontend
     function loadData() {
-        console.log('loading data');
-        // load all the data for frontend
         loadAggregateData(function () {
             loadSleepsData(function () {
                 loadMovesData(function () {
