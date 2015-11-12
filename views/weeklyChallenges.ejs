@@ -33,26 +33,7 @@
 
   <head>
       <script type="text/javascript">
-      var Timer;
-      var TotalSeconds;
-      var month = 'Nov';
-      var date = '15';
-      var year = '2015';
-      var theDate = month + ' ' + date + ' ' + year;
-      
-      var setdate = new Date(theDate);
-      var now = new Date();
-
-      var countdown = (setdate - now)/1000;
-      countdown = Math.floor(countdown);
-      var seconds = countdown;
-
-      var midnight = new Date();
-      midnight.setHours(24,0,0,0); //midnignt
-      if (now.getDay()==0 && midnight.getTime() ==Date.now() ){ //is Sunday at midnight
-        //iterate challenge
-        //maybe store challenge results
-      }
+      var seconds = <%= countdown %>;
  
         function timer() {
             var days        = Math.floor(seconds/24/60/60);

@@ -321,30 +321,54 @@ app.get('/teamPage', function(req, res){
 });
 
 app.get('/weeklyChallenges', function(req,res){
-  var now = new Date();
-  var midnight = new Date();
-  midnight.setHours(24,0,0,0); //midnignt
-  if (now.getDay()==0 && midnight.getTime() ==Date.now() ){ //is Sunday at midnight
-    //iterate challenge
-    //maybe store challenge results
+  var currentChallenge=0;
+  //array of weekly challenges
+  challenges = new Array();
+    
+  if (true){
+    challenges.push("Take the most steps this week!");
+    challenges.push("Log the most sleep this week!");
+    challenges.push("Log the most workouts this week!");
   }
-  
 
 
-  up.getFriends(userToken, function(friends) {
+    //set a starting Sunday to build from
+    var month = 'Nov'; 
+    var date = '15';
+    var year = '2015';
+
+    var theDate = month + ' ' + date + ' ' + year;
+    var setdate = new Date(theDate);
+    var now = new Date();
+    
+
+    var now = new Date();
+    var midnight = new Date();
+    midnight.setHours(24,0,0,0); //midnignt
+    while (setdate-now<=0){
+    //if (now.getDay()==0 && midnight.getTime() ==Date.now() ){ //is Sunday at midnight
+      //iterate challenge
+      currentChallenge++;
+      currentChallenge=currentChallenge%challenges.size();
+      //iterate setdate
+      setdate.setHours(setdate.getHours() + 7*24);
+    }
+    
+    var countdown = (setdate - now)/1000;
+    countdown = Math.floor(countdown);
+
+    up.getFriends(userToken, function(friends) {
     userFriends = new Array();   
     userProgress = new Array(); 
     for (var i = 0; i < friends.length; i++) {
         console.log('friend: ' + i);
         console.log(friends[i].xid);
-        userFriends.push('friend: ' + i);
+        userFriends.push(friends[i].userID);
         userFriends.push(friends[i].xid);
-        userProgress.push(friends[i].userID);
+        userProgress.push('Friend ' + i);
         userProgress.push(friends[i].xid);
     }
 
-    userFriends[1];
-   
  /*   
  if (true){
     userProgress.push("Friend 1");
@@ -359,15 +383,11 @@ app.get('/weeklyChallenges', function(req,res){
     userProgress.push("1,000 steps");
   }
   */
-  challenges = new Array();
-    
-  if (true){
-    challenges.push("Take the most steps this week!");
-    challenges.push("Log the most sleep this week!");
-    challenges.push("Log the most workouts this week!");
-  }
-
-    res.render('weeklyChallenges');
+  
+    res.render('weeklyChallenges', 
+      {countdown: countdown,
+        currentChallenge: currentChallenge}
+      );
     });
 });
 
