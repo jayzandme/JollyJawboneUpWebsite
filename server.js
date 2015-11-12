@@ -26,9 +26,11 @@ var returnDataSleeps = [];
 var returnDataMoves = [];
 var returnDataWorkouts = [];
 
-//Timer Variables for Weekly Challenges Page
+//Variables for Weekly Challenges Page
 var Timer;
 var TotalSeconds;
+var FriendMoves;
+var FriendXid;
 
 var host = 'localhost'
 var port = 5000;
@@ -319,15 +321,29 @@ app.get('/teamPage', function(req, res){
 });
 
 app.get('/weeklyChallenges', function(req,res){
+  var now = new Date();
+  var midnight = new Date();
+  midnight.setHours(24,0,0,0); //midnignt
+  if (now.getDay()==0 && midnight.getTime() ==Date.now() ){ //is Sunday at midnight
+    //iterate challenge
+    //maybe store challenge results
+  }
+  
+
+
   up.getFriends(userToken, function(friends) {
-    userProgress = new Array();     
+    userFriends = new Array();   
+    userProgress = new Array(); 
     for (var i = 0; i < friends.length; i++) {
         console.log('friend: ' + i);
         console.log(friends[i].xid);
-        userProgress.push('friend: ' + i);
+        userFriends.push('friend: ' + i);
+        userFriends.push(friends[i].xid);
+        userProgress.push(friends[i].userID);
         userProgress.push(friends[i].xid);
     }
 
+    userFriends[1];
    
  /*   
  if (true){
@@ -515,6 +531,11 @@ function loadSleepsData(callback) {
 
 // load moves data for the frontend
 function loadMovesData(callback) {
+    FriendMoves = 0;
+    FriendXid = "2hjpAooLN61LYkWC2ca6YQ";
+    /*queries.getMoves(FriendXid,function(moves)){
+      
+    }*/
 
     returnAllTimeMoves = 0;
     queries.getMoves(1, function(moves) {
@@ -547,6 +568,7 @@ function loadMovesData(callback) {
             //alltimemoves
             returnAllTimeMoves+=moves[i].steps;
         }
+
 
         // done getting moves data call the callback
         callback();
