@@ -3,10 +3,11 @@ var sleeps = require('../databaseSchema/sleeps.js');
 var moves = require('../databaseSchema/moves.js');
 var workouts = require('../databaseSchema/workouts.js');
 var users = require('../databaseSchema/users.js');
-var _ = require('underscore');
 var levels = require('../databaseSchema/levels.js');
 var database 
     = mongoose.connect('mongodb://localhost:27017/myappdatabase').connection;
+
+var nextUserID = 1;
 
 database.on('error', function(err) {
     console.log(err.message);
@@ -81,24 +82,8 @@ getWorkoutsAggregation = function(callback) {
     );
 }
 
-// inserts an array of sleeps into the database
-insertSleeps = function(sleeps, callback) {
-    
-    var inserted = _.after(sleeps.length, callback);
-
-    if (sleeps.length < 1) {
-        callback();
-    }
-
-    for (var i = 0; i < sleeps.length; i++) {
-        insertSleep(sleeps[i], function() {
-            inserted();
-        });
-    }
-}
-
 // inserts a sleep into the database
-insertSleep = function(sleep, callback) {
+insertSleep = function(sleep) {
 
    var newSleep = new sleeps({
         userID: 1,
@@ -122,7 +107,6 @@ insertSleep = function(sleep, callback) {
         }
    });
 
-   callback();
 };
 
 // gets all the sleeps for a user in the database
@@ -140,39 +124,20 @@ getSleeps = function(userID, callback){
 
 // gets the most recent sleep for a user in the database
 getLatestSleep = function(userID, callback) {
-
     sleeps.findOne({userID: userID}).sort({time_completed: -1}).exec(
         function(err, sleeps) {
-            if(err) {
-                console.log('error');
-                throw err;
-            }
-            else {
-                callback(sleeps);
-            }
+
+        if(err) {
+            throw err;
+        }
+        else {
+            callback(sleeps);
+        }
     });
 }
 
-
-// inserts an array of moves into the database
-insertMoves = function(moves, callback) {
-    
-    var inserted = _.after(moves.length, callback);
-
-    if (moves.length < 1) {
-        callback();
-    }
-
-    for (var i = 0; i < moves.length; i++) {
-        insertMove(moves[i], function() {
-            inserted();
-        });
-    }
-
-}
-
 // inserts a move into the database
-insertMove = function(move, callback) {
+insertMove = function(move) {
 
    var newMove = new moves({
         userID: 1,
@@ -192,8 +157,6 @@ insertMove = function(move, callback) {
             return console.error(err);
         }
    });
-
-   callback();
 
 };
 
@@ -225,25 +188,8 @@ getLatestMove = function(userID, callback) {
     });
 }
 
-// inserts an array of workouts into the database
-insertWorkouts = function(workouts, callback) {
-    
-    var inserted = _.after(workouts.length, callback);
-
-    if (workouts.length < 1) {
-        callback();
-    }
-
-    for (var i = 0; i < workouts.length; i++) {
-        insertWorkout(workouts[i], function() {
-            inserted();
-        });
-    }
-
-}
-
 // inserts a workout into the database
-insertWorkout = function(workout, callback) {
+insertWorkout = function(workout) {
 
    var newWorkout = new workouts({
         userID: 1,
@@ -264,8 +210,6 @@ insertWorkout = function(workout, callback) {
             return console.error(err);
         }
    });
-
-    callback();
 
 };
 
@@ -301,27 +245,25 @@ getLatestWorkout = function(userID, callback) {
 // inserts a user into the database
 insertUser = function(user, callback) {
 
-    nextID(function(nextUserID) {
+    var newUser = new users({
+        userID: nextUserID,
+        token: user.token,
+        xid: user.xid,
+        first: user.first,
+        last: user.last,
+        level: 0,
+        challengeProgress: 0,
+        dashboard: ""
+    });
 
-        var newUser = new users({
-            userID: nextUserID,
-            token: user.token,
-            xid: user.xid,
-            first: user.first,
-            last: user.last,
-            level: 0,
-            challengeProgress: 0,
-            dashboard: ""
-        });
+    nextUserID++;
 
-        nextUserID++;
-
-        newUser.save(function (err, thor) {
-            if (err) {
-                return console.error(err);
-            }
-        });
-    });    
+    newUser.save(function (err, thor) {
+        if (err) {
+            return console.error(err);
+        }
+    });
+    
 }
 
 // determines if a user is in the database from their xid
@@ -336,22 +278,6 @@ findUser = function(xid, callback) {
         }
     });
 
-}
-
-// returns the next userID
-function nextID (callback) {
-    
-    users.findOne({}).sort({userID: -1}).exec(function(err, user) {
-        if (err) {
-            throw err;
-        } else {
-            if (user) {
-                callback(user.userID + 1);
-            } else {
-                callback(0);
-            }
-        }
-    });
 }
 
 insertLevel = function(level) {
@@ -499,11 +425,33 @@ levelsGetUserLevel = function(userID, callback){
             throw err;
         }
         else {
-            console.log(user);
             callback(user);
         }
     });
 }
+
+insertUser = function(user) {
+
+   var newUser= new users({
+      userID: user.userID,
+      token: user.token,
+      xid: user.xid,
+      first: user.first,
+      last: user.last,
+      username: user.username,
+      level: user.level,
+      challengeProgress: user.challengeProgress,
+      dashboard: user.dashboard,
+      dateStartedLevel: user.dateStartedLevel
+   });
+
+   newUser.save(function (err, thor) {
+        if (err) {
+            return console.error(err);
+        }
+   });
+
+};
 
 updateUserLevelInfo = function(userID, newLevel, startedLevelDate){
     users.update({userID: userID}, {$set:{level: newLevel, dateStartedLevel: startedLevelDate}}).exec(
@@ -514,32 +462,34 @@ updateUserLevelInfo = function(userID, newLevel, startedLevelDate){
     });
 }
 
+
 module.exports.insertSleep = insertSleep;
-module.exports.insertSleeps = insertSleeps;
-module.exports.insertMove = insertMove;
-module.exports.insertMoves = insertMoves;
-module.exports.insertWorkout = insertWorkout;
-module.exports.insertWorkouts = insertWorkouts;
 module.exports.getSleeps = getSleeps;
 module.exports.getLatestSleep = getLatestSleep;
-module.exports.getMoves = getMoves;
+module.exports.insertMove = insertMove;
 module.exports.getLatestMove = getLatestMove;
-module.exports.getWorkouts = getWorkouts;
+module.exports.getMoves = getMoves;
+module.exports.insertWorkout = insertWorkout;
 module.exports.getLatestWorkout = getLatestWorkout;
+module.exports.getWorkouts = getWorkouts;
 module.exports.getMovesAggregation = getMovesAggregation;
 module.exports.getSleepsAggregation = getSleepsAggregation;
 module.exports.getWorkoutsAggregation = getWorkoutsAggregation;
+<<<<<<< HEAD
 module.exports.insertLevel = insertLevel;
 module.exports.getLevel = getLevel;
 module.exports.levelsGetNumSteps = levelsGetNumSteps;
 module.exports.levelsGetTimeWorkouts = levelsGetTimeWorkouts;
 module.exports.levelsGetTimeSleeps = levelsGetTimeSleeps;
 module.exports.levelsGetUserLevel = levelsGetUserLevel;
+module.exports.insertUser = insertUser;
 module.exports.updateUserLevelInfo = updateUserLevelInfo;
 module.exports.levelsGetDistance = levelsGetDistance;
 module.exports.levelsGetStepsWorkouts = levelsGetStepsWorkouts;
 module.exports.levelsGetAwakeningsSleeps = levelsGetAwakeningsSleeps;
 module.exports.levelsGetCaloriesWorkouts = levelsGetCaloriesWorkouts;
 module.exports.levelsGetTimeAwakeSleeps = levelsGetTimeAwakeSleeps;
+=======
 module.exports.insertUser = insertUser;
 module.exports.findUser = findUser;
+>>>>>>> 140980eef520a0be2b5e3e8dc7a64a7895fd9497

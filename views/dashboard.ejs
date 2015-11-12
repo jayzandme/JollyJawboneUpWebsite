@@ -6,7 +6,75 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="/dashboardStyle.css" rel="stylesheet" type="text/css">
   <link rel ="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+  <script src="bower_components/jquery/dist/jquery.min.js"></script>
   <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+  <script src="bower_components/highcharts/highcharts.js"></script>
+  <script src="bower_components/highcharts/highcharts-more.js"></script>
+  <script src="bower_components/highcharts/modules/solid-gauge.js"></script>
+  <script>
+    $(function () {
+
+      var gaugeOptions = {
+
+          'chart': {
+              'type': 'solidgauge',
+              backgroundColor: null
+          },
+          title: {
+            text: '<%= moves.steps %>',
+            verticalAlign: 'middle',
+            style: {'color': 'white'}
+          },
+          'tooltip': {
+              'enabled': false
+          },
+          credits:{
+            'enabled': false
+          },
+          'pane': {
+            'center': ['50%', '50%'],
+            'size': '100px',
+            'startAngle': 0,
+            'endAngle': 360,
+            'background': {
+              'backgroundColor': null,
+              'innerRadius': '90%',
+              'outerRadius': '100%',
+              'borderWidth': 0
+            }
+          },
+
+          'yAxis': {
+            'min': 0,
+            'max': 100,
+            'labels': {
+              'enabled': false
+            },
+      
+            'lineWidth': 0,
+            'minorTickInterval': null,
+            'tickPixelInterval': 400,
+            'tickWidth': 0
+          },
+
+          'plotOptions': {
+              'solidgauge': {
+                  'innerRadius': '90%'
+              }
+          },
+          
+          'series': [{
+              'name': 'Speed',
+              'data': [<%= moves.percentOfGoal %>],
+              'dataLabels': {
+                  'enabled': false
+              }
+          }]
+      };
+
+      $('#my-chart').highcharts(gaugeOptions);
+    });
+  </script>
 </head>
 <body>
 	<nav class="navbar navbar-trans">
@@ -26,7 +94,6 @@
   		</div>
 	</nav>
 	<div class = "text-center addBorder"> <h1>Dashboard Data for <%= otherData.date %></h1> </div>
-
 
   <div class="container">
     <div class="row">
@@ -56,8 +123,12 @@
         </div>
         <div class="col-md-4 parent">
           <div class ="circleAndTextMoves parent"> 
-            <div class="sideText child">Todays Steps </div>
-            <div class="circleBase text-center child"><span class="insideCircle"> <%= moves.steps %></span></div>
+              <div class="sideText child" style:"float:left">Today's Steps
+                <span>  
+                  <div id="my-chart" style="width: 125px; height: 150px; float: right"> 
+                  </div>
+                </span>
+              </div>
         </div>
           <div class="moves img-rounded">
             <div>Active Time: <%= moves.active_time %></div>

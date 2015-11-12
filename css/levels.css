@@ -2,6 +2,11 @@ body{
     background:#2e2e2e !important;
 }
 
+.row {
+    color:white;
+    padding:10px;
+}
+
 .navbar-trans {
     background-color:#2b2b2b;
     color:#cdcdcd;
