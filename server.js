@@ -17,9 +17,6 @@ var consecutiveSleepMax = 0;
 var consecutiveWorkoutMax = 0;
 var returnAllTimeMoves = 0;
 
-// user session stuff
-var userToken;
-
 // data for frontend
 var otherdata;
 var returnDataSleeps = [];
@@ -44,8 +41,6 @@ app.use(express.static(__dirname + '/css'));
 app.use('/bower_components',  express.static(__dirname + '/bower_components'));
 app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views');
-
-var userToken = ''
 
 var jawboneAuth = {
     clientID: 'bbtI3tvNMBs',
@@ -80,59 +75,60 @@ app.get('/token', function (req, res) {
                     queries.insertUser(userInfo, function(){});
                 }
             });
-        });
-       
-        // update the sleeps
-        up.updateSleeps(token, function(sleepsData) { 
+        }); 
 
-            console.log('got ' + sleepsData.length + ' sleep events');
-            for (var i = 0; i < sleepsData.length; i++) {
-                queries.insertSleep(sleepsData[i])
+        res.redirect('/dashboard?token=' + token);
+    }); 
+});
+
+app.get('/dashboard', function(req, res){
+
+    var token = req.query.token;
+
+    // update the sleeps
+    up.updateSleeps(token, function(sleepsData) { 
+
+        console.log('got ' + sleepsData.length + ' sleep events');
+        for (var i = 0; i < sleepsData.length; i++) {
+            queries.insertSleep(sleepsData[i])
+        }
+        console.log('inserted sleeps')
+
+        // update the moves
+        up.updateMoves(token, function(movesData) {
+            console.log('got ' + movesData.length + ' move events');
+            for (var i = 0; i < movesData.length; i++) {
+                queries.insertMove(movesData[i])
             }
-            console.log('inserted sleeps')
+            console.log('inserted moves');
 
-            // update the moves
-            up.updateMoves(token, function(movesData) {
-                console.log('got ' + movesData.length + ' move events');
-                for (var i = 0; i < movesData.length; i++) {
-                    queries.insertMove(movesData[i])
+            // update the workouts
+            up.updateWorkouts(token, function(workoutsData){
+                console.log('got ' + workoutsData.length + ' workout events');
+                for (var i = 0; i < workoutsData.length; i++) {
+                    queries.insertWorkout(workoutsData[i])
                 }
-                console.log('inserted moves');
+                console.log('inserted workouts');
 
-                // update the workouts
-                up.updateWorkouts(token, function(workoutsData){
-                    console.log('got ' + workoutsData.length + ' workout events');
-                    for (var i = 0; i < workoutsData.length; i++) {
-                        queries.insertWorkout(workoutsData[i])
-                    }
-                    console.log('inserted workouts');
+                // load all the data for frontend
+                loadAggregateData(function () {
+                    loadSleepsData(function () {
+                        loadMovesData(function () {
+                            loadWorkoutsData(function() {
 
-                    // load all the data for frontend
-                    loadAggregateData(function () {
-                        loadSleepsData(function () {
-                            loadMovesData(function () {
-                                loadWorkoutsData(function() {
-
-                                    // display the dashboard
-                                    setTimeout(function(){
-                                    app.get('/dashboard', function(req, res){
-                                        res.render('dashboard', 
+                                res.render('dashboard', 
                                             { sleeps: returnDataSleeps[0],
                                             moves: returnDataMoves[0],
                                             workouts: returnDataWorkouts[0],
                                             otherData: otherData
                                             });
-                                           });
-                                        res.redirect('/dashboard');
-                                    }, 1000);
-                                });
                             });
                         });
                     });
                 });
             });
         });
-    }); 
+    });
 });
 
 app.get('/', function(req, res) {
@@ -313,6 +309,7 @@ app.get('/achievements', function(req,res){
 app.get('/teamPage', function(req, res){
 
     userFriends = [];
+    var friendStats = [];
 
     up.getFriends(userToken, function(friends) {
         
