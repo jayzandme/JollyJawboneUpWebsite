@@ -592,6 +592,48 @@ app.get('/newLevel', function(req, res){
 
 });
 
+app.get('/viewOldLevel', function(req, res){
+
+  var levelNum = 1;
+  var oldLevel = {
+    goal1Name: null,
+    goal2Name: null,
+    goal3Name: null,
+    currentLevelNum: null
+  };
+
+  queries.levelsGetUserLevel(1, function(users){
+    oldLevel.currentLevelNum = users.level;
+    queries.getLevel(levelNum, function(levels){
+      oldLevel.goal1Name = levels.firstGoal;
+      oldLevel.goal2Name = levels.secondGoal;
+      oldLevel.goal3Name = levels.thirdGoal;
+    }); 
+  });
+
+  setTimeout(function(){
+    res.render('viewOldLevel', 
+      { levelNum: levelNum,
+      currentLevelNum: oldLevel.currentLevelNum,
+      goal1: {
+        name: oldLevel.goal1Name,
+        percentComplete: 100,
+        leftToGo: "Complete!"
+      },
+      goal2: {
+        name: oldLevel.goal2Name,
+        percentComplete: 100,
+        leftToGo: "Complete!"
+      },
+      goal3: {
+        name: oldLevel.goal3Name,
+        percentComplete: 100,
+        leftToGo: "Complete"
+      },
+    });
+  }, 500);
+});
+
 app.get('/achievements', function(req,res){
 
     var earnedAchievements = new Array();

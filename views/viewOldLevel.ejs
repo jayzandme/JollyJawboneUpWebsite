@@ -122,15 +122,11 @@
               }
           }
       });
-
-      if (!<%= showNextLevelButton %>){
-        $('#nextLevelButton').hide();
-      }
   });
   </script>
 </head>
 <body>
-	<nav class="navbar navbar-trans">
+  <nav class="navbar navbar-trans">
       <div class="container-fluid">
         <div class="navbar-header">
             <a class="navbar-brand" href="#">Jawbone Data Website</a>
@@ -148,10 +144,10 @@
   </nav>
     <div class="row">
       <div class="col-md-6">
-        <div class="text-center"><h3>Current Level: <%= currentLevel %></h3></div>
+        <div class="text-center"><h3>Past Level: <%= levelNum %></h3></div>
       </div>
       <div class="col-md-6">
-        <div class="text-center"> <h3>Days on Level: <%= daysOnLevel %></h3></div>
+        <div class="text-center"><h3>This level has been completed!</h3></div>
       </div>
     </div>
     <div class="row">
@@ -203,14 +199,12 @@
           <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">View Completed Level
           <span class="caret"></span></button>
           <ul class="dropdown-menu">
-            <% for(var i=1; i<currentLevel; i++) {%>
+            <% for(var i=1; i<currentLevelNum; i++) {
+              if (i != levelNum){%>
                <li><a href="/viewOldLevel"><%= i %></a></li>
-            <% } %> 
+            <% }} %> 
           </ul>
         </div>
-      </div>
-      <div class="col-md-4">
-        <a href="/newLevel" class="btn btn-primary" id="nextLevelButton">View Next Level!</a>
       </div>
     </div>
   </div>
