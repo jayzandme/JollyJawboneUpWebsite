@@ -18,7 +18,21 @@ var consecutiveWorkoutMax = 0;
 var returnAllTimeMoves = 0;
 
 // data for frontend
-var otherdata;
+otherData = {date: null, 
+             stepsAverage: null,
+             sleepsAverage: null,
+             stepsTotal: null,
+             sleepsTotal: null,
+             workoutsStepsAverage: null,
+             workoutsStepsTotal: null,
+             workoutsCaloriesAverage: null,
+             workoutsCaloriesTotal: null,
+             workoutsTimeAverage: null,
+             workoutsTimeTotal: null,
+             workoutsDistanceAverage: null,
+             workoutsDistanceTotal: null,
+            };
+
 var returnDataSleeps = [];
 var returnDataMoves = [];
 var returnDataWorkouts = [];
@@ -121,10 +135,10 @@ app.get('/dashboard', function(req, res){
 
     // load all the data for frontend
     function loadData() {
-        loadAggregateData(function () {
-            loadSleepsData(function () {
-                loadMovesData(function () {
-                    loadWorkoutsData(function() {
+        loadSleepsData(function () {
+            loadMovesData(function () {
+                loadWorkoutsData(function() {
+                    loadAggregateData(function () {
 
                         res.render('dashboard', 
                                     { sleeps: returnDataSleeps[0],
@@ -408,21 +422,6 @@ function metersToMiles(meters){
 
 // loads the aggregate data for the front end
 function loadAggregateData(callback) {
-
-    otherData = {date: null, 
-                 stepsAverage: null,
-                 sleepsAverage: null,
-                 stepsTotal: null,
-                 sleepsTotal: null,
-                 workoutsStepsAverage: null,
-                 workoutsStepsTotal: null,
-                 workoutsCaloriesAverage: null,
-                 workoutsCaloriesTotal: null,
-                 workoutsTimeAverage: null,
-                 workoutsTimeTotal: null,
-                 workoutsDistanceAverage: null,
-                 workoutsDistanceTotal: null,
-                };
 
     // get the moves aggregations
     queries.getMovesAggregation(function (results) {

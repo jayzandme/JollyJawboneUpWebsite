@@ -165,7 +165,6 @@ insertMoves = function(moves, callback) {
     for (var i = 0; i < moves.length; i++) {
         insertMove(moves[i], function() {
             inserted();
-            console.log('inserted: ' + i + ' of ' + moves.length);
         });
     }
 
@@ -201,11 +200,11 @@ insertMove = function(move, callback) {
 getMoves = function(userID, callback){
     var queryVals = moves.find({userID: userID}).sort({_id:-1});
 
-    queryVals.exec(function (err, sleeps) {
+    queryVals.exec(function (err, moves) {
         if (err) 
             throw err;
         else {
-            callback(sleeps);
+            callback(moves);
         }
     });
 }
