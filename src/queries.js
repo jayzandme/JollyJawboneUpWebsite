@@ -296,6 +296,18 @@ levelsGetTimeWorkouts = function(userID, startedLevelDate, value, name, callback
     });
 }
 
+levelsGetStepsWorkouts = function(userID, startedLevelDate, value, name, callback){
+    var queryVals = workouts.find({$and: [{userID: userID}, {date: {$gt: startedLevelDate}}]}).sort({steps:-1});
+
+    queryVals.exec(function (err, workouts) {
+        if (err) 
+            throw err;
+        else {
+            callback(workouts, value, name);
+        }
+    });
+}
+
 levelsGetTimeSleeps = function(userID, startedLevelDate, value, name, callback){
     var queryVals = sleeps.find({$and: [{userID: userID}, {date: {$gt: startedLevelDate}}]}).sort({duration:-1});
 
@@ -304,6 +316,30 @@ levelsGetTimeSleeps = function(userID, startedLevelDate, value, name, callback){
             throw err;
         else {
             callback(sleeps, value, name);
+        }
+    });
+}
+
+levelsGetAwakeningsSleeps = function(userID, startedLevelDate, value, name, callback){
+    var queryVals = sleeps.find({$and: [{userID: userID}, {date: {$gt: startedLevelDate}}]}).sort({awakenings:1});
+
+    queryVals.exec(function (err, sleeps) {
+        if (err) 
+            throw err;
+        else {
+            callback(sleeps, value, name);
+        }
+    });
+}
+
+levelsGetDistance = function(userID, startedLevelDate, value, name, callback){
+    var queryVals = moves.find({$and: [{userID: userID}, {date: {$gt: startedLevelDate}}]}).sort({distance:-1});
+
+    queryVals.exec(function (err, moves) {
+        if (err) 
+            throw err;
+        else {
+            callback(moves,value, name);
         }
     });
 }
@@ -317,18 +353,6 @@ levelsGetUserLevel = function(userID, callback){
         }
         else {
             callback(user);
-        }
-    });
-}
-
-levelsGetDistance = function(userID, startedLevelDate, value, name, callback){
-    var queryVals = moves.find({$and: [{userID: userID}, {date: {$gt: startedLevelDate}}]}).sort({distance:-1});
-
-    queryVals.exec(function (err, moves) {
-        if (err) 
-            throw err;
-        else {
-            callback(moves,value, name);
         }
     });
 }
@@ -387,3 +411,5 @@ module.exports.levelsGetUserLevel = levelsGetUserLevel;
 module.exports.insertUser = insertUser;
 module.exports.updateUserLevelInfo = updateUserLevelInfo;
 module.exports.levelsGetDistance = levelsGetDistance;
+module.exports.levelsGetStepsWorkouts = levelsGetStepsWorkouts;
+module.exports.levelsGetAwakeningsSleeps = levelsGetAwakeningsSleeps;
