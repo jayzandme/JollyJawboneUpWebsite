@@ -321,7 +321,7 @@ app.get('/teamPage', function(req, res){
 });
 
 app.get('/weeklyChallenges', function(req,res){
-  var currentChallenge=0;
+  
   //array of weekly challenges
   challenges = new Array();
     
@@ -330,6 +330,9 @@ app.get('/weeklyChallenges', function(req,res){
     challenges.push("Log the most sleep this week!");
     challenges.push("Log the most workouts this week!");
   }
+
+  var challengeCount=0;
+  var currentChallenge=challenges[challengeCount];
 
 
     //set a starting Sunday to build from
@@ -348,8 +351,9 @@ app.get('/weeklyChallenges', function(req,res){
     while (setdate-now<=0){
     //if (now.getDay()==0 && midnight.getTime() ==Date.now() ){ //is Sunday at midnight
       //iterate challenge
-      currentChallenge++;
-      currentChallenge=currentChallenge%challenges.size();
+      challengeCount++;
+      challengeCount=challengeCount%challenges.length;
+      currentChallenge=challenges[challengeCount];
       //iterate setdate
       setdate.setHours(setdate.getHours() + 7*24);
     }
@@ -386,7 +390,8 @@ app.get('/weeklyChallenges', function(req,res){
   
     res.render('weeklyChallenges', 
       {countdown: countdown,
-        currentChallenge: currentChallenge}
+        currentChallenge: currentChallenge,
+        }
       );
     });
 });
