@@ -293,6 +293,18 @@ levelsGetTimeWorkouts = function(userID, startedLevelDate, value, name, callback
     });
 }
 
+levelsGetCaloriesWorkouts = function(userID, startedLevelDate, value, name, callback){
+    var queryVals = workouts.find({$and: [{userID: userID}, {date: {$gt: startedLevelDate}}]}).sort({calories:-1});
+
+    queryVals.exec(function (err, workouts) {
+        if (err) 
+            throw err;
+        else {
+            callback(workouts, value, name);
+        }
+    });
+}
+
 levelsGetStepsWorkouts = function(userID, startedLevelDate, value, name, callback){
     var queryVals = workouts.find({$and: [{userID: userID}, {date: {$gt: startedLevelDate}}]}).sort({steps:-1});
 
@@ -319,6 +331,18 @@ levelsGetTimeSleeps = function(userID, startedLevelDate, value, name, callback){
 
 levelsGetAwakeningsSleeps = function(userID, startedLevelDate, value, name, callback){
     var queryVals = sleeps.find({$and: [{userID: userID}, {date: {$gt: startedLevelDate}}]}).sort({awakenings:1});
+
+    queryVals.exec(function (err, sleeps) {
+        if (err) 
+            throw err;
+        else {
+            callback(sleeps, value, name);
+        }
+    });
+}
+
+levelsGetTimeAwakeSleeps = function(userID, startedLevelDate, value, name, callback){
+    var queryVals = sleeps.find({$and: [{userID: userID}, {date: {$gt: startedLevelDate}}]}).sort({awake:1});
 
     queryVals.exec(function (err, sleeps) {
         if (err) 
@@ -410,3 +434,5 @@ module.exports.updateUserLevelInfo = updateUserLevelInfo;
 module.exports.levelsGetDistance = levelsGetDistance;
 module.exports.levelsGetStepsWorkouts = levelsGetStepsWorkouts;
 module.exports.levelsGetAwakeningsSleeps = levelsGetAwakeningsSleeps;
+module.exports.levelsGetCaloriesWorkouts = levelsGetCaloriesWorkouts;
+module.exports.levelsGetTimeAwakeSleeps = levelsGetTimeAwakeSleeps;

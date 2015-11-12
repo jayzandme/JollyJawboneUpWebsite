@@ -73,7 +73,7 @@ app.get('/token', function (req, res) {
         });
 
         //this inserted a level into the database to initialize it 
-        level1 = {
+        /*level1 = {
           levelNum: 1,
           levelName: "First Level!",          
           firstGoal: "Take 2,000 steps in day",    //description of goal
@@ -106,43 +106,25 @@ app.get('/token', function (req, res) {
           thirdGoalType: "sleeps",
           thirdGoalDescriptor: "awakenings"
         }
-        queries.insertLevel(level2);
+        queries.insertLevel(level2);*/
 
         /*level3 = {
           levelNum: 3,
           levelName: "Third Level!",          
-          firstGoal: "Move 3 miles in a day",    //description of goal
-          firstGoalNum: 4828, //this is the number of meters  //how to quantify the goal
+          firstGoal: "Take 15000 in a day",    //description of goal
+          firstGoalNum: 15000, //how to quantify the goal
           firstGoalType: "moves",  //sleeps, moves, or workouts
-          firstGoalDescriptor: "distance", //for example - steps or active_time (use this when referencing moves object)
-          secondGoal: "Take 5,000 steps during a workout",
-          secondGoalNum: 5000,  //steps
+          firstGoalDescriptor: "steps", //for example - steps or active_time (use this when referencing moves object)
+          secondGoal: "Burn 300 calories during a workout",
+          secondGoalNum: 300,  //steps
           secondGoalType: "workouts",
-          secondGoalDescriptor: "steps",
-          thirdGoal: "Wake up zero times in the night",
-          thirdGoalNum: 0,  
+          secondGoalDescriptor: "calories",
+          thirdGoal: "Be awake for less than 10 minutes",
+          thirdGoalNum: 600,  
           thirdGoalType: "sleeps",
-          thirdGoalDescriptor: "awakenings"
+          thirdGoalDescriptor: "awake"
         }
         queries.insertLevel(level3);*/
-
-        /*level4 = {
-          levelNum: 4,
-          levelName: "Fourth Level!",          
-          firstGoal: "Move 3 miles in a day",    //description of goal
-          firstGoalNum: 4828, //this is the number of meters  //how to quantify the goal
-          firstGoalType: "moves",  //sleeps, moves, or workouts
-          firstGoalDescriptor: "distance", //for example - steps or active_time (use this when referencing moves object)
-          secondGoal: "Take 5,000 steps during a workout",
-          secondGoalNum: 5000,  //steps
-          secondGoalType: "workouts",
-          secondGoalDescriptor: "steps",
-          thirdGoal: "Wake up zero times in the night",
-          thirdGoalNum: 0,  
-          thirdGoalType: "sleeps",
-          thirdGoalDescriptor: "awakenings"
-        }
-        queries.insertLevel(level4);*/
 
         /*firstUser = {
           userID: 1,
@@ -377,7 +359,7 @@ app.get('/levels', function(req, res){
                   progress.push({
                     name: name,
                     goalCompleted: false,
-                    percentCompleted: ((value - stepsRemaining)/value) * 100,
+                    percentCompleted: (((value - stepsRemaining)/value) * 100).toFixed(2),
                     leftToGoString: "Only " + addCommas(stepsRemaining) + " steps to go"
                   })
                 }
@@ -480,8 +462,41 @@ app.get('/levels', function(req, res){
                   progress.push({
                     name: name,
                     goalCompleted: false,
-                    percentCompleted: ((workoutStepsValue - workoutStepsRemaining)/workoutStepsValue) * 100,
+                    percentCompleted: (((workoutStepsValue - workoutStepsRemaining)/workoutStepsValue) * 100).toFixed(2),
                     leftToGoString: "Moves " + remaining + "more steps during a workout!"
+                  });
+                }
+              }
+              else{
+                progress.push({
+                  name: name,
+                  goalCompleted: false,
+                  percentCompleted: 0,
+                  leftToGoString: "You haven't started this goal!"
+                });
+              }
+            });
+          }
+          else if(goalInfo[i].attribute == "calories"){
+            queries.levelsGetCaloriesWorkouts(1, startedLevelDate, value, name, function(workouts, value, name){
+              if (workouts[0] != null){
+                var workoutCaloriesValue = value;
+                var workoutCalories = workouts[0].calories;
+                var workoutCaloriesRemaining = workoutCaloriesValue - workoutCalories;
+                if (workoutCaloriesRemaining <= 0){
+                  progress.push({
+                    name: name,
+                    goalCompleted: true,
+                    percentCompleted: 100,
+                    leftToGoString: "Complete!"
+                  });
+                }
+                else{
+                  progress.push({
+                    name: name,
+                    goalCompleted: false,
+                    percentCompleted: ((workoutCaloriesValue - workoutCaloriesRemaining)/workoutCaloriesValue) * 100,
+                    leftToGoString: "Burn " + workoutCaloriesRemaining + "more calories during a workout!"
                   });
                 }
               }
@@ -534,37 +549,71 @@ app.get('/levels', function(req, res){
           }
           else if (goalInfo[i].attribute == "awakenings"){
             queries.levelsGetAwakeningsSleeps(1, startedLevelDate, value, name, function(sleeps, value, name){
-            if (sleeps[0] != null){
-              var sleepAwakeningsValue = value * 3600;
-              var sleepAwakenings = sleeps[0].awakenings;
-              var sleepAwakeningsOver = sleepAwakenings - sleepAwakeningsValue;
-              if (sleepAwakeningsOver <= 0){
-                progress.push({
-                  name: name,
-                  goalCompleted: true,
-                  percentCompleted: 100,
-                  leftToGoString: "Complete!"
-                });
+              if (sleeps[0] != null){
+                var sleepAwakeningsValue = value * 3600;
+                var sleepAwakenings = sleeps[0].awakenings;
+                var sleepAwakeningsOver = sleepAwakenings - sleepAwakeningsValue;
+                if (sleepAwakeningsOver <= 0){
+                  progress.push({
+                    name: name,
+                    goalCompleted: true,
+                    percentCompleted: 100,
+                    leftToGoString: "Complete!"
+                  });
+                }
+                else{
+                  progress.push({
+                    name: name,
+                    goalCompleted: false,
+                    percentCompleted: (10 - sleepAwakeningsOver) * 10,
+                    leftToGoString: "You awakened " + sleepAwakeningsOver + " more times than the goal"
+                  });
+                }
               }
               else{
                 progress.push({
                   name: name,
                   goalCompleted: false,
-                  percentCompleted: (10 - sleepAwakeningsOver) * 10,
-                  leftToGoString: "You awakened " + sleepAwakeningsOver + " more times than the goal"
-                });
+                  percentCompleted: 0,
+                  leftToGoString: "You haven't started this goal!"
+                })
               }
-            }
-            else{
-              progress.push({
-                name: name,
-                goalCompleted: false,
-                percentCompleted: 0,
-                leftToGoString: "You haven't started this goal!"
-              })
-            }
-          });
+            });
           }
+          else if (goalInfo[i].attribute == "awake"){
+            queries.levelsGetTimeAwakeSleeps(1, startedLevelDate, value, name, function(sleeps, value, name){
+              if (sleeps[0] != null){
+                var sleepTimeAwakeValue = value;
+                var sleepTimeAwake = sleeps[0].awake;
+                var sleepTimeOver = sleepTimeAwake - sleepTimeAwakeValue;
+                if (sleepTimeOver <= 0){
+                  progress.push({
+                    name: name,
+                    goalCompleted: true,
+                    percentCompleted: 100,
+                    leftToGoString: "Complete!"
+                  });
+                }
+                else{
+                  var remaining = (sleepTimeRemaining / 60).toFixed(0);
+                  progress.push({
+                    name: name,
+                    goalCompleted: false,
+                    percentCompleted: (3600 - sleepAwakeningsOver) / 36,
+                    leftToGoString: "You were awake for " + sleepTimeOver % 60 + " minutes over the goal value!"
+                  });
+                }
+              }
+              else{
+                progress.push({
+                  name: name,
+                  goalCompleted: false,
+                  percentCompleted: 0,
+                  leftToGoString: "You haven't started this goal!"
+                })
+              }
+            });
+          } 
         }
       }
 
