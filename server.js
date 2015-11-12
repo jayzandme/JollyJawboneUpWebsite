@@ -592,9 +592,9 @@ app.get('/newLevel', function(req, res){
 
 });
 
-app.get('/viewOldLevel', function(req, res){
+app.get('/viewOldLevel/:i', function(req, res){
 
-  var levelNum = 1;
+  var levelNum = req.params.i;
   var oldLevel = {
     goal1Name: null,
     goal2Name: null,
