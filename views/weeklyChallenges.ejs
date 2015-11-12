@@ -26,6 +26,77 @@
       </div>
   </nav>
 
+  <body onload="timer()">
+
   <div class="titleChallenges"> <h2> Weekly Challenges Page </h2>
   </div>
+
+  <head>
+      <script type="text/javascript">
+      var Timer;
+      var TotalSeconds;
+      var month = 'Nov';
+      var date = '10';
+      var year = '2015';
+      var theDate = month + ' ' + date + ' ' + year;
+      
+      var setdate = new Date(theDate);
+      var now = new Date();
+
+      var countdown = (setdate - now)/1000;
+      countdown = Math.floor(countdown);
+      var seconds = countdown;
+ 
+        function timer() {
+            var days        = Math.floor(seconds/24/60/60);
+            var hoursLeft   = Math.floor((seconds) - (days*86400));
+            var hours       = Math.floor(hoursLeft/3600);
+            var minutesLeft = Math.floor((hoursLeft) - (hours*3600));
+            var minutes     = Math.floor(minutesLeft/60);
+            var remainingSeconds = seconds % 60;
+            /*if (remainingSeconds < 10) {
+                remainingSeconds = "0" + remainingSeconds; 
+            }*/
+            document.getElementById('timer_div').innerHTML = days + " Days " + hours + " Hours " + minutes + " Minutes " + remainingSeconds + " Seconds " ;
+            if (seconds == 0) {
+                clearInterval(countdownTimer);
+                document.getElementById('timer_div').innerHTML = "Weekly Challenge Expired! Refresh to see the new Challenge!";
+            } else {
+                seconds--;
+            }
+        }
+        var countdownTimer = setInterval('timer()', 1000);
+
+         //-->
+      </script>      
+   </head>
+   
+   
+
+  <body>   
+    <h4 id="challenges"><%= challenges[1] %> </h4> 
+    <div id="timer_div"></div>
+  </body>
+
+
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Leaderboard</th>
+        <th>Progress</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% for(var i=0; i < userProgress.length; i+=2) { %>
+      <tr>
+        <td> <%= userProgress[i] %> </td>
+        <td><%= userProgress[i+1] %></td>
+      </tr>
+      <% } %>
+    </tbody>
+  </table>
+
+
+
+
 </body>

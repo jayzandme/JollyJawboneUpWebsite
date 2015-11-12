@@ -18,12 +18,18 @@ getCode = function() {
    var options = {
         host: 'jawbone.com',
         path: '/auth/oauth2/auth?response_type=code&client_id=' + client_id + 
-              '&scope=basic_read%20sleep_read%20move_read%20workout_read&redirect_uri=' + redirect_uri
+              '&scope=basic_read' + 
+              '%20sleep_read' + 
+              '%20move_read' +
+              '%20workout_read' +
+              '%20friends_read&' +
+              'redirect_uri=' + redirect_uri
     }
 
     return (options.host + options.path)
 }
 
+// gets a token for the user session
 getToken = function(code, callback) {
 
     var options = {
@@ -50,6 +56,7 @@ getToken = function(code, callback) {
 
 }
 
+// gets all of the users sleeps since they last logged on
 updateSleeps = function(token, callback) {
 
     var time;
@@ -66,6 +73,7 @@ updateSleeps = function(token, callback) {
         
 }
 
+// gets all of the users sleeps since a time
 getSleeps = function(token, time, callback) {
 
     sleepCount = 0;
@@ -101,6 +109,7 @@ getSleeps = function(token, time, callback) {
 
 }
 
+// gets a page of the users sleeps
 getSleepsPage = function(token, page, callback) {
 
     parsedURL = url.parse(page);
@@ -141,6 +150,7 @@ getSleepsPage = function(token, page, callback) {
 
 }
 
+// gets all of a users moves since they last logged on
 updateMoves = function(token, callback) {
 
     var time;
@@ -158,6 +168,7 @@ updateMoves = function(token, callback) {
         
 }
 
+// gets all of the users moves since a time
 getMoves = function(token, time, callback) {
 
     movesCount = 0;
@@ -192,6 +203,7 @@ getMoves = function(token, time, callback) {
 	}).end();
 }
 
+// gets a page of the users moves
 getMovesPage = function(token, page, callback) {
 
     parsedURL = url.parse(page);
@@ -232,6 +244,7 @@ getMovesPage = function(token, page, callback) {
 
 }
 
+// gets all of a users workouts since they last logged on
 updateWorkouts = function(token, callback) {
 
     var time;
@@ -249,6 +262,7 @@ updateWorkouts = function(token, callback) {
         
 }
 
+// gets all of a users workouts since a time
 getWorkouts = function(token, time, callback) {
 
     workoutsCount = 0;
@@ -283,6 +297,7 @@ getWorkouts = function(token, time, callback) {
     }).end();
 }
 
+// gets a page of a users workouts
 getWorkoutsPage = function(token, page, callback) {
 
     parsedURL = url.parse(page);
@@ -323,8 +338,62 @@ getWorkoutsPage = function(token, page, callback) {
 
 }
 
+// gets all of a users friends
+getFriends = function(token, callback) {
+
+    var options = {
+        host: 'jawbone.com',
+        path: '/nudge/api/v.1.1/users/@me/friends',
+        headers: {'Authorization': 'Bearer ' + token,
+                  'Accept': 'application/json'}
+    };
+
+    https.request(options, function(response) {
+
+        var body = '';
+    
+        response.on('data', function (chunk) {
+            body += chunk;
+        });
+
+        response.on('end', function() {
+            var parsedJSON = JSON.parse(body).data;
+            callback(parsedJSON.items);
+        });
+
+    }).end();
+}
+
+// get user info
+getUserInfo = function(token, callback) {
+
+    console.log('upAPI');
+    var options = {
+        host: 'jawbone.com',
+        path: '/nudge/api/v.1.1/users/@me',
+        headers: {'Authorization': 'Bearer ' + token,
+                  'Accept': 'application/json'}
+    };
+
+    https.request(options, function(response) {
+
+        var body = '';
+        
+        response.on('data', function (chunk) {
+            body += chunk;
+        });
+
+        response.on('end', function() {
+            var parsedJSON = JSON.parse(body).data;
+            callback(parsedJSON);
+        });
+    }).end();
+}
+
 module.exports.getToken = getToken;
 module.exports.getCode = getCode;
 module.exports.updateSleeps = updateSleeps;
 module.exports.updateMoves = updateMoves;
 module.exports.updateWorkouts = updateWorkouts;
+module.exports.getFriends = getFriends;
+module.exports.getUserInfo = getUserInfo;

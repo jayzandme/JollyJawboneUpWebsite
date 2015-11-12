@@ -475,6 +475,7 @@ module.exports.getWorkouts = getWorkouts;
 module.exports.getMovesAggregation = getMovesAggregation;
 module.exports.getSleepsAggregation = getSleepsAggregation;
 module.exports.getWorkoutsAggregation = getWorkoutsAggregation;
+<<<<<<< HEAD
 module.exports.insertLevel = insertLevel;
 module.exports.getLevel = getLevel;
 module.exports.levelsGetNumSteps = levelsGetNumSteps;
@@ -488,5 +489,7 @@ module.exports.levelsGetStepsWorkouts = levelsGetStepsWorkouts;
 module.exports.levelsGetAwakeningsSleeps = levelsGetAwakeningsSleeps;
 module.exports.levelsGetCaloriesWorkouts = levelsGetCaloriesWorkouts;
 module.exports.levelsGetTimeAwakeSleeps = levelsGetTimeAwakeSleeps;
+=======
 module.exports.insertUser = insertUser;
 module.exports.findUser = findUser;
+>>>>>>> 140980eef520a0be2b5e3e8dc7a64a7895fd9497
