@@ -5,8 +5,11 @@ var bodyParser = require('body-parser');
 var fs = require('fs');
 var up = require ('./src/upAPI.js');
 var queries = require('./src/queries.js');
-var mongoose = require('mongoose');
 var cookie = require('cookie');
+var _ = require('underscore');
+
+// user session stuff
+var userToken;
 
 //Variables for Achievements Page
 var returnMovesMax = 0;
@@ -17,30 +20,44 @@ var consecutiveSleepMax = 0;
 var consecutiveWorkoutMax = 0;
 var returnAllTimeMoves = 0;
 
-// user session stuff
-var userToken;
-
 // data for frontend
-var otherdata;
+otherData = {date: null, 
+             stepsAverage: null,
+             sleepsAverage: null,
+             stepsTotal: null,
+             sleepsTotal: null,
+             workoutsStepsAverage: null,
+             workoutsStepsTotal: null,
+             workoutsCaloriesAverage: null,
+             workoutsCaloriesTotal: null,
+             workoutsTimeAverage: null,
+             workoutsTimeTotal: null,
+             workoutsDistanceAverage: null,
+             workoutsDistanceTotal: null,
+            };
+
 var returnDataSleeps = [];
 var returnDataMoves = [];
 var returnDataWorkouts = [];
+
+// team
+var userFriends = [];
 
 //Timer Variables for Weekly Challenges Page
 var Timer;
 var TotalSeconds;
 
+// hosting the server
 var host = 'localhost'
 var port = 5000;
 var app = express()
 
+// frontend rendering 
 app.use(bodyParser.json());
 app.use(express.static(__dirname + '/css'));
 app.use('/bower_components',  express.static(__dirname + '/bower_components'));
 app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views');
-
-var userToken = ''
 
 var jawboneAuth = {
     clientID: 'bbtI3tvNMBs',
@@ -54,7 +71,6 @@ app.get('/login/jawbone', function (req, res) {
 
     res.redirect('https://' + up.getCode());
     res.end;
-
 });
 
 app.get('/token', function (req, res) {
@@ -75,58 +91,71 @@ app.get('/token', function (req, res) {
                     queries.insertUser(userInfo, function(){});
                 }
             });
-        });
-       
-        // update the sleeps
-        up.updateSleeps(token, function(sleepsData) { 
+        }); 
 
-            console.log('got ' + sleepsData.length + ' sleep events');
-            for (var i = 0; i < sleepsData.length; i++) {
-                queries.insertSleep(sleepsData[i])
-            }
+        res.redirect('/dashboard?token=' + token);
+    }); 
+});
+
+app.get('/dashboard', function(req, res){
+
+    // var token = req.query.token;
+    var token = userToken;
+    var updating = 3;
+    var doneUpdating = _.after(3, loadData);
+
+    // update the sleeps
+    up.updateSleeps(token, function(sleepsData) { 
+        console.log('got ' + sleepsData.length + ' sleep events');
+        queries.insertSleeps(sleepsData, function() {
+
+            updating--;
             console.log('inserted sleeps')
-            // update the moves
-            up.updateMoves(token, function(movesData) {
-                console.log('got ' + movesData.length + ' move events');
-                for (var i = 0; i < movesData.length; i++) {
-                    queries.insertMove(movesData[i])
-                }
-                console.log('inserted moves');
+            doneUpdating();
+        });
+    });
 
-                // update the workouts
-                up.updateWorkouts(token, function(workoutsData){
-                    console.log('got ' + workoutsData.length + ' workout events');
-                    for (var i = 0; i < workoutsData.length; i++) {
-                        queries.insertWorkout(workoutsData[i])
-                    }
-                    console.log('inserted workouts');
+    // update the moves
+    up.updateMoves(token, function(movesData) {
+        console.log('got ' + movesData.length + ' move events');
+        queries.insertMoves(movesData, function() {
 
-                    // load all the data for frontend
+            updating--;
+            console.log('inserted moves');
+            doneUpdating();
+        });
+    });
+
+    // update the workouts
+    up.updateWorkouts(token, function(workoutsData){
+        console.log('got ' + workoutsData.length + ' workout events');
+        queries.insertWorkouts(workoutsData, function() {
+
+            updating--;
+            console.log('inserted workouts');
+            doneUpdating();
+        });
+    });
+
+    // load all the data for frontend
+    function loadData() {
+        loadSleepsData(function () {
+            loadMovesData(function () {
+                loadWorkoutsData(function() {
                     loadAggregateData(function () {
-                        loadSleepsData(function () {
-                            loadMovesData(function () {
-                                loadWorkoutsData(function() {
 
-                                    // display the dashboard
-                                    setTimeout(function(){
-                                    app.get('/dashboard', function(req, res){
-                                        res.render('dashboard', 
-                                            { sleeps: returnDataSleeps[0],
-                                            moves: returnDataMoves[0],
-                                            workouts: returnDataWorkouts[0],
-                                            otherData: otherData
-                                            });
-                                           });
-                                        res.redirect('/dashboard');
-                                    }, 1000);
-                                });
-                            });
-                        });
+                        res.render('dashboard', 
+                                    { sleeps: returnDataSleeps[0],
+                                    moves: returnDataMoves[0],
+                                    workouts: returnDataWorkouts[0],
+                                    otherData: otherData
+                                    });
                     });
                 });
             });
         });
-    }); 
+    }
+
 });
 
 app.get('/', function(req, res) {
@@ -136,7 +165,7 @@ app.get('/', function(req, res) {
 app.get('/levels', function(req, res){
 
   //get user's current level from database and when the user started this level
-  queries.levelsGetUserLevel(1, function(users){
+  queries.levelsGetUserLevel(0, function(users){
     var currentLevel = users.level;
     var startedLevelDate = users.dateStartedLevel;
     var daysOnLevel = computeDaysOnLevel(startedLevelDate);
@@ -172,7 +201,7 @@ app.get('/levels', function(req, res){
         var name = goalInfo[i].name
         if (goalInfo[i].type == "moves"){
           if (goalInfo[i].attribute == "steps"){
-             queries.levelsGetNumSteps(1, startedLevelDate, value, name, function(moves, value, name){
+             queries.levelsGetNumSteps(0, startedLevelDate, value, name, function(moves, value, name){
 
               if (moves[0] != null){
                 var stepsTaken = moves[0].steps;
@@ -205,7 +234,7 @@ app.get('/levels', function(req, res){
             });
           }
           else if (goalInfo[i].attribute == "distance"){
-            queries.levelsGetDistance(1, startedLevelDate, value, name, function(moves, value, name){
+            queries.levelsGetDistance(0, startedLevelDate, value, name, function(moves, value, name){
               if (moves[0] != null){
                 var distanceTraveled = moves[0].distance;
                 var distanceRemaining = value - distanceTraveled;
@@ -240,7 +269,7 @@ app.get('/levels', function(req, res){
         }
         else if (goalInfo[i].type == "workouts"){
           if (goalInfo[i].attribute == "time"){
-            queries.levelsGetTimeWorkouts(1, startedLevelDate, value, name, function(workouts, value, name){
+            queries.levelsGetTimeWorkouts(0, startedLevelDate, value, name, function(workouts, value, name){
               if (workouts[0] != null){
                 var workoutTimeValue = value;
                 var workoutTime = workouts[0].time;
@@ -274,7 +303,7 @@ app.get('/levels', function(req, res){
             });
           }
           else if (goalInfo[i].attribute == "steps"){
-            queries.levelsGetStepsWorkouts(1, startedLevelDate, value, name, function(workouts, value, name){
+            queries.levelsGetStepsWorkouts(0, startedLevelDate, value, name, function(workouts, value, name){
               if (workouts[0] != null){
                 var workoutStepsValue = value;
                 var workoutSteps = workouts[0].steps;
@@ -308,7 +337,7 @@ app.get('/levels', function(req, res){
             });
           }
           else if(goalInfo[i].attribute == "calories"){
-            queries.levelsGetCaloriesWorkouts(1, startedLevelDate, value, name, function(workouts, value, name){
+            queries.levelsGetCaloriesWorkouts(0, startedLevelDate, value, name, function(workouts, value, name){
               if (workouts[0] != null){
                 var workoutCaloriesValue = value;
                 var workoutCalories = workouts[0].calories;
@@ -344,7 +373,7 @@ app.get('/levels', function(req, res){
         }
         else if (goalInfo[i].type == "sleeps"){
           if(goalInfo[i].attribute == "asleep_time"){
-            queries.levelsGetTimeSleeps(1, startedLevelDate, value, name, function(sleeps, value, name){
+            queries.levelsGetTimeSleeps(0, startedLevelDate, value, name, function(sleeps, value, name){
               if (sleeps[0] != null){
                 var sleepTimeValue = value * 3600;
                 var sleepTime = sleeps[0].duration;
@@ -378,7 +407,7 @@ app.get('/levels', function(req, res){
             });
           }
           else if (goalInfo[i].attribute == "awakenings"){
-            queries.levelsGetAwakeningsSleeps(1, startedLevelDate, value, name, function(sleeps, value, name){
+            queries.levelsGetAwakeningsSleeps(0, startedLevelDate, value, name, function(sleeps, value, name){
               if (sleeps[0] != null){
                 var sleepAwakeningsValue = value * 3600;
                 var sleepAwakenings = sleeps[0].awakenings;
@@ -411,7 +440,7 @@ app.get('/levels', function(req, res){
             });
           }
           else if (goalInfo[i].attribute == "awake"){
-            queries.levelsGetTimeAwakeSleeps(1, startedLevelDate, value, name, function(sleeps, value, name){
+            queries.levelsGetTimeAwakeSleeps(0, startedLevelDate, value, name, function(sleeps, value, name){
               if (sleeps[0] != null){
                 var sleepTimeAwakeValue = value;
                 var sleepTimeAwake = sleeps[0].awake;
@@ -486,7 +515,7 @@ app.get('/newLevel', function(req, res){
     newLevelNum: null
   };
 
-  queries.levelsGetUserLevel(1, function(users){
+  queries.levelsGetUserLevel(0, function(users){
     nextLevelData.newLevelNum = users.level;
     queries.getLevel(nextLevelData.newLevelNum, function(levels){
       nextLevelData.goal1Name = levels.firstGoal;
@@ -712,14 +741,15 @@ app.get('/achievements', function(req,res){
 
 app.get('/teamPage', function(req, res){
 
+    userFriends = [];
+    var friendStats = [];
+
     up.getFriends(userToken, function(friends) {
         
-        for (var i = 0; i < friends.length; i++) {
-            console.log('friend: ' + i);
-            console.log(friends[i].xid);
-        }
+        loadFriends(friends, function() {
 
-        res.render('teamPage');
+            res.render('teamPage', { friends: userFriends });
+        });
     });
 });
 
@@ -847,21 +877,6 @@ function getDateNumber(){
 // loads the aggregate data for the front end
 function loadAggregateData(callback) {
 
-    otherData = {date: null, 
-                 stepsAverage: null,
-                 sleepsAverage: null,
-                 stepsTotal: null,
-                 sleepsTotal: null,
-                 workoutsStepsAverage: null,
-                 workoutsStepsTotal: null,
-                 workoutsCaloriesAverage: null,
-                 workoutsCaloriesTotal: null,
-                 workoutsTimeAverage: null,
-                 workoutsTimeTotal: null,
-                 workoutsDistanceAverage: null,
-                 workoutsDistanceTotal: null,
-                };
-
     // get the moves aggregations
     queries.getMovesAggregation(function (results) {
         otherData.stepsAverage = addCommas((results[0].movesAvg).toFixed(2));
@@ -901,13 +916,12 @@ function loadAggregateData(callback) {
                 otherData.workoutsDistanceTotal = 
                     addCommas((metersToMiles(results[0].workoutsDistanceTotal)).toFixed(2));
 
-                    // done with getting aggrgations, call callback
-                    callback();
+                // done with getting aggregations, call callback
+                callback();
 
             });
         });
     });
-
 
 }
 
@@ -1031,6 +1045,25 @@ function loadWorkoutsData(callback) {
         // done getting workouts data, call callback
         callback();
     });
+}
+
+// loads the friends of a user
+function loadFriends(friends, callback) {
+
+    friend = friends.shift();
+
+    if (friend) {
+
+        queries.findUser(friend.xid, function(user) {
+            if (user) {
+                userFriends.push(user);
+            }
+            loadFriends(friends, callback);
+        });
+    }
+    else {
+        callback();
+    }
 }
 
 var sslOptions= {

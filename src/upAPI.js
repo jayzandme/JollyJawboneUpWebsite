@@ -180,6 +180,8 @@ getMoves = function(token, time, callback) {
 		headers: {'Authorization': 'Bearer ' + token}
 	}
 
+    console.log(token);
+
 	https.request(options, function(response){
 
 		var body = '';
@@ -367,7 +369,6 @@ getFriends = function(token, callback) {
 // get user info
 getUserInfo = function(token, callback) {
 
-    console.log('upAPI');
     var options = {
         host: 'jawbone.com',
         path: '/nudge/api/v.1.1/users/@me',
