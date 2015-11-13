@@ -16,6 +16,31 @@ database.once('open', function() {
     console.log('mongodb connection open');
 });
 
+// clears the database
+clearDatabase = function(callback) {
+    moves.remove({}, function() {
+
+        console.log('moves removed');
+        users.remove({}, function() {
+
+            console.log('users removes');
+            sleeps.remove({}, function() {
+
+                console.log('sleeps removes');
+                workouts.remove({}, function() {
+
+                    console.log('workouts removed');
+                    levels.remove({}, function() {
+
+                        console.log('levels removed');
+                        callback();
+                    }) 
+                })
+            })
+        })
+    });
+}
+
 // gets aggregate data for the Moves in the database 
 getMovesAggregation = function(callback){ 
     moves.aggregate([ 
@@ -101,7 +126,7 @@ insertSleeps = function(sleeps, callback) {
 insertSleep = function(sleep, callback) {
 
    var newSleep = new sleeps({
-        userID: 1,
+        userID: 0,
         xid: sleep.xid,
         date: sleep.date,
         time_created: sleep.time_created,
@@ -175,7 +200,7 @@ insertMoves = function(moves, callback) {
 insertMove = function(move, callback) {
 
    var newMove = new moves({
-        userID: 1,
+        userID: 0,
         xid: move.xid,
         date: move.date,
         time_created: move.time_created,
@@ -246,7 +271,7 @@ insertWorkouts = function(workouts, callback) {
 insertWorkout = function(workout, callback) {
 
    var newWorkout = new workouts({
-        userID: 1,
+        userID: 0,
         xid: workout.xid,
         date: workout.date,
         time_created: workout.time_created,
@@ -370,7 +395,7 @@ function nextID (callback) {
     });
 }
 
-insertLevel = function(level) {
+insertLevel = function(level, callback) {
 
    var newLevel = new levels({
       levelNum: level.levelNum,
@@ -393,6 +418,7 @@ insertLevel = function(level) {
         if (err) {
             return console.error(err);
         }
+        callback();
    });
 
 };
@@ -560,3 +586,4 @@ module.exports.levelsGetCaloriesWorkouts = levelsGetCaloriesWorkouts;
 module.exports.levelsGetTimeAwakeSleeps = levelsGetTimeAwakeSleeps;
 module.exports.insertUser = insertUser;
 module.exports.findUser = findUser;
+module.exports.clearDatabase = clearDatabase;
