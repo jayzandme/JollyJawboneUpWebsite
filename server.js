@@ -136,7 +136,7 @@ app.get('/', function(req, res) {
 app.get('/levels', function(req, res){
 
   //get user's current level from database and when the user started this level
-  queries.levelsGetUserLevel(1, function(users){
+  queries.levelsGetUserLevel(0, function(users){
     var currentLevel = users.level;
     var startedLevelDate = users.dateStartedLevel;
     var daysOnLevel = computeDaysOnLevel(startedLevelDate);
@@ -172,7 +172,7 @@ app.get('/levels', function(req, res){
         var name = goalInfo[i].name
         if (goalInfo[i].type == "moves"){
           if (goalInfo[i].attribute == "steps"){
-             queries.levelsGetNumSteps(1, startedLevelDate, value, name, function(moves, value, name){
+             queries.levelsGetNumSteps(0, startedLevelDate, value, name, function(moves, value, name){
 
               if (moves[0] != null){
                 var stepsTaken = moves[0].steps;
@@ -205,7 +205,7 @@ app.get('/levels', function(req, res){
             });
           }
           else if (goalInfo[i].attribute == "distance"){
-            queries.levelsGetDistance(1, startedLevelDate, value, name, function(moves, value, name){
+            queries.levelsGetDistance(0, startedLevelDate, value, name, function(moves, value, name){
               if (moves[0] != null){
                 var distanceTraveled = moves[0].distance;
                 var distanceRemaining = value - distanceTraveled;
@@ -240,7 +240,7 @@ app.get('/levels', function(req, res){
         }
         else if (goalInfo[i].type == "workouts"){
           if (goalInfo[i].attribute == "time"){
-            queries.levelsGetTimeWorkouts(1, startedLevelDate, value, name, function(workouts, value, name){
+            queries.levelsGetTimeWorkouts(0, startedLevelDate, value, name, function(workouts, value, name){
               if (workouts[0] != null){
                 var workoutTimeValue = value;
                 var workoutTime = workouts[0].time;
@@ -274,7 +274,7 @@ app.get('/levels', function(req, res){
             });
           }
           else if (goalInfo[i].attribute == "steps"){
-            queries.levelsGetStepsWorkouts(1, startedLevelDate, value, name, function(workouts, value, name){
+            queries.levelsGetStepsWorkouts(0, startedLevelDate, value, name, function(workouts, value, name){
               if (workouts[0] != null){
                 var workoutStepsValue = value;
                 var workoutSteps = workouts[0].steps;
@@ -308,7 +308,7 @@ app.get('/levels', function(req, res){
             });
           }
           else if(goalInfo[i].attribute == "calories"){
-            queries.levelsGetCaloriesWorkouts(1, startedLevelDate, value, name, function(workouts, value, name){
+            queries.levelsGetCaloriesWorkouts(0, startedLevelDate, value, name, function(workouts, value, name){
               if (workouts[0] != null){
                 var workoutCaloriesValue = value;
                 var workoutCalories = workouts[0].calories;
@@ -344,7 +344,7 @@ app.get('/levels', function(req, res){
         }
         else if (goalInfo[i].type == "sleeps"){
           if(goalInfo[i].attribute == "asleep_time"){
-            queries.levelsGetTimeSleeps(1, startedLevelDate, value, name, function(sleeps, value, name){
+            queries.levelsGetTimeSleeps(0, startedLevelDate, value, name, function(sleeps, value, name){
               if (sleeps[0] != null){
                 var sleepTimeValue = value * 3600;
                 var sleepTime = sleeps[0].duration;
@@ -378,7 +378,7 @@ app.get('/levels', function(req, res){
             });
           }
           else if (goalInfo[i].attribute == "awakenings"){
-            queries.levelsGetAwakeningsSleeps(1, startedLevelDate, value, name, function(sleeps, value, name){
+            queries.levelsGetAwakeningsSleeps(0, startedLevelDate, value, name, function(sleeps, value, name){
               if (sleeps[0] != null){
                 var sleepAwakeningsValue = value * 3600;
                 var sleepAwakenings = sleeps[0].awakenings;
@@ -411,7 +411,7 @@ app.get('/levels', function(req, res){
             });
           }
           else if (goalInfo[i].attribute == "awake"){
-            queries.levelsGetTimeAwakeSleeps(1, startedLevelDate, value, name, function(sleeps, value, name){
+            queries.levelsGetTimeAwakeSleeps(0, startedLevelDate, value, name, function(sleeps, value, name){
               if (sleeps[0] != null){
                 var sleepTimeAwakeValue = value;
                 var sleepTimeAwake = sleeps[0].awake;
@@ -451,7 +451,7 @@ app.get('/levels', function(req, res){
         if (progress[0].goalCompleted && progress[1].goalCompleted && progress[2].goalCompleted){
           showNextLevelButton = true;
           var finishedLevelDate = getDateNumber();
-          queries.updateUserLevelInfo(1, currentLevel + 1, finishedLevelDate); 
+          queries.updateUserLevelInfo(0, currentLevel + 1, finishedLevelDate); 
         }
         res.render('levels', 
           { currentLevel: currentLevel,
@@ -486,7 +486,7 @@ app.get('/newLevel', function(req, res){
     newLevelNum: null
   };
 
-  queries.levelsGetUserLevel(1, function(users){
+  queries.levelsGetUserLevel(0, function(users){
     nextLevelData.newLevelNum = users.level;
     queries.getLevel(nextLevelData.newLevelNum, function(levels){
       nextLevelData.goal1Name = levels.firstGoal;
@@ -511,7 +511,7 @@ app.get('/viewOldLevel/:i', function(req, res){
     currentLevelNum: null
   };
 
-  queries.levelsGetUserLevel(1, function(users){
+  queries.levelsGetUserLevel(0, function(users){
     oldLevel.currentLevelNum = users.level;
     queries.getLevel(levelNum, function(levels){
       oldLevel.goal1Name = levels.firstGoal;
