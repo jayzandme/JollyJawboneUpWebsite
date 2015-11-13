@@ -26,11 +26,9 @@ var returnDataSleeps = [];
 var returnDataMoves = [];
 var returnDataWorkouts = [];
 
-//Variables for Weekly Challenges Page
+//Timer Variables for Weekly Challenges Page
 var Timer;
 var TotalSeconds;
-var FriendMoves;
-var FriendXid;
 
 var host = 'localhost'
 var port = 5000;
@@ -726,59 +724,8 @@ app.get('/teamPage', function(req, res){
 });
 
 app.get('/weeklyChallenges', function(req,res){
-  
-  //array of weekly challenges
-  challenges = new Array();
+   userProgress = new Array();
     
-  if (true){
-    challenges.push("Take the most steps this week!");
-    challenges.push("Log the most sleep this week!");
-    challenges.push("Log the most workouts this week!");
-  }
-
-  var challengeCount=0;
-  var currentChallenge=challenges[challengeCount];
-
-
-    //set a starting Sunday to build from
-    var month = 'Nov'; 
-    var date = '15';
-    var year = '2015';
-
-    var theDate = month + ' ' + date + ' ' + year;
-    var setdate = new Date(theDate);
-    var now = new Date();
-    
-
-    var now = new Date();
-    var midnight = new Date();
-    midnight.setHours(24,0,0,0); //midnignt
-    while (setdate-now<=0){
-    //if (now.getDay()==0 && midnight.getTime() ==Date.now() ){ //is Sunday at midnight
-      //iterate challenge
-      challengeCount++;
-      challengeCount=challengeCount%challenges.length;
-      currentChallenge=challenges[challengeCount];
-      //iterate setdate
-      setdate.setHours(setdate.getHours() + 7*24);
-    }
-    
-    var countdown = (setdate - now)/1000;
-    countdown = Math.floor(countdown);
-
-    up.getFriends(userToken, function(friends) {
-    userFriends = new Array();   
-    userProgress = new Array(); 
-    for (var i = 0; i < friends.length; i++) {
-        console.log('friend: ' + i);
-        console.log(friends[i].xid);
-        userFriends.push(friends[i].userID);
-        userFriends.push(friends[i].xid);
-        userProgress.push('Friend ' + i);
-        userProgress.push(friends[i].xid);
-    }
-
- /*   
  if (true){
     userProgress.push("Friend 1");
     userProgress.push("30,000 steps");
@@ -791,14 +738,16 @@ app.get('/weeklyChallenges', function(req,res){
     userProgress.push("Friend 3");
     userProgress.push("1,000 steps");
   }
-  */
-  
-    res.render('weeklyChallenges', 
-      {countdown: countdown,
-        currentChallenge: currentChallenge,
-        }
-      );
-    });
+
+  challenges = new Array();
+    
+  if (true){
+    challenges.push("Take the most steps this week!");
+    challenges.push("Log the most sleep this week!");
+    challenges.push("Log the most workouts this week!");
+  }
+
+    res.render('weeklyChallenges');
 });
 
 function epochtoClockTime(epochTime){
@@ -1005,11 +954,6 @@ function loadSleepsData(callback) {
 
 // load moves data for the frontend
 function loadMovesData(callback) {
-    FriendMoves = 0;
-    FriendXid = "2hjpAooLN61LYkWC2ca6YQ";
-    /*queries.getMoves(FriendXid,function(moves)){
-      
-    }*/
 
     returnAllTimeMoves = 0;
     queries.getMoves(1, function(moves) {
@@ -1043,7 +987,6 @@ function loadMovesData(callback) {
             //alltimemoves
             returnAllTimeMoves+=moves[i].steps;
         }
-
 
         // done getting moves data call the callback
         callback();

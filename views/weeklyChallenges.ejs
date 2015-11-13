@@ -33,7 +33,19 @@
 
   <head>
       <script type="text/javascript">
-      var seconds = <%= countdown %>;
+      var Timer;
+      var TotalSeconds;
+      var month = 'Nov';
+      var date = '10';
+      var year = '2015';
+      var theDate = month + ' ' + date + ' ' + year;
+      
+      var setdate = new Date(theDate);
+      var now = new Date();
+
+      var countdown = (setdate - now)/1000;
+      countdown = Math.floor(countdown);
+      var seconds = countdown;
  
         function timer() {
             var days        = Math.floor(seconds/24/60/60);
@@ -42,7 +54,7 @@
             var minutesLeft = Math.floor((hoursLeft) - (hours*3600));
             var minutes     = Math.floor(minutesLeft/60);
             var remainingSeconds = seconds % 60;
-            /*if (remainingSeconds < 10) { //for digital clock style countdown
+            /*if (remainingSeconds < 10) {
                 remainingSeconds = "0" + remainingSeconds; 
             }*/
             document.getElementById('timer_div').innerHTML = days + " Days " + hours + " Hours " + minutes + " Minutes " + remainingSeconds + " Seconds " ;
@@ -62,7 +74,7 @@
    
 
   <body>   
-    <h4 id="challenges"><%= currentChallenge %> </h4> 
+    <h4 id="challenges"><%= challenges[1] %> </h4> 
     <div id="timer_div"></div>
   </body>
 
