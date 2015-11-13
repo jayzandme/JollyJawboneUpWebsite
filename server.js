@@ -5,7 +5,6 @@ var bodyParser = require('body-parser');
 var fs = require('fs');
 var up = require ('./src/upAPI.js');
 var queries = require('./src/queries.js');
-var cookie = require('cookie');
 var _ = require('underscore');
 
 // user session stuff
