@@ -107,7 +107,7 @@ getWorkoutsAggregation = function(callback) {
 }
 
 // inserts an array of sleeps into the database
-insertSleeps = function(sleeps, callback) {
+insertSleeps = function(sleeps, userID, callback) {
     
     var inserted = _.after(sleeps.length, callback);
 
@@ -116,17 +116,17 @@ insertSleeps = function(sleeps, callback) {
     }
 
     for (var i = 0; i < sleeps.length; i++) {
-        insertSleep(sleeps[i], function() {
+        insertSleep(sleeps[i], userID, function() {
             inserted();
         });
     }
 }
 
 // inserts a sleep into the database
-insertSleep = function(sleep, callback) {
+insertSleep = function(sleep, userID, callback) {
 
    var newSleep = new sleeps({
-        userID: 0,
+        userID: userID,
         xid: sleep.xid,
         date: sleep.date,
         time_created: sleep.time_created,
@@ -180,7 +180,7 @@ getLatestSleep = function(userID, callback) {
 
 
 // inserts an array of moves into the database
-insertMoves = function(moves, callback) {
+insertMoves = function(moves, userID, callback) {
     
     var inserted = _.after(moves.length, callback);
 
@@ -189,7 +189,7 @@ insertMoves = function(moves, callback) {
     }
 
     for (var i = 0; i < moves.length; i++) {
-        insertMove(moves[i], function() {
+        insertMove(moves[i], userID, function() {
             inserted();
         });
     }
@@ -197,10 +197,10 @@ insertMoves = function(moves, callback) {
 }
 
 // inserts a move into the database
-insertMove = function(move, callback) {
+insertMove = function(move, userID, callback) {
 
    var newMove = new moves({
-        userID: 0,
+        userID: userID,
         xid: move.xid,
         date: move.date,
         time_created: move.time_created,
@@ -251,7 +251,7 @@ getLatestMove = function(userID, callback) {
 }
 
 // inserts an array of workouts into the database
-insertWorkouts = function(workouts, callback) {
+insertWorkouts = function(workouts, userID, callback) {
     
     var inserted = _.after(workouts.length, callback);
 
@@ -260,7 +260,7 @@ insertWorkouts = function(workouts, callback) {
     }
 
     for (var i = 0; i < workouts.length; i++) {
-        insertWorkout(workouts[i], function() {
+        insertWorkout(workouts[i], userID, function() {
             inserted();
         });
     }
@@ -271,7 +271,7 @@ insertWorkouts = function(workouts, callback) {
 insertWorkout = function(workout, callback) {
 
    var newWorkout = new workouts({
-        userID: 0,
+        userID: userID,
         xid: workout.xid,
         date: workout.date,
         time_created: workout.time_created,
