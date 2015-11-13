@@ -928,7 +928,7 @@ function loadAggregateData(callback) {
 // load the sleep data for the frontend
 function loadSleepsData(callback) {
 
-    queries.getSleeps(1, function(sleeps) {
+    queries.getSleeps(0, function(sleeps) {
         for (var i = 0; i < 10; i++) {
             returnDataSleeps.push({
                   title: sleeps[i].title,
@@ -970,7 +970,7 @@ function loadSleepsData(callback) {
 function loadMovesData(callback) {
 
     returnAllTimeMoves = 0;
-    queries.getMoves(1, function(moves) {
+    queries.getMoves(0, function(moves) {
         for (var i = 0; i < 10; i++) {
             returnDataMoves.push({
               steps: addCommas(moves[i].steps),
@@ -1011,7 +1011,7 @@ function loadMovesData(callback) {
 // loads the workout data for the front end
 function loadWorkoutsData(callback) {
 
-    queries.getWorkouts(1, function(workouts) {
+    queries.getWorkouts(0, function(workouts) {
         for (var i = 0; i < 10; i++){
             returnDataWorkouts.push({
               title: workouts[i].title,
