@@ -101,7 +101,7 @@ insertSleeps = function(sleeps, callback) {
 insertSleep = function(sleep, callback) {
 
    var newSleep = new sleeps({
-        userID: 1,
+        userID: 0,
         xid: sleep.xid,
         date: sleep.date,
         time_created: sleep.time_created,
@@ -175,7 +175,7 @@ insertMoves = function(moves, callback) {
 insertMove = function(move, callback) {
 
    var newMove = new moves({
-        userID: 1,
+        userID: 0,
         xid: move.xid,
         date: move.date,
         time_created: move.time_created,
@@ -246,7 +246,7 @@ insertWorkouts = function(workouts, callback) {
 insertWorkout = function(workout, callback) {
 
    var newWorkout = new workouts({
-        userID: 1,
+        userID: 0,
         xid: workout.xid,
         date: workout.date,
         time_created: workout.time_created,
@@ -301,20 +301,21 @@ getLatestWorkout = function(userID, callback) {
 // inserts a user into the database
 insertUser = function(user, callback) {
 
-    var today = new Date();
-    var dd = today.getDate();
-    var mm = today.getMonth() + 1;
-    var yyyy = today.getFullYear();
+  var today = new Date();
+  var todayDay = today.getDate();
+  var todayMonth = today.getMonth()+1; //January is 0
+  var todayYear = today.getFullYear();
 
-    if (dd < 10) {
-        dd = '0' + dd;
-    }
-    
-    if (mm < 10) {
-        dd = '0' + mm;
-    }
+  if(todayDay<10) {
+      todayDay='0'+todayDay
+  } 
 
-    today = yyyy + mm + dd;
+  if(todayMonth<10) {
+      todayMonth='0'+todayMonth
+  } 
+
+
+  var today = parseInt(todayYear, 10) * 10000 + parseInt(todayMonth, 10) * 100 + parseInt(todayDay, 10);
 
     nextID(function(nextUserID) {
 

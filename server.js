@@ -195,14 +195,13 @@ app.get('/levels', function(req, res){
       }];
 
       //going to have to make queries for daily steps vs. aggregrate steps and such
-      //this will only work for level 1 currently
       for (var i = 0; i < 3; i++){
         var value = goalInfo[i].value;
         var name = goalInfo[i].name
         if (goalInfo[i].type == "moves"){
           if (goalInfo[i].attribute == "steps"){
              queries.levelsGetNumSteps(0, startedLevelDate, value, name, function(moves, value, name){
-
+              console.log(moves[0])
               if (moves[0] != null){
                 var stepsTaken = moves[0].steps;
                 var stepsRemaining = value - stepsTaken;
@@ -480,7 +479,7 @@ app.get('/levels', function(req, res){
         if (progress[0].goalCompleted && progress[1].goalCompleted && progress[2].goalCompleted){
           showNextLevelButton = true;
           var finishedLevelDate = getDateNumber();
-          queries.updateUserLevelInfo(1, currentLevel + 1, finishedLevelDate); 
+          queries.updateUserLevelInfo(0, currentLevel + 1, finishedLevelDate); 
         }
         res.render('levels', 
           { currentLevel: currentLevel,
@@ -540,7 +539,7 @@ app.get('/viewOldLevel/:i', function(req, res){
     currentLevelNum: null
   };
 
-  queries.levelsGetUserLevel(1, function(users){
+  queries.levelsGetUserLevel(0, function(users){
     oldLevel.currentLevelNum = users.level;
     queries.getLevel(levelNum, function(levels){
       oldLevel.goal1Name = levels.firstGoal;
@@ -928,7 +927,7 @@ function loadAggregateData(callback) {
 // load the sleep data for the frontend
 function loadSleepsData(callback) {
 
-    queries.getSleeps(1, function(sleeps) {
+    queries.getSleeps(0, function(sleeps) {
         for (var i = 0; i < 10; i++) {
             returnDataSleeps.push({
                   title: sleeps[i].title,
@@ -970,7 +969,7 @@ function loadSleepsData(callback) {
 function loadMovesData(callback) {
 
     returnAllTimeMoves = 0;
-    queries.getMoves(1, function(moves) {
+    queries.getMoves(0, function(moves) {
         for (var i = 0; i < 10; i++) {
             returnDataMoves.push({
               steps: addCommas(moves[i].steps),
@@ -1011,7 +1010,7 @@ function loadMovesData(callback) {
 // loads the workout data for the front end
 function loadWorkoutsData(callback) {
 
-    queries.getWorkouts(1, function(workouts) {
+    queries.getWorkouts(0, function(workouts) {
         for (var i = 0; i < 10; i++){
             returnDataWorkouts.push({
               title: workouts[i].title,
