@@ -309,7 +309,7 @@ insertUser = function(user, callback) {
             xid: user.xid,
             first: user.first,
             last: user.last,
-            level: 0,
+            level: 1,
             challengeProgress: 0,
             dashboard: ""
         });
@@ -499,7 +499,6 @@ levelsGetUserLevel = function(userID, callback){
             throw err;
         }
         else {
-            console.log(user);
             callback(user);
         }
     });

@@ -1,3 +1,5 @@
+var queries = require('./src/queries.js');
+
 level1 = {
     levelNum: 1,
     levelName: "First Level!",
