@@ -515,7 +515,7 @@ app.get('/newLevel', function(req, res){
     newLevelNum: null
   };
 
-  queries.levelsGetUserLevel(1, function(users){
+  queries.levelsGetUserLevel(0, function(users){
     nextLevelData.newLevelNum = users.level;
     queries.getLevel(nextLevelData.newLevelNum, function(levels){
       nextLevelData.goal1Name = levels.firstGoal;

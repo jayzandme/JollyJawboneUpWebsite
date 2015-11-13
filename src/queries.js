@@ -301,6 +301,21 @@ getLatestWorkout = function(userID, callback) {
 // inserts a user into the database
 insertUser = function(user, callback) {
 
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth() + 1;
+    var yyyy = today.getFullYear();
+
+    if (dd < 10) {
+        dd = '0' + dd;
+    }
+    
+    if (mm < 10) {
+        dd = '0' + mm;
+    }
+
+    today = yyyy + mm + dd;
+
     nextID(function(nextUserID) {
 
         var newUser = new users({
@@ -310,6 +325,7 @@ insertUser = function(user, callback) {
             first: user.first,
             last: user.last,
             level: 1,
+            dateStartedLevel: today,
             challengeProgress: 0,
             dashboard: ""
         });
@@ -399,8 +415,10 @@ levelsGetNumSteps = function(userID, startedLevelDate, value, name, callback){
     var queryVals = moves.find({$and: [{userID: userID}, {date: {$gt: startedLevelDate}}]}).sort({steps:-1});
 
     queryVals.exec(function (err, moves) {
-        if (err) 
+        if (err) {
+            console.log(err);
             throw err;
+        }
         else {
             callback(moves, value, name);
         }
