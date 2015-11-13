@@ -17,8 +17,6 @@ level1 = {
     thirdGoalDescriptor: "asleep_time"
 }
 
-queries.insertLevel(level1);
-
 level2 = {
     levelNum: 2,
     levelName: "Second Level!",
@@ -35,7 +33,6 @@ level2 = {
     thirdGoalType: "sleeps",
     thirdGoalDescriptor: "awakenings"
 }
-queries.insertLevel(level2);
 
 level3 = {
       levelNum: 3,
@@ -54,5 +51,14 @@ level3 = {
       thirdGoalDescriptor: "awake"
     }
 
-queries.insertLevel(level3);
+queries.clearDatabase(function() {
+    console.log('database cleared');
+        queries.insertLevel(level1, function() {
+            queries.insertLevel(level2, function() { 
+                queries.insertLevel(level3, function() {
+                    console.log('levels inserted');
+                })
+            })
+        });
+});
 

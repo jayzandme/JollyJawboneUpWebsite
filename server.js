@@ -195,14 +195,12 @@ app.get('/levels', function(req, res){
       }];
 
       //going to have to make queries for daily steps vs. aggregrate steps and such
-      //this will only work for level 1 currently
       for (var i = 0; i < 3; i++){
         var value = goalInfo[i].value;
         var name = goalInfo[i].name
         if (goalInfo[i].type == "moves"){
           if (goalInfo[i].attribute == "steps"){
              queries.levelsGetNumSteps(0, startedLevelDate, value, name, function(moves, value, name){
-
               if (moves[0] != null){
                 var stepsTaken = moves[0].steps;
                 var stepsRemaining = value - stepsTaken;
@@ -480,7 +478,7 @@ app.get('/levels', function(req, res){
         if (progress[0].goalCompleted && progress[1].goalCompleted && progress[2].goalCompleted){
           showNextLevelButton = true;
           var finishedLevelDate = getDateNumber();
-          queries.updateUserLevelInfo(1, currentLevel + 1, finishedLevelDate); 
+          queries.updateUserLevelInfo(0, currentLevel + 1, finishedLevelDate); 
         }
         res.render('levels', 
           { currentLevel: currentLevel,
@@ -540,7 +538,7 @@ app.get('/viewOldLevel/:i', function(req, res){
     currentLevelNum: null
   };
 
-  queries.levelsGetUserLevel(1, function(users){
+  queries.levelsGetUserLevel(0, function(users){
     oldLevel.currentLevelNum = users.level;
     queries.getLevel(levelNum, function(levels){
       oldLevel.goal1Name = levels.firstGoal;
@@ -747,28 +745,15 @@ app.get('/teamPage', function(req, res){
     up.getFriends(userToken, function(friends) {
         
         loadFriends(friends, function() {
-
             res.render('teamPage', { friends: userFriends });
         });
     });
 });
 
 app.get('/weeklyChallenges', function(req,res){
-   userProgress = new Array();
-    
- if (true){
-    userProgress.push("Friend 1");
-    userProgress.push("30,000 steps");
-  }
-  if (true){
-    userProgress.push("Friend 2");
-    userProgress.push("12,000 steps");
-  }
-  if (true){
-    userProgress.push("Friend 3");
-    userProgress.push("1,000 steps");
-  }
 
+  userFriends = [];
+  //array of weekly challenges
   challenges = new Array();
     
   if (true){
@@ -777,7 +762,87 @@ app.get('/weeklyChallenges', function(req,res){
     challenges.push("Log the most workouts this week!");
   }
 
-    res.render('weeklyChallenges');
+  var challengeCount=0;
+  var currentChallenge=challenges[challengeCount];
+
+
+    //set a starting Sunday to build from
+    var month = 'Nov'; 
+    var date = '15';
+    var year = '2015';
+
+    var theDate = month + ' ' + date + ' ' + year;
+    var setdate = new Date(theDate);
+    var now = new Date();
+    
+
+    var now = new Date();
+    var midnight = new Date();
+    midnight.setHours(24,0,0,0); //midnignt
+    while (setdate-now<=0){
+    //if (now.getDay()==0 && midnight.getTime() ==Date.now() ){ //is Sunday at midnight
+      //iterate challenge
+      challengeCount++;
+      challengeCount=challengeCount%challenges.length;
+      currentChallenge=challenges[challengeCount];
+      //iterate setdate
+      setdate.setHours(setdate.getHours() + 7*24);
+    }
+    
+    var countdown = (setdate - now)/1000;
+    countdown = Math.floor(countdown);
+
+    up.getFriends(userToken, function(friends) {
+    friendsXID = new Array();   
+    friendsUserID = new Array(); 
+    userProgress = new Array(); 
+    for (var i = 0; i < friends.length; i++) {
+        console.log('friend: ' + i);
+        console.log(friends[i].xid);
+        friendsXID.push(friends[i].xid);
+        /*
+        queries.findUser(friends[i].xid, function(userID){
+          console.log('in findUser query');
+          friendsUserID.push(userID);
+        });
+         */
+        console.log(friendsUserID[i]);
+        userProgress.push('Friend ' + i);
+        userProgress.push(friends[i].xid);
+      }
+
+
+
+       /*   
+       if (true){
+          userProgress.push("Friend 1");
+          userProgress.push("30,000 steps");
+        }
+        if (true){
+          userProgress.push("Friend 2");
+          userProgress.push("12,000 steps");
+        }
+        if (true){
+          userProgress.push("Friend 3");
+          userProgress.push("1,000 steps");
+        }
+        */
+  
+  up.getFriends(userToken, function(friends) {
+        
+        loadFriends(friends, function() {
+            res.render('weeklyChallenges', 
+      {countdown: countdown,
+        currentChallenge: currentChallenge,
+        friends: userFriends
+      }
+
+      );
+        });
+    });
+    
+    });
+
 });
 
 function epochtoClockTime(epochTime){
@@ -928,7 +993,7 @@ function loadAggregateData(callback) {
 // load the sleep data for the frontend
 function loadSleepsData(callback) {
 
-    queries.getSleeps(1, function(sleeps) {
+    queries.getSleeps(0, function(sleeps) {
         for (var i = 0; i < 10; i++) {
             returnDataSleeps.push({
                   title: sleeps[i].title,
@@ -970,7 +1035,7 @@ function loadSleepsData(callback) {
 function loadMovesData(callback) {
 
     returnAllTimeMoves = 0;
-    queries.getMoves(1, function(moves) {
+    queries.getMoves(0, function(moves) {
         for (var i = 0; i < 10; i++) {
             returnDataMoves.push({
               steps: addCommas(moves[i].steps),
@@ -1011,7 +1076,7 @@ function loadMovesData(callback) {
 // loads the workout data for the front end
 function loadWorkoutsData(callback) {
 
-    queries.getWorkouts(1, function(workouts) {
+    queries.getWorkouts(0, function(workouts) {
         for (var i = 0; i < 10; i++){
             returnDataWorkouts.push({
               title: workouts[i].title,
