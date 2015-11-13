@@ -745,7 +745,6 @@ app.get('/teamPage', function(req, res){
     up.getFriends(userToken, function(friends) {
         
         loadFriends(friends, function() {
-
             res.render('teamPage', { friends: userFriends });
         });
     });
