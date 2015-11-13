@@ -5,8 +5,11 @@ var bodyParser = require('body-parser');
 var fs = require('fs');
 var up = require ('./src/upAPI.js');
 var queries = require('./src/queries.js');
-var mongoose = require('mongoose');
 var cookie = require('cookie');
+var _ = require('underscore');
+
+// user session stuff
+var userToken;
 
 //Variables for Achievements Page
 var returnMovesMax = 0;
@@ -17,30 +20,44 @@ var consecutiveSleepMax = 0;
 var consecutiveWorkoutMax = 0;
 var returnAllTimeMoves = 0;
 
-// user session stuff
-var userToken;
-
 // data for frontend
-var otherdata;
+otherData = {date: null, 
+             stepsAverage: null,
+             sleepsAverage: null,
+             stepsTotal: null,
+             sleepsTotal: null,
+             workoutsStepsAverage: null,
+             workoutsStepsTotal: null,
+             workoutsCaloriesAverage: null,
+             workoutsCaloriesTotal: null,
+             workoutsTimeAverage: null,
+             workoutsTimeTotal: null,
+             workoutsDistanceAverage: null,
+             workoutsDistanceTotal: null,
+            };
+
 var returnDataSleeps = [];
 var returnDataMoves = [];
 var returnDataWorkouts = [];
+
+// team
+var userFriends = [];
 
 //Timer Variables for Weekly Challenges Page
 var Timer;
 var TotalSeconds;
 
+// hosting the server
 var host = 'localhost'
 var port = 5000;
 var app = express()
 
+// frontend rendering 
 app.use(bodyParser.json());
 app.use(express.static(__dirname + '/css'));
 app.use('/bower_components',  express.static(__dirname + '/bower_components'));
 app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views');
-
-var userToken = ''
 
 var jawboneAuth = {
     clientID: 'bbtI3tvNMBs',
@@ -54,7 +71,6 @@ app.get('/login/jawbone', function (req, res) {
 
     res.redirect('https://' + up.getCode());
     res.end;
-
 });
 
 app.get('/token', function (req, res) {
@@ -75,58 +91,71 @@ app.get('/token', function (req, res) {
                     queries.insertUser(userInfo, function(){});
                 }
             });
-        });
-       
-        // update the sleeps
-        up.updateSleeps(token, function(sleepsData) { 
+        }); 
 
-            console.log('got ' + sleepsData.length + ' sleep events');
-            for (var i = 0; i < sleepsData.length; i++) {
-                queries.insertSleep(sleepsData[i])
-            }
+        res.redirect('/dashboard?token=' + token);
+    }); 
+});
+
+app.get('/dashboard', function(req, res){
+
+    // var token = req.query.token;
+    var token = userToken;
+    var updating = 3;
+    var doneUpdating = _.after(3, loadData);
+
+    // update the sleeps
+    up.updateSleeps(token, function(sleepsData) { 
+        console.log('got ' + sleepsData.length + ' sleep events');
+        queries.insertSleeps(sleepsData, function() {
+
+            updating--;
             console.log('inserted sleeps')
-            // update the moves
-            up.updateMoves(token, function(movesData) {
-                console.log('got ' + movesData.length + ' move events');
-                for (var i = 0; i < movesData.length; i++) {
-                    queries.insertMove(movesData[i])
-                }
-                console.log('inserted moves');
+            doneUpdating();
+        });
+    });
 
-                // update the workouts
-                up.updateWorkouts(token, function(workoutsData){
-                    console.log('got ' + workoutsData.length + ' workout events');
-                    for (var i = 0; i < workoutsData.length; i++) {
-                        queries.insertWorkout(workoutsData[i])
-                    }
-                    console.log('inserted workouts');
+    // update the moves
+    up.updateMoves(token, function(movesData) {
+        console.log('got ' + movesData.length + ' move events');
+        queries.insertMoves(movesData, function() {
 
-                    // load all the data for frontend
+            updating--;
+            console.log('inserted moves');
+            doneUpdating();
+        });
+    });
+
+    // update the workouts
+    up.updateWorkouts(token, function(workoutsData){
+        console.log('got ' + workoutsData.length + ' workout events');
+        queries.insertWorkouts(workoutsData, function() {
+
+            updating--;
+            console.log('inserted workouts');
+            doneUpdating();
+        });
+    });
+
+    // load all the data for frontend
+    function loadData() {
+        loadSleepsData(function () {
+            loadMovesData(function () {
+                loadWorkoutsData(function() {
                     loadAggregateData(function () {
-                        loadSleepsData(function () {
-                            loadMovesData(function () {
-                                loadWorkoutsData(function() {
 
-                                    // display the dashboard
-                                    setTimeout(function(){
-                                    app.get('/dashboard', function(req, res){
-                                        res.render('dashboard', 
-                                            { sleeps: returnDataSleeps[0],
-                                            moves: returnDataMoves[0],
-                                            workouts: returnDataWorkouts[0],
-                                            otherData: otherData
-                                            });
-                                           });
-                                        res.redirect('/dashboard');
-                                    }, 1000);
-                                });
-                            });
-                        });
+                        res.render('dashboard', 
+                                    { sleeps: returnDataSleeps[0],
+                                    moves: returnDataMoves[0],
+                                    workouts: returnDataWorkouts[0],
+                                    otherData: otherData
+                                    });
                     });
                 });
             });
         });
-    }); 
+    }
+
 });
 
 app.get('/', function(req, res) {
@@ -166,14 +195,12 @@ app.get('/levels', function(req, res){
       }];
 
       //going to have to make queries for daily steps vs. aggregrate steps and such
-      //this will only work for level 1 currently
       for (var i = 0; i < 3; i++){
         var value = goalInfo[i].value;
         var name = goalInfo[i].name
         if (goalInfo[i].type == "moves"){
           if (goalInfo[i].attribute == "steps"){
              queries.levelsGetNumSteps(0, startedLevelDate, value, name, function(moves, value, name){
-
               if (moves[0] != null){
                 var stepsTaken = moves[0].steps;
                 var stepsRemaining = value - stepsTaken;
@@ -712,14 +739,15 @@ app.get('/achievements', function(req,res){
 
 app.get('/teamPage', function(req, res){
 
+    userFriends = [];
+    var friendStats = [];
+
     up.getFriends(userToken, function(friends) {
         
-        for (var i = 0; i < friends.length; i++) {
-            console.log('friend: ' + i);
-            console.log(friends[i].xid);
-        }
+        loadFriends(friends, function() {
 
-        res.render('teamPage');
+            res.render('teamPage', { friends: userFriends });
+        });
     });
 });
 
@@ -847,21 +875,6 @@ function getDateNumber(){
 // loads the aggregate data for the front end
 function loadAggregateData(callback) {
 
-    otherData = {date: null, 
-                 stepsAverage: null,
-                 sleepsAverage: null,
-                 stepsTotal: null,
-                 sleepsTotal: null,
-                 workoutsStepsAverage: null,
-                 workoutsStepsTotal: null,
-                 workoutsCaloriesAverage: null,
-                 workoutsCaloriesTotal: null,
-                 workoutsTimeAverage: null,
-                 workoutsTimeTotal: null,
-                 workoutsDistanceAverage: null,
-                 workoutsDistanceTotal: null,
-                };
-
     // get the moves aggregations
     queries.getMovesAggregation(function (results) {
         otherData.stepsAverage = addCommas((results[0].movesAvg).toFixed(2));
@@ -901,20 +914,19 @@ function loadAggregateData(callback) {
                 otherData.workoutsDistanceTotal = 
                     addCommas((metersToMiles(results[0].workoutsDistanceTotal)).toFixed(2));
 
-                    // done with getting aggrgations, call callback
-                    callback();
+                // done with getting aggregations, call callback
+                callback();
 
             });
         });
     });
-
 
 }
 
 // load the sleep data for the frontend
 function loadSleepsData(callback) {
 
-    queries.getSleeps(1, function(sleeps) {
+    queries.getSleeps(0, function(sleeps) {
         for (var i = 0; i < 10; i++) {
             returnDataSleeps.push({
                   title: sleeps[i].title,
@@ -956,7 +968,7 @@ function loadSleepsData(callback) {
 function loadMovesData(callback) {
 
     returnAllTimeMoves = 0;
-    queries.getMoves(1, function(moves) {
+    queries.getMoves(0, function(moves) {
         for (var i = 0; i < 10; i++) {
             returnDataMoves.push({
               steps: addCommas(moves[i].steps),
@@ -997,7 +1009,7 @@ function loadMovesData(callback) {
 // loads the workout data for the front end
 function loadWorkoutsData(callback) {
 
-    queries.getWorkouts(1, function(workouts) {
+    queries.getWorkouts(0, function(workouts) {
         for (var i = 0; i < 10; i++){
             returnDataWorkouts.push({
               title: workouts[i].title,
@@ -1031,6 +1043,25 @@ function loadWorkoutsData(callback) {
         // done getting workouts data, call callback
         callback();
     });
+}
+
+// loads the friends of a user
+function loadFriends(friends, callback) {
+
+    friend = friends.shift();
+
+    if (friend) {
+
+        queries.findUser(friend.xid, function(user) {
+            if (user) {
+                userFriends.push(user);
+            }
+            loadFriends(friends, callback);
+        });
+    }
+    else {
+        callback();
+    }
 }
 
 var sslOptions= {

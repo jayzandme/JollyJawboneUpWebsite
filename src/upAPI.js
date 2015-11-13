@@ -61,7 +61,7 @@ updateSleeps = function(token, callback) {
 
     var time;
 
-    queries.getLatestSleep(1, function(lastSleep) {
+    queries.getLatestSleep(0, function(lastSleep) {
         if (lastSleep === null) {
             time = 0;
         }
@@ -155,7 +155,7 @@ updateMoves = function(token, callback) {
 
     var time;
 
-    queries.getLatestMove(1, function(lastMove) {
+    queries.getLatestMove(0, function(lastMove) {
 
         if (lastMove === null) {
             time = 0;
@@ -179,6 +179,8 @@ getMoves = function(token, time, callback) {
 		path: '/nudge/api/v.1.1/users/@me/moves?start_time=' + time,
 		headers: {'Authorization': 'Bearer ' + token}
 	}
+
+    console.log(token);
 
 	https.request(options, function(response){
 
@@ -249,7 +251,7 @@ updateWorkouts = function(token, callback) {
 
     var time;
 
-    queries.getLatestWorkout(1, function(lastWorkout) {
+    queries.getLatestWorkout(0, function(lastWorkout) {
 
         if (lastWorkout === null) {
             time = 0;
@@ -367,7 +369,6 @@ getFriends = function(token, callback) {
 // get user info
 getUserInfo = function(token, callback) {
 
-    console.log('upAPI');
     var options = {
         host: 'jawbone.com',
         path: '/nudge/api/v.1.1/users/@me',
