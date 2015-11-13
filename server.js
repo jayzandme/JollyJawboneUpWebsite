@@ -362,31 +362,40 @@ app.get('/weeklyChallenges', function(req,res){
     countdown = Math.floor(countdown);
 
     up.getFriends(userToken, function(friends) {
-    userFriends = new Array();   
+    friendsXID = new Array();   
+    friendsUserID = new Array(); 
     userProgress = new Array(); 
     for (var i = 0; i < friends.length; i++) {
         console.log('friend: ' + i);
         console.log(friends[i].xid);
-        userFriends.push(friends[i].userID);
-        userFriends.push(friends[i].xid);
+        friendsXID.push(friends[i].xid);
+        /*
+        queries.findUser(friends[i].xid, function(userID){
+          console.log('in findUser query');
+          friendsUserID.push(userID);
+        });
+         */
+        console.log(friendsUserID[i]);
         userProgress.push('Friend ' + i);
         userProgress.push(friends[i].xid);
-    }
+      }
 
- /*   
- if (true){
-    userProgress.push("Friend 1");
-    userProgress.push("30,000 steps");
-  }
-  if (true){
-    userProgress.push("Friend 2");
-    userProgress.push("12,000 steps");
-  }
-  if (true){
-    userProgress.push("Friend 3");
-    userProgress.push("1,000 steps");
-  }
-  */
+
+
+       /*   
+       if (true){
+          userProgress.push("Friend 1");
+          userProgress.push("30,000 steps");
+        }
+        if (true){
+          userProgress.push("Friend 2");
+          userProgress.push("12,000 steps");
+        }
+        if (true){
+          userProgress.push("Friend 3");
+          userProgress.push("1,000 steps");
+        }
+        */
   
     res.render('weeklyChallenges', 
       {countdown: countdown,
