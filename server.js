@@ -149,13 +149,15 @@ app.get('/dashboard', function(req, res){
 
         // load all the data for frontend
         function loadData() {
-            loadSleepsData(userID, function () {
+            loadSleepsData(userID, function (sleepsData, 
+                                             sleepsMax, 
+                                             consecutiveSleepMax) {
                 loadMovesData(function () {
                     loadWorkoutsData(function() {
                         loadAggregateData(function () {
 
                             res.render('dashboard', 
-                                        { sleeps: returnDataSleeps[0],
+                                        { sleeps: sleepsData[0],
                                         moves: returnDataMoves[0],
                                         workouts: returnDataWorkouts[0],
                                         otherData: otherData
@@ -1007,7 +1009,7 @@ function loadSleepsData(userID, callback) {
 
     var sleepsData = [];
     var sleepsMax = 0;
-    var consecutiveSleepsmax = 0;
+    var consecutiveSleepMax = 0;
 
     queries.getSleeps(userID, function(sleeps) {
         for (var i = 0; i < 10; i++) {
@@ -1043,7 +1045,7 @@ function loadSleepsData(userID, callback) {
         }
 
         // done getting sleeps data call the callback
-        callback(sleepsData, sleepsMax, consecutiveSleepsMax);
+        callback(sleepsData, sleepsMax, consecutiveSleepMax);
 
     }); 
 }
