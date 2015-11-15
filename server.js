@@ -11,11 +11,8 @@ var _ = require('underscore');
 var userToken;
 
 //Variables for Achievements Page
-var returnMovesMax = 0;
 var returnWorkoutsMax = 0;
-var consecutiveStepMax = 0;
 var consecutiveWorkoutMax = 0;
-var returnAllTimeMoves = 0;
 
 // data for frontend
 otherData = {date: null, 
@@ -33,7 +30,6 @@ otherData = {date: null,
              workoutsDistanceTotal: null,
             };
 
-var returnDataMoves = [];
 var returnDataWorkouts = [];
 
 // team
@@ -152,13 +148,16 @@ app.get('/dashboard', function(req, res){
             loadSleepsData(userID, function (sleepsData, 
                                              sleepsMax, 
                                              consecutiveSleepMax) {
-                loadMovesData(function () {
+                loadMovesData(function (movesData, 
+                                        totalSteps, 
+                                        consecutiveStepCount, 
+                                        movesMax) {
                     loadWorkoutsData(function() {
                         loadAggregateData(function () {
 
                             res.render('dashboard', 
                                         { sleeps: sleepsData[0],
-                                        moves: returnDataMoves[0],
+                                        moves: movesData[0],
                                         workouts: returnDataWorkouts[0],
                                         otherData: otherData
                                         });
@@ -1053,10 +1052,15 @@ function loadSleepsData(userID, callback) {
 // load moves data for the frontend
 function loadMovesData(callback) {
 
-    returnAllTimeMoves = 0;
+    var totalSteps = 0;
+    var movesData = [];
+    var consecutiveStepCount = 0;
+    var movesMax = 0;
+    var consecutiveStepMax = 0;
+
     queries.getMoves(0, function(moves) {
         for (var i = 0; i < 10; i++) {
-            returnDataMoves.push({
+            movesData.push({
               steps: addCommas(moves[i].steps),
               active_time: secondsToTimeString(moves[i].active_time),
               distance: (metersToMiles(moves[i].distance)).toFixed(2),
@@ -1067,27 +1071,26 @@ function loadMovesData(callback) {
         otherData.date = getFormattedDate(moves[0].date);
 
         //getStepAmount and consectiveStepCount
-        var consecutiveStepCount=0;
         for (var i = 0; i < moves.length; i++){
-            if(moves[i].steps>returnMovesMax)
-                returnMovesMax=moves[i].steps;
+            if(moves[i].steps > movesMax)
+                movesMax = moves[i].steps;
 
-            if(moves[i].steps>10000){
+            if(moves[i].steps > 10000){
                 consecutiveStepCount++;
             }
             else{
                 consecutiveStepCount=0;
             }
-            if (consecutiveStepCount>consecutiveStepMax){
-                consecutiveStepMax=consecutiveStepCount;
+            if (consecutiveStepCount > consecutiveStepMax){
+                consecutiveStepMax = consecutiveStepCount;
             }
 
             //alltimemoves
-            returnAllTimeMoves+=moves[i].steps;
+            totalSteps += moves[i].steps;
         }
 
         // done getting moves data call the callback
-        callback();
+        callback(movesData, totalSteps, consecutiveStepCount, movesMax);
 
     });
 }
