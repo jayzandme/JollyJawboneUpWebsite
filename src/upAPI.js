@@ -57,11 +57,11 @@ getToken = function(code, callback) {
 }
 
 // gets all of the users sleeps since they last logged on
-updateSleeps = function(token, callback) {
+updateSleeps = function(token, userID, callback) {
 
     var time;
 
-    queries.getLatestSleep(0, function(lastSleep) {
+    queries.getLatestSleep(userID, function(lastSleep) {
         if (lastSleep === null) {
             time = 0;
         }
@@ -151,11 +151,11 @@ getSleepsPage = function(token, page, callback) {
 }
 
 // gets all of a users moves since they last logged on
-updateMoves = function(token, callback) {
+updateMoves = function(token, userID, callback) {
 
     var time;
 
-    queries.getLatestMove(0, function(lastMove) {
+    queries.getLatestMove(userID, function(lastMove) {
 
         if (lastMove === null) {
             time = 0;
@@ -245,11 +245,11 @@ getMovesPage = function(token, page, callback) {
 }
 
 // gets all of a users workouts since they last logged on
-updateWorkouts = function(token, callback) {
+updateWorkouts = function(token, userID, callback) {
 
     var time;
 
-    queries.getLatestWorkout(0, function(lastWorkout) {
+    queries.getLatestWorkout(userID, function(lastWorkout) {
 
         if (lastWorkout === null) {
             time = 0;

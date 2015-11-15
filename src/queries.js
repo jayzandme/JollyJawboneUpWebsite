@@ -326,21 +326,22 @@ getLatestWorkout = function(userID, callback) {
 // inserts a user into the database
 insertUser = function(user, callback) {
 
-  var today = new Date();
-  var todayDay = today.getDate();
-  var todayMonth = today.getMonth()+1; //January is 0
-  var todayYear = today.getFullYear();
+    var today = new Date();
+    var todayDay = today.getDate();
+    var todayMonth = today.getMonth() + 1;
+    var todayYear = today.getFullYear();
 
-  if(todayDay<10) {
-      todayDay='0'+todayDay
-  } 
+    if (todayDay < 10) {
+        todayDay = '0' + todayDay;
+    } 
 
-  if(todayMonth<10) {
-      todayMonth='0'+todayMonth
-  } 
+    if (todayMonth < 10) {
+        todayMonth = '0' + todayMonth;
+    } 
 
-
-  var today = parseInt(todayYear, 10) * 10000 + parseInt(todayMonth, 10) * 100 + parseInt(todayDay, 10);
+    today = parseInt(todayYear, 10) * 10000 + 
+            parseInt(todayMonth, 10) * 100 + 
+            parseInt(todayDay, 10);
 
     nextID(function(nextUserID) {
 
@@ -404,7 +405,7 @@ function nextID (callback) {
             if (user) {
                 callback(user.userID + 1);
             } else {
-                callback(-1);
+                callback(0);
             }
         }
     });
