@@ -745,13 +745,13 @@ app.get('/achievements', function(req,res){
 
 app.get('/teamPage', function(req, res){
 
-    userFriends = [];
+    var allFriends = [];
     var friendStats = [];
 
     up.getFriends(userToken, function(friends) {
         
-        loadFriends(friends, function() {
-            res.render('teamPage', { friends: userFriends });
+        loadFriends(friends, allFriends, function(allFriends) {
+            res.render('teamPage', { friends: allFriends });
         });
     });
 });
@@ -1131,8 +1131,9 @@ function loadWorkoutsData(callback) {
 }
 
 // loads the friends of a user
-function loadFriends(friends, callback) {
+function loadFriends(friends, allFriends, callback) {
 
+    
     friend = friends.shift();
 
     if (friend) {
@@ -1141,11 +1142,11 @@ function loadFriends(friends, callback) {
             if (user) {
                 userFriends.push(user);
             }
-            loadFriends(friends, callback);
+            loadFriends(friends, allFriends, callback);
         });
     }
     else {
-        callback();
+        callback(allFriends);
     }
 }
 
