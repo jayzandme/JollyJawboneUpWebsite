@@ -7,13 +7,6 @@ var up = require ('./src/upAPI.js');
 var queries = require('./src/queries.js');
 var _ = require('underscore');
 
-// user session stuff
-var userToken;
-
-//Variables for Achievements Page
-var returnWorkoutsMax = 0;
-var consecutiveWorkoutMax = 0;
-
 // data for frontend
 otherData = {date: null, 
              stepsAverage: null,
@@ -29,8 +22,6 @@ otherData = {date: null,
              workoutsDistanceAverage: null,
              workoutsDistanceTotal: null,
             };
-
-var returnDataWorkouts = [];
 
 // team
 var userFriends = [];
@@ -152,13 +143,15 @@ app.get('/dashboard', function(req, res){
                                         totalSteps, 
                                         consecutiveStepCount, 
                                         movesMax) {
-                    loadWorkoutsData(function() {
+                    loadWorkoutsData(function(workoutsData,
+                                              consecutiveWorkoutCount,
+                                              workoutsMax) {
                         loadAggregateData(function () {
 
                             res.render('dashboard', 
                                         { sleeps: sleepsData[0],
                                         moves: movesData[0],
-                                        workouts: returnDataWorkouts[0],
+                                        workouts:workoutsData[0],
                                         otherData: otherData
                                         });
                         });
@@ -1098,9 +1091,13 @@ function loadMovesData(callback) {
 // loads the workout data for the front end
 function loadWorkoutsData(callback) {
 
+    var consecutiveWorkoutCount = 0;
+    var workoutsData = [];
+    var workoutsMax = 0;
+
     queries.getWorkouts(0, function(workouts) {
         for (var i = 0; i < 10; i++){
-            returnDataWorkouts.push({
+            workoutsData.push({
               title: workouts[i].title,
               steps: addCommas(workouts[i].steps),
               time: secondsToTimeString(workouts[i].time),
@@ -1113,24 +1110,23 @@ function loadWorkoutsData(callback) {
         }
 
         //getWorkoutAmount and consecutive
-        var consecutiveWorkoutCount=0;
         for (var i = 0; i < workouts.length; i++){
-            if(workouts[i].time>returnWorkoutsMax)
-                returnWorkoutsMax=workouts[i].time;
+            if(workouts[i].time > workoutsMax)
+                workoutsMax = workouts[i].time;
 
-            if(workouts[i].time>60*60){
+            if(workouts[i].time > 60 * 60){
                 consecutiveWorkoutCount++;
             }
             else{
-                consecutiveWorkoutCount=0;
+                consecutiveWorkoutCount = 0;
             }
-            if (consecutiveWorkoutCount>consecutiveWorkoutMax){
-                consecutiveWorkoutMax=consecutiveWorkoutCount;
+            if (consecutiveWorkoutCount > workoutsMax){
+                workoutMax = consecutiveWorkoutCount;
             }
         }
         
         // done getting workouts data, call callback
-        callback();
+        callback(workoutsData, consecutiveWorkoutCount, workoutsMax);
     });
 }
 
