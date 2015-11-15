@@ -404,7 +404,7 @@ function nextID (callback) {
             if (user) {
                 callback(user.userID + 1);
             } else {
-                callback(0);
+                callback(-1);
             }
         }
     });
@@ -572,6 +572,17 @@ updateUserLevelInfo = function(userID, newLevel, startedLevelDate){
     });
 }
 
+updateUserToken = function(userID, newToken, callback) {
+    users.update({userID : userID}, {$set: {token: newToken}}).exec(
+        function (err, user){
+            if (err) {
+                throw err;
+            } else {
+                findUserByID(userID, callback);
+            }
+        });
+}
+
 module.exports.insertSleep = insertSleep;
 module.exports.insertSleeps = insertSleeps;
 module.exports.insertMove = insertMove;
@@ -603,3 +614,4 @@ module.exports.insertUser = insertUser;
 module.exports.findUser = findUser;
 module.exports.findUserByID = findUserByID;
 module.exports.clearDatabase = clearDatabase;
+module.exports.updateUserToken = updateUserToken;

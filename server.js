@@ -90,8 +90,11 @@ app.get('/token', function (req, res) {
                         res.redirect('/dashboard?user=' + userID);
                     });
                 } else {
-                    console.log('userID: ' + user.userID);
-                    res.redirect('/dashboard?user=' + user.userID);
+
+                    queries.updateUserToken(user.userID, token, function(user) {
+                        console.log('userID: ' + user.userID);
+                        res.redirect('/dashboard?user=' + user.userID);
+                    });
                 }
             });
         }); 
