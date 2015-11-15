@@ -104,7 +104,7 @@ app.get('/dashboard', function(req, res){
         // update the sleeps
         up.updateSleeps(token, function(sleepsData) { 
             console.log('got ' + sleepsData.length + ' sleep events');
-            queries.insertSleeps(sleepsData, 0, function() {
+            queries.insertSleeps(sleepsData, userID, function() {
 
                 updating--;
                 console.log('inserted sleeps')
@@ -115,7 +115,7 @@ app.get('/dashboard', function(req, res){
         // update the moves
         up.updateMoves(token, function(movesData) {
             console.log('got ' + movesData.length + ' move events');
-            queries.insertMoves(movesData, 0, function() {
+            queries.insertMoves(movesData, userID, function() {
 
                 updating--;
                 console.log('inserted moves');
@@ -126,7 +126,7 @@ app.get('/dashboard', function(req, res){
         // update the workouts
         up.updateWorkouts(token, function(workoutsData){
             console.log('got ' + workoutsData.length + ' workout events');
-            queries.insertWorkouts(workoutsData, 0, function() {
+            queries.insertWorkouts(workoutsData, userID, function() {
 
                 updating--;
                 console.log('inserted workouts');
@@ -150,9 +150,9 @@ app.get('/dashboard', function(req, res){
 
                             res.render('dashboard', 
                                         { sleeps: sleepsData[0],
-                                        moves: movesData[0],
-                                        workouts:workoutsData[0],
-                                        otherData: otherData
+                                          moves: movesData[0],
+                                          workouts:workoutsData[0],
+                                          otherData: otherData
                                         });
                         });
                     });
