@@ -136,14 +136,14 @@ app.get('/dashboard', function(req, res){
             loadSleepsData(userID, function (sleepsData, 
                                              sleepsMax, 
                                              consecutiveSleepMax) {
-                loadMovesData(function (movesData, 
-                                        totalSteps, 
-                                        consecutiveStepCount, 
-                                        movesMax) {
-                    loadWorkoutsData(function(workoutsData,
-                                              consecutiveWorkoutCount,
-                                              workoutsMax) {
-                        loadAggregateData(function (aggregateData) {
+                loadMovesData(userID, function (movesData, 
+                                                totalSteps, 
+                                                consecutiveStepCount, 
+                                                movesMax) {
+                    loadWorkoutsData(userID, function(workoutsData,
+                                                      consecutiveWorkoutCount,
+                                                      workoutsMax) {
+                        loadAggregateData(userID, function (aggregateData) {
 
                             res.render('dashboard', 
                                         { sleeps: sleepsData[0],
@@ -915,7 +915,7 @@ function getDateNumber(){
 }
 
 // loads the aggregate data for the front end
-function loadAggregateData(callback) {
+function loadAggregateData(userID, callback) {
 
     var today = new Date();
     var day = today.getDate();
@@ -1040,7 +1040,7 @@ function loadSleepsData(userID, callback) {
 }
 
 // load moves data for the frontend
-function loadMovesData(callback) {
+function loadMovesData(userID, callback) {
 
     var totalSteps = 0;
     var movesData = [];
@@ -1048,7 +1048,7 @@ function loadMovesData(callback) {
     var movesMax = 0;
     var consecutiveStepMax = 0;
 
-    queries.getMoves(0, function(moves) {
+    queries.getMoves(userID, function(moves) {
         for (var i = 0; i < 10; i++) {
             movesData.push({
               steps: addCommas(moves[i].steps),
@@ -1085,13 +1085,13 @@ function loadMovesData(callback) {
 }
 
 // loads the workout data for the front end
-function loadWorkoutsData(callback) {
+function loadWorkoutsData(userID, callback) {
 
     var consecutiveWorkoutCount = 0;
     var workoutsData = [];
     var workoutsMax = 0;
 
-    queries.getWorkouts(0, function(workouts) {
+    queries.getWorkouts(userID, function(workouts) {
         for (var i = 0; i < 10; i++){
             workoutsData.push({
               title: workouts[i].title,
