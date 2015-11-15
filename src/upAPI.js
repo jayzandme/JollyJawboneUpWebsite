@@ -180,8 +180,6 @@ getMoves = function(token, time, callback) {
 		headers: {'Authorization': 'Bearer ' + token}
 	}
 
-    console.log(token);
-
 	https.request(options, function(response){
 
 		var body = '';

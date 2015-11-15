@@ -12,10 +12,8 @@ var userToken;
 
 //Variables for Achievements Page
 var returnMovesMax = 0;
-var returnSleepsMax = 0;
 var returnWorkoutsMax = 0;
 var consecutiveStepMax = 0;
-var consecutiveSleepMax = 0;
 var consecutiveWorkoutMax = 0;
 var returnAllTimeMoves = 0;
 
@@ -35,7 +33,6 @@ otherData = {date: null,
              workoutsDistanceTotal: null,
             };
 
-var returnDataSleeps = [];
 var returnDataMoves = [];
 var returnDataWorkouts = [];
 
@@ -87,73 +84,86 @@ app.get('/token', function (req, res) {
 
                 if (!user) {
                     console.log('new user!');
-                    queries.insertUser(userInfo, function(){});
+                    userInfo.token = token;
+                    queries.insertUser(userInfo, function(userID) {
+                        console.log('userID: ' + userID); 
+                        res.redirect('/dashboard?user=' + userID);
+                    });
+                } else {
+                    console.log('userID: ' + user.userID);
+                    res.redirect('/dashboard?user=' + user.userID);
                 }
             });
         }); 
 
-        res.redirect('/dashboard?token=' + token);
     }); 
 });
 
 app.get('/dashboard', function(req, res){
 
-    // var token = req.query.token;
-    var token = userToken;
-    var updating = 3;
-    var doneUpdating = _.after(3, loadData);
+    // user data
+    var userID = req.query.user;
 
-    // update the sleeps
-    up.updateSleeps(token, function(sleepsData) { 
-        console.log('got ' + sleepsData.length + ' sleep events');
-        queries.insertSleeps(sleepsData, function() {
+    findUserByID(userID, function(user) {
 
-            updating--;
-            console.log('inserted sleeps')
-            doneUpdating();
+        // var token = req.query.token;
+        var token = user.token;
+        var updating = 3;
+        var doneUpdating = _.after(3, loadData);
+
+        // update the sleeps
+        up.updateSleeps(token, function(sleepsData) { 
+            console.log('got ' + sleepsData.length + ' sleep events');
+            queries.insertSleeps(sleepsData, 0, function() {
+
+                updating--;
+                console.log('inserted sleeps')
+                doneUpdating();
+            });
         });
-    });
 
-    // update the moves
-    up.updateMoves(token, function(movesData) {
-        console.log('got ' + movesData.length + ' move events');
-        queries.insertMoves(movesData, function() {
+        // update the moves
+        up.updateMoves(token, function(movesData) {
+            console.log('got ' + movesData.length + ' move events');
+            queries.insertMoves(movesData, 0, function() {
 
-            updating--;
-            console.log('inserted moves');
-            doneUpdating();
+                updating--;
+                console.log('inserted moves');
+                doneUpdating();
+            });
         });
-    });
 
-    // update the workouts
-    up.updateWorkouts(token, function(workoutsData){
-        console.log('got ' + workoutsData.length + ' workout events');
-        queries.insertWorkouts(workoutsData, function() {
+        // update the workouts
+        up.updateWorkouts(token, function(workoutsData){
+            console.log('got ' + workoutsData.length + ' workout events');
+            queries.insertWorkouts(workoutsData, 0, function() {
 
-            updating--;
-            console.log('inserted workouts');
-            doneUpdating();
+                updating--;
+                console.log('inserted workouts');
+                doneUpdating();
+            });
         });
-    });
 
-    // load all the data for frontend
-    function loadData() {
-        loadSleepsData(function () {
-            loadMovesData(function () {
-                loadWorkoutsData(function() {
-                    loadAggregateData(function () {
+        // load all the data for frontend
+        function loadData() {
+            loadSleepsData(userID, function () {
+                loadMovesData(function () {
+                    loadWorkoutsData(function() {
+                        loadAggregateData(function () {
 
-                        res.render('dashboard', 
-                                    { sleeps: returnDataSleeps[0],
-                                    moves: returnDataMoves[0],
-                                    workouts: returnDataWorkouts[0],
-                                    otherData: otherData
-                                    });
+                            res.render('dashboard', 
+                                        { sleeps: returnDataSleeps[0],
+                                        moves: returnDataMoves[0],
+                                        workouts: returnDataWorkouts[0],
+                                        otherData: otherData
+                                        });
+                        });
                     });
                 });
             });
-        });
-    }
+        }
+
+    });
 
 });
 
@@ -990,11 +1000,15 @@ function loadAggregateData(callback) {
 }
 
 // load the sleep data for the frontend
-function loadSleepsData(callback) {
+function loadSleepsData(userID, callback) {
 
-    queries.getSleeps(0, function(sleeps) {
+    var sleepsData = [];
+    var sleepsMax = 0;
+    var consecutiveSleepsmax = 0;
+
+    queries.getSleeps(userID, function(sleeps) {
         for (var i = 0; i < 10; i++) {
-            returnDataSleeps.push({
+            sleepsData.push( {
                   title: sleeps[i].title,
                   awake_time: epochtoClockTime(sleeps[i].awake_time),
                   asleep_time: epochtoClockTime(sleeps[i].asleep_time),
@@ -1006,26 +1020,27 @@ function loadSleepsData(callback) {
         }
         
         // getSleepAmount
-        for (var i = 0; i < sleeps.length; i++){
-            if(sleeps[i].duration>returnSleepsMax)
-            returnSleepsMax=sleeps[i].duration;
+        for (var i = 0; i < sleeps.length; i++) {
+            if(sleeps[i].duration > sleepsMax)
+            sleepsMax = sleeps[i].duration;
         }
+
         //consecutiveSleepAmount
-        var consecutiveSleepCount=0;
-        for (var i = 0; i < sleeps.length; i++){
-            if(sleeps[i].duration>60*60*8){
+        var consecutiveSleepCount = 0;
+        for (var i = 0; i < sleeps.length; i++) {
+            if(sleeps[i].duration> 60 * 60 * 8) {
               consecutiveSleepCount++;
             }
-            else{
-              consecutiveSleepCount=0;
+            else {
+              consecutiveSleepCount = 0;
             }
-            if (consecutiveSleepCount>consecutiveSleepMax){
-              consecutiveSleepMax=consecutiveSleepCount;
+            if (consecutiveSleepCount > consecutiveSleepMax) {
+              consecutiveSleepMax = consecutiveSleepCount;
             }
         }
 
         // done getting sleeps data call the callback
-        callback();
+        callback(sleepsData, sleepsMax, consecutiveSleepsMax);
 
     }); 
 }

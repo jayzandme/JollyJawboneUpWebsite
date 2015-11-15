@@ -268,7 +268,7 @@ insertWorkouts = function(workouts, userID, callback) {
 }
 
 // inserts a workout into the database
-insertWorkout = function(workout, callback) {
+insertWorkout = function(workout, userID, callback) {
 
    var newWorkout = new workouts({
         userID: userID,
@@ -361,9 +361,11 @@ insertUser = function(user, callback) {
         newUser.save(function (err, thor) {
             if (err) {
                 return console.error(err);
+            } else {
+                callback(nextUserID - 1);
             }
         });
-    });    
+    });
 }
 
 // determines if a user is in the database from their xid
@@ -378,6 +380,18 @@ findUser = function(xid, callback) {
         }
     });
 
+}
+
+// finds a user given a userID
+findUserByID = function(userID, callback) {
+
+    users.findOne({userID: userID}).exec(function(err, user) {
+        if (err) {
+            throw err;
+        } else {
+            callback(user);
+        }
+    });
 }
 
 // returns the next userID
@@ -587,4 +601,5 @@ module.exports.levelsGetCaloriesWorkouts = levelsGetCaloriesWorkouts;
 module.exports.levelsGetTimeAwakeSleeps = levelsGetTimeAwakeSleeps;
 module.exports.insertUser = insertUser;
 module.exports.findUser = findUser;
+module.exports.findUserByID = findUserByID;
 module.exports.clearDatabase = clearDatabase;
