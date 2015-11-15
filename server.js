@@ -1136,7 +1136,7 @@ function loadFriends(friends, allFriends, callback) {
 
         queries.findUser(friend.xid, function(user) {
             if (user) {
-                userFriends.push(user);
+                allFriends.push(user);
             }
             loadFriends(friends, allFriends, callback);
         });
