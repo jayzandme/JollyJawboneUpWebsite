@@ -152,6 +152,8 @@ app.get('/', function(req, res) {
 
 app.get('/levels', function(req, res){
 
+  var userID = req.query.user;
+
   //get user's current level from database and when the user started this level
   queries.levelsGetUserLevel(0, function(users){
     var currentLevel = users.level;
@@ -486,7 +488,8 @@ app.get('/levels', function(req, res){
               percentComplete: progress[2].percentCompleted,
               leftToGo: progress[2].leftToGoString
             },
-            showNextLevelButton: showNextLevelButton
+            showNextLevelButton: showNextLevelButton,
+            userID: userID
           });
       }, 500);      
     });
@@ -494,26 +497,30 @@ app.get('/levels', function(req, res){
 });
 
 app.get('/newLevel', function(req, res){
-  var nextLevelData = {
-    goal1Name: null,
-    goal2Name: null,
-    goal3Name: null,
-    newLevelNum: null
-  };
 
-  queries.levelsGetUserLevel(0, function(users){
-    nextLevelData.newLevelNum = users.level;
-    queries.getLevel(nextLevelData.newLevelNum, function(levels){
-      nextLevelData.goal1Name = levels.firstGoal;
-      nextLevelData.goal2Name = levels.secondGoal;
-      nextLevelData.goal3Name = levels.thirdGoal;
-    }); 
-  });
+    var userID = req.query.user;
 
-  setTimeout(function(){
-    res.render('newLevel', nextLevelData);
-  }, 500)
+    var nextLevelData = {
+        goal1Name: null,
+        goal2Name: null,
+        goal3Name: null,
+        newLevelNum: null
+    };
 
+    queries.levelsGetUserLevel(0, function(users){
+        nextLevelData.newLevelNum = users.level;
+        queries.getLevel(nextLevelData.newLevelNum, function(levels){
+            nextLevelData.goal1Name = levels.firstGoal;
+            nextLevelData.goal2Name = levels.secondGoal;
+            nextLevelData.goal3Name = levels.thirdGoal;
+
+            res.render('newLevel', 
+            {
+                nextLevelData: nextLevelData,
+                userID: userID
+            });
+        }); 
+    });
 });
 
 app.get('/viewOldLevel/:i', function(req, res){
