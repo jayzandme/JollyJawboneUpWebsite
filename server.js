@@ -46,8 +46,6 @@ var userFriends = [];
 //Timer Variables for Weekly Challenges Page
 var Timer;
 var TotalSeconds;
-var FriendMoves;
-var FriendXid;
 
 // hosting the server
 var host = 'localhost'
@@ -653,6 +651,7 @@ app.get('/teamPage', function(req, res){
 });
 
 app.get('/weeklyChallenges', function(req,res){
+
   userFriends = [];
   //array of weekly challenges
   challenges = new Array();
@@ -743,6 +742,7 @@ app.get('/weeklyChallenges', function(req,res){
     });
     
     });
+
 });
 
 function achievements(count, requirements, achievement, description){
@@ -943,11 +943,6 @@ function loadSleepsData(callback) {
 
 // load moves data for the frontend
 function loadMovesData(callback) {
-    FriendMoves = 0;
-    FriendXid = "2hjpAooLN61LYkWC2ca6YQ";
-    /*queries.getMoves(FriendXid,function(moves)){
-      
-    }*/
 
     returnAllTimeMoves = 0;
     queries.getMoves(0, function(moves) {
@@ -981,7 +976,6 @@ function loadMovesData(callback) {
             //alltimemoves
             returnAllTimeMoves+=moves[i].steps;
         }
-
 
         // done getting moves data call the callback
         callback();
