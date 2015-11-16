@@ -525,6 +525,7 @@ app.get('/newLevel', function(req, res){
 
 app.get('/viewOldLevel/:i', function(req, res){
 
+  var userID = req.query.user;
   var levelNum = req.params.i;
   var oldLevel = {
     goal1Name: null,
@@ -546,6 +547,7 @@ app.get('/viewOldLevel/:i', function(req, res){
     res.render('viewOldLevel', 
       { levelNum: levelNum,
       currentLevelNum: oldLevel.currentLevelNum,
+      userID: userID,
       goal1: {
         name: oldLevel.goal1Name,
         percentComplete: 100,
