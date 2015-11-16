@@ -778,6 +778,7 @@ app.get('/teamPage', function(req, res){
 
 app.get('/weeklyChallenges', function(req,res){
 
+  var userID = req.query.user;
   //array of weekly challenges
   challenges = new Array();
     
@@ -789,7 +790,6 @@ app.get('/weeklyChallenges', function(req,res){
 
   var challengeCount=0;
   var currentChallenge=challenges[challengeCount];
-
 
     //set a starting Sunday to build from
     var month = 'Nov'; 
@@ -836,7 +836,8 @@ app.get('/weeklyChallenges', function(req,res){
                 res.render('weeklyChallenges', 
                             { countdown: countdown,
                               currentChallenge: currentChallenge,
-                              friends: userFriends 
+                              friends: userFriends,
+                              userID: userID
                             });
             });
         });
