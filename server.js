@@ -576,71 +576,57 @@ app.get('/achievements', function(req,res){
 
   earnedAchievements = new Array();
   
-  stepperRequirements = new Array();
   stepperRequirements = [
     10000, 20000, 30000, 40000, 50000
   ];
-  stepperDescription = new Array();
   stepperDescription = [
     "Take 10000 steps in a day", "Take 20000 steps in a day", "Take 30000 steps in a day", "Take 40000 steps in a day", "Take 50000 steps in a day"
   ];
   achievements(returnMovesMax, stepperRequirements, "Stepper", stepperDescription);
   
-  sleeperRequirements = new Array();
   sleeperRequirements = [
     60*60*7, 60*60*8
   ];
-  sleeperDescription = new Array();
   sleeperDescription = [
     "Sleep at least 7 hours in a day", "Sleep at least 8 hours in a day"
   ];
-  achievements(returnMovesMax, sleeperRequirements, "Sleeper", sleeperDescription);
+  achievements(returnSleepsMax, sleeperRequirements, "Sleeper", sleeperDescription);
 
-  workoutRequirements = new Array();
   workoutRequirements = [
     60*60, 60*60*2, 60*60*3, 60*60*5, 60*60*10
   ];
-  workoutDescription = new Array();
   workoutDescription = [
-    "Workout for 1 hour in a day", "Workout for 2 hous in a day", "Workout for 3 hours in a day", "Workout for 5 hours in a day", "Workout for 10 hours in a day"
+    "Workout for 1 hour in a day", "Workout for 2 hours in a day", "Workout for 3 hours in a day", "Workout for 5 hours in a day", "Workout for 10 hours in a day"
   ];
   achievements(returnWorkoutsMax, workoutRequirements, "Workout", workoutDescription);
     
-  cStepperRequirements = new Array();
   cStepperRequirements = [
     2, 3, 5, 7, 14, 30, 365
   ];
-  cStepperDescription = new Array();
   cStepperDescription = [
-    "Workout for 1 hour in a day", "Workout for 2 hous in a day", "Workout for 3 hours in a day", "Workout for 5 hours in a day", "Workout for 10 hours in a day"
+    "Take 10000 steps 2 days in a row", "Take 10000 steps 3 days in a row", "Take 10000 steps 5 days in a row", "Take 10000 steps 1 week in a row", "Take 10000 steps 2 weeks in a row", "Take 10000 steps 1 month in a row", "Take 10000 steps 1 year in a row"
   ];
-  achievements(returnMovesMax, cStepperRequirements, "Consecutive Stepper", cStepperDescription);
+  achievements(consecutiveStepMax, cStepperRequirements, "Consecutive Stepper", cStepperDescription);
 
-  cSleepRequirements = new Array();
   cSleepRequirements = [
     2, 3, 5, 7, 14, 30, 365
   ];
-  cSleepDescription = new Array();
   cSleepDescription = [
     "Sleep at least 8 hours for 2 days in a row", "Sleep at least 8 hours for 3 days in a row", "Sleep at least 8 hours for 5 days in a row", "Sleep at least 8 hours every day for a week", "Sleep at least 8 hours every day for 2 weeks", "Sleep at least 8 hours every day for a month", "Sleep at least 8 hours every day for a year"
   ];
   achievements(consecutiveSleepMax, cSleepRequirements, "Consecutive Sleeper", cSleepDescription);
 
-  cWorkoutRequirements = new Array();
   cWorkoutRequirements = [
     2, 3, 5, 7, 14, 30, 365
   ];
-  cWorkoutDescription = new Array();
   cWorkoutDescription = [
     "Log a workout at least 1 hour long for 2 days in a row", "Log a workout at least 1 hour long for 3 days in a row", "Log a workout at least 1 hour long for 5 days in a row", "Log a workout at least 1 hour long every day for a week", "Log a workout at least 1 hour long every day for 2 weeks", "Log a workout at least 1 hour long every day for a month", "Log a workout at least 1 hour long every day for a year"
   ];
   achievements(consecutiveWorkoutMax, cWorkoutRequirements, "Consecutive Workout", cWorkoutDescription);
 
-  allTimeMovesRequirements = new Array();
   allTimeMovesRequirements = [
     1000, 10000, 100000, 1000000, 5000000, 10000000
   ];
-  allTimeMovesDescription = new Array();
   allTimeMovesDescription = [
     "Reached 1,000 total steps", "Reached 10,000 total steps", "Reached 100,000 total steps", "Reached 1,000,000 total steps", "Reached 5,000,000 total steps", "Reached 10,000,000 total steps"
   ];
@@ -760,11 +746,11 @@ app.get('/weeklyChallenges', function(req,res){
 });
 
 function achievements(count, requirements, achievement, description){
-  for (i = 1; i<= requirements.length; i++){
-    if (count>=requirements[i]){
+  for (i = 1; i<= requirements.length+1; i++){
+    if (count>=requirements[i-1]){
       //achievements(returnAllTimeMoves, allTimeMovesRequirements, "Total Steps", allTimeMovesDescription);
       earnedAchievements.push(achievement+" "+i);
-      earnedAchievements.push(description[i]);
+      earnedAchievements.push(description[i-1]);
     } 
   }
 }
