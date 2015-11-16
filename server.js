@@ -758,13 +758,18 @@ app.get('/achievements', function(req,res){
 
 app.get('/teamPage', function(req, res){
 
-var allFriends = [];
-var friendStats = [];
+    var userID = req.query.user;
+    var allFriends = [];
+    var friendStats = [];
 
     up.getFriends(userToken, function(friends) {
         
         loadFriends(friends, allFriends, function(allFriends) {
-            res.render('teamPage', { friends: allFriends });
+            res.render('teamPage', 
+            { 
+                friends: allFriends,
+                userID: userID
+            });
         });
     });
 });
