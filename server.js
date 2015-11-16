@@ -575,163 +575,77 @@ app.get('/viewOldLevel/:i', function(req, res){
 app.get('/achievements', function(req,res){
 
   earnedAchievements = new Array();
+  
+  stepperRequirements = new Array();
+  stepperRequirements = {
+    10000, 20000, 30000, 40000, 50000}
+  }
+  stepperDescription = new Array();
+  stepperDescription = {
+    "Take 10000 steps in a day", "Take 20000 steps in a day", "Take 30000 steps in a day", "Take 40000 steps in a day", "Take 50000 steps in a day"
+  }
+  achievements(returnMovesMax, stepperRequirements, "Stepper", stepperDescription);
+  
+  sleeperRequirements = new Array();
+  sleeperRequirements = {
+    60*60*7, 60*60*8}
+  }
+  sleeperDescription = new Array();
+  sleeperDescription = {
+    "Sleep at least 7 hours in a day", "Sleep at least 8 hours in a day"
+  }
+  achievements(returnMovesMax, sleeperRequirements, "Sleeper", sleeperDescription);
+
+  workoutRequirements = new Array();
+  workoutRequirements = {
+    60*60, 60*60*2, 60*60*3, 60*60*5, 60*60*10}
+  }
+  sleeperDescription = new Array();
+  sleeperDescription = {
+    "Workout for 1 hour in a day", "Workout for 2 hous in a day", "Workout for 3 hours in a day", "Workout for 5 hours in a day", "Workout for 10 hours in a day"
+  }
+  achievements(returnWorkoutsMax, workoutRequirements, "Workout", workoutDescription);
     
-  if (returnMovesMax>10000){
-    earnedAchievements.push("Stepper 1");
-    earnedAchievements.push("Take 10000 steps in a day");
+  cStepperRequirements = new Array();
+  cStepperRequirements = {
+    2, 3, 5, 7, 14, 30, 365}
   }
-  if (returnMovesMax>20000){
-    earnedAchievements.push("Stepper 2");
-    earnedAchievements.push("Take 20000 steps in a day");
+  cStepperDescription = new Array();
+  cStepperDescription = {
+    "Workout for 1 hour in a day", "Workout for 2 hous in a day", "Workout for 3 hours in a day", "Workout for 5 hours in a day", "Workout for 10 hours in a day"
   }
-  if (returnMovesMax>30000){
-    earnedAchievements.push("Stepper 3");
-    earnedAchievements.push("Take 30000 steps in a day");
+  achievements(returnMovesMax, cStepperRequirements, "Consecutive Stepper", cStepperDescription);
+
+  cSleepRequirements = new Array();
+  cSleepRequirements = {
+    2, 3, 5, 7, 14, 30, 365}
   }
-  if (returnMovesMax>40000){
-    earnedAchievements.push("Stepper 4");
-    earnedAchievements.push("Take 40000 steps in a day");
+  cStepperDescription = new Array();
+  cStepperDescription = {
+    "Sleep at least 8 hours for 2 days in a row", "Sleep at least 8 hours for 3 days in a row", "Sleep at least 8 hours for 5 days in a row", "Sleep at least 8 hours every day for a week", "Sleep at least 8 hours every day for 2 weeks", "Sleep at least 8 hours every day for a month", "Sleep at least 8 hours every day for a year"
   }
-  if (returnMovesMax>50000){
-    earnedAchievements.push("Stepper 5");
-    earnedAchievements.push("Take 50000 steps in a day");
+  achievements(consecutiveSleepMax, cSleepRequirements, "Consecutive Sleeper", cSleepDescription);
+
+  cWorkoutRequirements = new Array();
+  cWorkoutRequirements = {
+    2, 3, 5, 7, 14, 30, 365}
   }
-  if (returnMovesMax>60*60*7){
-    earnedAchievements.push("Sleeper 1");
-    earnedAchievements.push("Sleep at least 7 hours in a day");
+  cWorkoutDescription = new Array();
+  cWorkoutDescription = {
+    "Log a workout at least 1 hour long for 2 days in a row", "Log a workout at least 1 hour long for 3 days in a row", "Log a workout at least 1 hour long for 5 days in a row", "Log a workout at least 1 hour long every day for a week", "Log a workout at least 1 hour long every day for 2 weeks", "Log a workout at least 1 hour long every day for a month", "Log a workout at least 1 hour long every day for a year"
   }
-  if (returnMovesMax>60*60*8){
-    earnedAchievements.push("Sleeper 2");
-    earnedAchievements.push("Sleep at least 8 hours in a day");
+  achievements(consecutiveWorkoutMax, cWorkoutRequirements, "Consecutive Workout", cWorkoutDescription);
+
+  allTimeMovesRequirements = new Array();
+  allTimeMovesRequirements = {
+    1000, 10000, 100000, 1000000, 5000000, 10000000}
   }
-  if (returnMovesMax>60*60){
-    earnedAchievements.push("Workout 1");
-    earnedAchievements.push("Workout for 1 hour in a day");
+  allTimeMovesDescription = new Array();
+  allTimeMovesDescription = {
+    "Reached 1,000 total steps", "Reached 10,000 total steps", "Reached 100,000 total steps", "Reached 1,000,000 total steps", "Reached 5,000,000 total steps", "Reached 10,000,000 total steps"
   }
-  if (returnMovesMax>60*60*2){
-    earnedAchievements.push("Workout 2");
-    earnedAchievements.push("Workout for 2 hours in a day");
-  }
-  if (returnMovesMax>60*60*3){
-    earnedAchievements.push("Workout 3");
-    earnedAchievements.push("Workout for 3 hours in a day");
-  }
-  if (returnMovesMax>60*60*5){
-    earnedAchievements.push("Workout 4");
-    earnedAchievements.push("Workout for 5 hours in a day");
-  }
-  if (returnMovesMax>60*60*10){
-    earnedAchievements.push("Workout 5");
-    earnedAchievements.push("Workout for 10 hours in a day");
-  }
-  if (consecutiveStepMax>=2){
-    earnedAchievements.push("Consecutive Stepper 1");
-    earnedAchievements.push("Take 10000 steps 2 days in a row");
-  }
-  if (consecutiveStepMax>=3){
-    earnedAchievements.push("Consecutive Stepper 2");
-    earnedAchievements.push("Take 10000 steps 3 days in a row");
-  }
-  if (consecutiveStepMax>=5){
-    earnedAchievements.push("Consecutive Stepper 3");
-    earnedAchievements.push("Take 10000 steps 5 days in a row");
-  }
-  if (consecutiveStepMax>=7){
-    earnedAchievements.push("Consecutive Stepper 4");
-    earnedAchievements.push("Take 10000 steps every day for a week");
-  }
-  if (consecutiveStepMax>=14){
-    earnedAchievements.push("Consecutive Stepper 5");
-    earnedAchievements.push("Take 10000 steps every day for 2 weeks");
-  }
-  if (consecutiveStepMax>=30){
-    earnedAchievements.push("Consecutive Stepper 6");
-    earnedAchievements.push("Take 10000 steps every day for a month");
-  }
-  if (consecutiveStepMax>=365){
-    earnedAchievements.push("Consecutive Stepper 7");
-    earnedAchievements.push("Take 10000 steps every day for a year");
-  }
-  if (consecutiveSleepMax>=2){
-    earnedAchievements.push("Consecutive Sleeper 1");
-    earnedAchievements.push("Sleep at least 8 hours for 2 days in a row");
-  }
-  if (consecutiveSleepMax>=3){
-    earnedAchievements.push("Consecutive Sleeper 2");
-    earnedAchievements.push("Sleep at least 8 hours for 3 days in a row");
-  }
-  if (consecutiveSleepMax>=5){
-    earnedAchievements.push("Consecutive Sleeper 3");
-    earnedAchievements.push("Sleep at least 8 hours for 5 days in a row");
-  }
-  if (consecutiveSleepMax>=7){
-    earnedAchievements.push("Consecutive Sleeper 4");
-    earnedAchievements.push("Sleep at least 8 hours every day for a week");
-  }
-  if (consecutiveSleepMax>=14){
-    earnedAchievements.push("Consecutive Sleeper 5");
-    earnedAchievements.push("Sleep at least 8 hours every day for 2 weeks");
-  }
-  if (consecutiveSleepMax>=30){
-    earnedAchievements.push("Consecutive Sleeper 6");
-    earnedAchievements.push("Sleep at least 8 hours every day for a month");
-  }
-  if (consecutiveSleepMax>=365){
-    earnedAchievements.push("Consecutive Sleeper 7");
-    earnedAchievements.push("Sleep at least 8 hours every day for a year");
-  }
-  if (consecutiveWorkoutMax>=2){
-    earnedAchievements.push("Consecutive Workout 1");
-    earnedAchievements.push("Log a workout at least 1 hour long for 2 days in a row");
-  }
-  if (consecutiveWorkoutMax>=3){
-    earnedAchievements.push("Consecutive Workout 2");
-    earnedAchievements.push("Log a workout at least 1 hour long for 2 days in a row");
-  }
-  if (consecutiveWorkoutMax>=5){
-    earnedAchievements.push("Consecutive Workout 3");
-    earnedAchievements.push("Log a workout at least 1 hour long for 2 days in a row");
-  }
-  if (consecutiveWorkoutMax>=7){
-    earnedAchievements.push("Consecutive Workout 4");
-    earnedAchievements.push("Log a workout at least 1 hour long every day for a week");
-  }
-  if (consecutiveWorkoutMax>=14){
-    earnedAchievements.push("Consecutive Workout 5");
-    earnedAchievements.push("Log a workout at least 1 hour long every day for 2 weeks");
-  }
-  if (consecutiveWorkoutMax>=30){
-    earnedAchievements.push("Consecutive Workout 6");
-    earnedAchievements.push("Log a workout at least 1 hour long every day for a month");
-  }
-  if (consecutiveWorkoutMax>=365){
-    earnedAchievements.push("Consecutive Workout 7");
-    earnedAchievements.push("Log a workout at least 1 hour long every day for a year");
-  }
-  if (returnAllTimeMoves>=1000){
-    earnedAchievements.push("Total Steps 1");
-    earnedAchievements.push("Reached 1,000 total steps");
-  }
-  if (returnAllTimeMoves>=10000){
-    earnedAchievements.push("Total Steps 2");
-    earnedAchievements.push("Reached 10,000 total steps");
-  }
-  if (returnAllTimeMoves>=100000){
-    earnedAchievements.push("Total Steps 3");
-    earnedAchievements.push("Reached 100,000 total steps");
-  }
-  if (returnAllTimeMoves>=1000000){
-    earnedAchievements.push("Total Steps 4");
-    earnedAchievements.push("Reached 1,000,000 total steps");
-  }
-  if (returnAllTimeMoves>=5000000){
-    earnedAchievements.push("Total Steps 5");
-    earnedAchievements.push("Reached 5,000,000 total steps");
-  }
-  if (returnAllTimeMoves>=10000000){
-    earnedAchievements.push("Total Steps 6");
-    earnedAchievements.push("Reached 10,000,000 total steps");
-  }
+  achievements(returnAllTimeMoves, allTimeMovesRequirements, "Total Steps", allTimeMovesDescription);
+ 
 
   //console.log('earnedAchievements: %s', earnedAchievements);
     
@@ -844,6 +758,18 @@ app.get('/weeklyChallenges', function(req,res){
     
     });
 });
+
+function achievements(count, requirements, achievement, description){
+  for (i = 1; i<= requirements.length; i++){
+    if (count>=allTimeMovesRequirements[i]){
+      //achievements(returnAllTimeMoves, allTimeMovesRequirements, "Total Steps", allTimeMovesDescription);
+      earnedAchievements.push("achievement"+i);
+      earnedAchievements.push(description[i]);
+    }
+      
+  
+  }
+}
 
 function epochtoClockTime(epochTime){
   var date = new Date(0);
