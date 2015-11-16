@@ -7,22 +7,6 @@ var up = require ('./src/upAPI.js');
 var queries = require('./src/queries.js');
 var _ = require('underscore');
 
-// data for frontend
-otherData = {date: null, 
-             stepsAverage: null,
-             sleepsAverage: null,
-             stepsTotal: null,
-             sleepsTotal: null,
-             workoutsStepsAverage: null,
-             workoutsStepsTotal: null,
-             workoutsCaloriesAverage: null,
-             workoutsCaloriesTotal: null,
-             workoutsTimeAverage: null,
-             workoutsTimeTotal: null,
-             workoutsDistanceAverage: null,
-             workoutsDistanceTotal: null,
-            };
-
 //Timer Variables for Weekly Challenges Page
 var Timer;
 var TotalSeconds;
@@ -149,7 +133,8 @@ app.get('/dashboard', function(req, res){
                                         { sleeps: sleepsData[0],
                                           moves: movesData[0],
                                           workouts: workoutsData[0],
-                                          otherData: aggregateData
+                                          otherData: aggregateData,
+                                          userID: userID
                                         });
                         });
                     });
@@ -1129,7 +1114,6 @@ function loadWorkoutsData(userID, callback) {
 // loads the friends of a user
 function loadFriends(friends, allFriends, callback) {
 
-    
     friend = friends.shift();
 
     if (friend) {
@@ -1152,6 +1136,7 @@ var sslOptions= {
 };
 
 var server = https.createServer(sslOptions, app);
+
 server.listen(port, host, function() {
     var host = server.address().address;
     console.log('Up server listening on %s:%s', host, port);
