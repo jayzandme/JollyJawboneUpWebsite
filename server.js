@@ -54,13 +54,11 @@ app.get('/token', function (req, res) {
                     console.log('new user!');
                     userInfo.token = token;
                     queries.insertUser(userInfo, function(userID) {
-                        console.log('userID: ' + userID); 
                         res.redirect('/dashboard?user=' + userID);
                     });
                 } else {
 
                     queries.updateUserToken(user.userID, token, function(user) {
-                        console.log('userID: ' + user.userID);
                         res.redirect('/dashboard?user=' + user.userID);
                     });
                 }
@@ -746,8 +744,6 @@ app.get('/achievements', function(req,res){
                     earnedAchievements.push("Reached 10,000,000 total steps");
                 }
 
-                //console.log('earnedAchievements: %s', earnedAchievements);
-
                 res.render('achievements', 
                            { 
                              earnedAchievements: earnedAchievements,
@@ -779,6 +775,7 @@ app.get('/teamPage', function(req, res){
 app.get('/weeklyChallenges', function(req,res){
 
   var userID = req.query.user;
+  var allFriends = [];
   //array of weekly challenges
   challenges = new Array();
     
@@ -822,17 +819,14 @@ app.get('/weeklyChallenges', function(req,res){
     friendsUserID = new Array(); 
     userProgress = new Array(); 
     for (var i = 0; i < friends.length; i++) {
-        console.log('friend: ' + i);
-        console.log(friends[i].xid);
         friendsXID.push(friends[i].xid);
-        console.log(friendsUserID[i]);
         userProgress.push('Friend ' + i);
         userProgress.push(friends[i].xid);
       }
   
         up.getFriends(userToken, function(friends) {
             
-            loadFriends(friends, function() {
+            loadFriends(friends, allFriends, function(userFriends) {
                 res.render('weeklyChallenges', 
                             { countdown: countdown,
                               currentChallenge: currentChallenge,
@@ -1159,6 +1153,7 @@ function loadWorkoutsData(userID, callback) {
 function loadFriends(friends, allFriends, callback) {
 
     friend = friends.shift();
+    console.log(allFriends);
 
     if (friend) {
 
