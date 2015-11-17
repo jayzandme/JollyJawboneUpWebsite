@@ -710,27 +710,16 @@ app.get('/weeklyChallenges', function(req,res){
     
     var countdown = (setdate - now)/1000;
     countdown = Math.floor(countdown);
-
-    up.getFriends(userToken, function(friends) {
-    friendsXID = new Array();   
-    friendsUserID = new Array(); 
-    userProgress = new Array(); 
-    for (var i = 0; i < friends.length; i++) {
-        friendsXID.push(friends[i].xid);
-        userProgress.push('Friend ' + i);
-        userProgress.push(friends[i].xid);
-      }
   
-        up.getFriends(userToken, function(friends) {
-            
-            loadFriends(friends, allFriends, function(userFriends) {
-                res.render('weeklyChallenges', 
-                            { countdown: countdown,
-                              currentChallenge: currentChallenge,
-                              friends: userFriends,
-                              userID: userID
-                            });
-            });
+    up.getFriends(userToken, function(friends) {
+
+      loadFriends(friends, allFriends, function(userFriends) {
+          res.render('weeklyChallenges', 
+              { countdown: countdown,
+                currentChallenge: currentChallenge,
+                friends: userFriends,
+                userID: userID
+              });
         });
     });
 });
