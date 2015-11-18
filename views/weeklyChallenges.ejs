@@ -26,6 +26,12 @@
       </div>
   </nav>
 
+  <button class="btn btn-default btn-lg" onclick="toggle_visibility('past_friends')" type="Past Friends">Past Friends</button>
+  <button class="btn btn-default btn-lg" onclick="toggle_visibility('past_leaders')" type="Past Leaders">Past Leaders</button>
+  <button class="btn btn-default btn-lg" onclick="toggle_visibility('me')" type="Me">Me</button>
+  <button class="btn btn-default btn-lg" onclick="toggle_visibility('overall')" type="Overall">Overall</button>
+  <button class="btn btn-default btn-lg" onclick="toggle_visibility('friends')" type="Friends">Friends</button>
+
   <body onload="timer()">
 
   <div class="titleChallenges"> <h2> Weekly Challenges Page </h2>
@@ -73,7 +79,7 @@
   </body>
 
 
-  <table class="table table-bordered" id = "Friends">
+  <table class="table table-bordered" id = "friends">
     <thead>
       <tr>
         <th>Leaderboard</th>
@@ -90,13 +96,24 @@
     </tbody>
   </table>
 
+  <body>   
+    <div id="past_friends"> <h2> Past Friends Page </h2>
+    </div>
+  </body>
 
-<button class="btn btn-default btn-lg" type="Past Friends">Past Friends</button>
-<button class="btn btn-default btn-lg" type="Past Leaders">Past Leaders</button>
-<button class="btn btn-default btn-lg" type="Me">Me</button>
-<button class="btn btn-default btn-lg" type="Overall">Overall</button>
-<button class="btn btn-default btn-lg" onclick="toggle_visibility('Friends')" type="Friends">Friends</button>
+  <body>   
+    <div id="past_leaders"> <h2> Past Leaders Page </h2>
+    </div>
+  </body>
 
+  <body>   
+    <div id="me"> <h2> Me Page </h2>
+    </div>
+  </body>
 
+  <body>   
+    <div id="overall"> <h2> Overall Page </h2>
+    </div>
+  </body>
 
 </body>
