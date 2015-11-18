@@ -33,6 +33,12 @@
 
   <head>
       <script type="text/javascript">
+      function toggle_visibility(id) {
+          var e = document.getElementById(id);
+          if (e.style.display == 'block' || e.style.display=='') e.style.display = 'none';
+          else e.style.display = 'block';
+      }
+
       var seconds = <%= countdown %>;
  
         function timer() {
@@ -67,7 +73,7 @@
   </body>
 
 
-  <table class="table table-bordered">
+  <table class="table table-bordered" id = "Friends">
     <thead>
       <tr>
         <th>Leaderboard</th>
@@ -89,7 +95,7 @@
 <button class="btn btn-default btn-lg" type="Past Leaders">Past Leaders</button>
 <button class="btn btn-default btn-lg" type="Me">Me</button>
 <button class="btn btn-default btn-lg" type="Overall">Overall</button>
-<button class="btn btn-default btn-lg" type="Friends">Friends</button>
+<button class="btn btn-default btn-lg" onclick="toggle_visibility('Friends')" type="Friends">Friends</button>
 
 
 
