@@ -130,9 +130,6 @@
 
 
     <table class="table table-bordered">
-      <!-- Display challenge progress of each friend 
-            Order by who is further
-    -->
       <thead>
         <tr>
           <th>Leaderboard</th>
@@ -156,12 +153,49 @@
   <body>   
     <div id="past_friends_leaderboard" style="display:none"> <h2> Past Friends Leaderboard Page </h2>
       <!-- Display challenge results from each past challenge -->
+
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>Challenge</th>
+            <th>Leader</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% for(var i = 0; i < 10; i++) { %>
+          <tr>
+            <td> Challenge <%=i%> </td>
+            <td> Friend <%=i%></td>
+          </tr>
+          <% } %>
+        </tbody>
+      </table>
+
     </div>
   </body>
 
   <body>   
     <div id="past_global_leaderboard" style="display:none"> <h2> Past Global Leaderboard Page </h2>
       <!-- Display past Global Winners for each challenge -->
+
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>Challenge</th>
+            <th>Leader</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% for(var i = 0; i < 10; i++) { %>
+          <tr>
+            <td> Challenge <%=i%> </td>
+            <td> Global User <%=i%></td>
+          </tr>
+          <% } %>
+        </tbody>
+      </table>
+
+
     </div>
   </body>
 
