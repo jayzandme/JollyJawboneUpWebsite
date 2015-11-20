@@ -48,26 +48,35 @@ body{
     color:white;
 }
 
-#challenges {
+#challenges1 {
     color:white;
 }
 
-#timer_div {
+#challenges2 {
     color:white;
 }
 
-#past_friends {
+#timer_div1 {
     color:white;
 }
 
-#past_leaders {
+#timer_div2 {
     color:white;
 }
 
-#me {
+#friends {
     color:white;
 }
 
-#overall {
+#past_friends_leaderboard {
     color:white;
 }
+
+#past_global_leaderboard {
+    color:white;
+}
+
+#global {
+    color:white;
+}
+
