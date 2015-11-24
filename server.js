@@ -19,6 +19,7 @@ var app = express()
 // frontend rendering 
 app.use(bodyParser.json());
 app.use(express.static(__dirname + '/css'));
+app.use(express.static(__dirname + '/img'));
 app.use('/bower_components',  express.static(__dirname + '/bower_components'));
 app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views');
