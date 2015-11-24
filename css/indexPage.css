@@ -8,21 +8,41 @@ body,
 html {
     width: 100%;
     height: 100%;
+    background:#2e2e2e !important;
 }
 
-body,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-    font-family: "Lato","Helvetica Neue",Helvetica,Arial,sans-serif;
-    font-weight: 700;
+.navbar-trans {
+    background-color:#2b2b2b;
+    color:#cdcdcd;
+    border-width:0;
 }
 
-.topnav {
-    font-size: 14px; 
+.navbar-trans .navbar-brand, .navbar-trans >.container-fluid .navbar-brand {
+    padding: 14px;
+    color:#f44d3c ;
+}
+
+.navbar-trans li>a:focus,.navbar-trans li.active {
+    background-color:#f44d3c ;
+    color:#333;
+}
+
+.navbar-trans li>a:hover {
+    background-color:#f44d3c ;
+    color:#5a9bfc;
+    opacity:0.5;
+}
+
+.navbar-trans a{
+    color:white;
+    letter-spacing:1px;
+}
+
+.navbar-trans .form-control:focus {
+    border-color: blue;
+    outline: 0;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,0.075),0 0 8px rgba(100,100,100,0.6);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,0.075),0 0 8px rgba(100,100,100,0.6);
 }
 
 .lead {
