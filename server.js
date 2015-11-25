@@ -700,12 +700,12 @@ app.get('/weeklyChallenges', function(req,res){
     midnight.setHours(24,0,0,0); //midnignt
     while (setdate-now<=0){
     //if (now.getDay()==0 && midnight.getTime() ==Date.now() ){ //is Sunday at midnight
-      //iterate challenge
-      challengeCount++;
+      
+      challengeCount++; //iterate challenge
       challengeCount=challengeCount%challenges.length;
       currentChallenge=challenges[challengeCount];
-      //iterate setdate
-      setdate.setHours(setdate.getHours() + 7*24);
+      
+      setdate.setHours(setdate.getHours() + 7*24);  //iterate setdate
     }
     
     var countdown = (setdate - now)/1000;
@@ -714,14 +714,23 @@ app.get('/weeklyChallenges', function(req,res){
     up.getFriends(userToken, function(friends) {
 
       loadFriends(friends, allFriends, function(userFriends) {
-          res.render('weeklyChallenges', 
-              { countdown: countdown,
-                currentChallenge: currentChallenge,
-                friends: userFriends,
-                userID: userID
-              });
+
+        queries.getLatestMove(userID, function(latestMove){
+
+            res.render('weeklyChallenges', 
+                { countdown: countdown,
+                  currentChallenge: currentChallenge,
+                  friends: userFriends,
+                  userID: userID,
+                  latestMove: latestMove
+                });
+            });
         });
+
+
     });
+
+    
 });
 
 function achievements(count, requirements, achievement, description){
