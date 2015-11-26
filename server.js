@@ -717,8 +717,11 @@ app.get('/weeklyChallenges', function(req,res){
     up.getFriends(userToken, function(friends) {
 
       loadFriends(friends, allFriends, function(userFriends) {
+        var tempFriends=userFriends.slice(0);
+        tempFriends.reverse();
+        console.log("\ntempFriends: "+ tempFriends + "\n\n");
 
-        loadFriendMoves(friends, allFriendMoves, function(allFriendMoves) {
+        loadFriendMoves(tempFriends, allFriendMoves, function(allFriendMoves) {
 
             res.render('weeklyChallenges', 
                 { countdown: countdown,
@@ -1085,20 +1088,30 @@ function loadFriends(friends, allFriends, callback) {
 }
 
 // loads the moves of friends of a user
-function loadFriendMoves(friends, allFriendMoves, callback) {
+function loadFriendMoves(tempFriends, allFriendMoves, callback) {
 
-    friend = friends.shift();
-    console.log(allFriendMoves);
+    console.log("\n Begin loadFriendMoves---------------\n")
+    
+
+    friend = tempFriends.shift();
 
     if (friend) {
-        queries.getLatestMove(friend, function(latestMove){
+      friendID=friend.userID;
+      console.log("UserID: "+friendID);
+
+        queries.getLatestMove(friendID, function(latestMove){
             if (latestMove) {
                 allFriendMoves.push(latestMove);
             }
-            loadFriends(friends, allFriendMoves, callback);
+            else{
+              allFriendMoves.push("error");
+            }
+            loadFriendMoves(tempFriends, allFriendMoves, callback);
         });
     }
     else {
+        console.log(allFriendMoves);
+        console.log("\nEnd loadFriendMoves------------\n")
         callback(allFriendMoves);
     }
 }
