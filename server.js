@@ -1089,9 +1089,29 @@ function loadFriends(friends, allFriends, callback) {
 }
 //chooses the correct friend function based on challengeCount
 function loadFriendFunction(tempFriends, allFriendData, challengeCount, callback) {
+  if (challengeCount==0){
+    //loadfriendmoves
+    loadFriendMoves(tempFriends, allFriendData, function(allFriendData){
+      console.log("\n--------------------------\nThis Is Move's All Friend Data: "+allFriendData+"\n-------------------------------------------\n")
+    });
+  }
+  else{
+    //loadfriendsteps
+    loadFriendSleeps(tempFriends, allFriendData, function(allFriendData){
+      console.log("\n--------------------------\nThis Is Sleep's All Friend Data: "+allFriendData+"\n-------------------------------------------\n")
+    });
+  }
+  console.log("\n--------------------------\nThis Is All Friend Data: "+allFriendData+"\n-------------------------------------------\n")
+  callback(allFriendData);
   
-  if (challengeCount==0){  //loadfriendmoves
+}
+
+// loads the latest moves of friends of a user
+function loadFriendMoves(tempFriends, allFriendData, callback) {
+
     console.log("\n Begin loadFriendMoves---------------\n")
+    
+
     friend = tempFriends.shift();
 
     if (friend) {
@@ -1102,17 +1122,22 @@ function loadFriendFunction(tempFriends, allFriendData, challengeCount, callback
             if (latestMove) {
                 allFriendData.push(latestMove.steps+" steps");
             }
-            loadFriendFunction(tempFriends, allFriendData, challengeCount, callback);
+            loadFriendMoves(tempFriends, allFriendData, callback);
         });
     }
     else {
         console.log(allFriendData);
         console.log("\nEnd loadFriendMoves------------\n")
     }
-  }
-  
-  else{   //loadfriendsteps
+    callback(allFriendData);
+}
+
+// loads the latest sleeps of friends of a user
+function loadFriendSleeps(tempFriends, allFriendData, callback) {
+
     console.log("\n Begin loadFriendSleeps---------------\n")
+    
+
     friend = tempFriends.shift();
 
     if (friend) {
@@ -1123,15 +1148,14 @@ function loadFriendFunction(tempFriends, allFriendData, challengeCount, callback
             if (latestSleep) {
                 allFriendData.push(secondsToTimeString(latestSleep.duration));
             }
-            loadFriendFunction(tempFriends, allFriendData, challengeCount, callback);
+            loadFriendSleeps(tempFriends, allFriendData, callback);
         });
     }
     else {
         console.log(allFriendData);
         console.log("\nEnd loadFriendSleeps------------\n")
+        callback(allFriendData);
     }
-  }
-  callback(allFriendData);
 }
 
 var sslOptions= {
