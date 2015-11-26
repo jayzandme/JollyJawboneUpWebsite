@@ -657,6 +657,7 @@ app.get('/teamPage', function(req, res){
     var allFriends = [];
     var friendStats = [];
 
+
     up.getFriends(userToken, function(friends) {
         
         loadFriends(friends, allFriends, function(allFriends) {
@@ -673,6 +674,7 @@ app.get('/weeklyChallenges', function(req,res){
 
   var userID = req.query.user;
   var allFriends = [];
+  var allFriendMoves = [];
   //array of weekly challenges
   challenges = new Array();
     
@@ -710,21 +712,23 @@ app.get('/weeklyChallenges', function(req,res){
     
     var countdown = (setdate - now)/1000;
     countdown = Math.floor(countdown);
+
   
     up.getFriends(userToken, function(friends) {
 
       loadFriends(friends, allFriends, function(userFriends) {
 
-        queries.getLatestMove(userID, function(latestMove){
+        loadFriendMoves(friends, allFriendMoves, function(allFriendMoves) {
 
             res.render('weeklyChallenges', 
                 { countdown: countdown,
                   currentChallenge: currentChallenge,
                   friends: userFriends,
                   userID: userID,
-                  latestMove: latestMove
+                  allFriendMoves: allFriendMoves
                 });
             });
+
         });
 
 
@@ -732,6 +736,7 @@ app.get('/weeklyChallenges', function(req,res){
 
     
 });
+
 
 function achievements(count, requirements, achievement, description){
   for (i = 1; i<= requirements.length+1; i++){
@@ -1076,6 +1081,25 @@ function loadFriends(friends, allFriends, callback) {
     }
     else {
         callback(allFriends);
+    }
+}
+
+// loads the moves of friends of a user
+function loadFriendMoves(friends, allFriendMoves, callback) {
+
+    friend = friends.shift();
+    console.log(allFriendMoves);
+
+    if (friend) {
+        queries.getLatestMove(friend, function(latestMove){
+            if (latestMove) {
+                allFriendMoves.push(latestMove);
+            }
+            loadFriends(friends, allFriendMoves, callback);
+        });
+    }
+    else {
+        callback(allFriendMoves);
     }
 }
 

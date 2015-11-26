@@ -108,7 +108,8 @@
           <% for(var i = 0; i < friends.length; i++) { %>
           <tr>
             <td><%= friends[i].first %> <%=friends[i].last %></td>
-            <td> <%= latestMove %></td>
+            <td> <%= friends[i] %></td>
+            <td> <%= allFriendMoves[i] %></td>
           </tr>
           <% } %>
         </tbody>
