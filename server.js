@@ -674,6 +674,7 @@ app.get('/weeklyChallenges', function(req,res){
 
   var userID = req.query.user;
   var allFriends = [];
+  var allFriendSleeps = [];
   var allFriendMoves = [];
   //array of weekly challenges
   challenges = new Array();
@@ -721,13 +722,15 @@ app.get('/weeklyChallenges', function(req,res){
         tempFriends.reverse();
         console.log("\ntempFriends: "+ tempFriends + "\n\n");
 
-        loadFriendMoves(tempFriends, allFriendMoves, function(allFriendMoves) {
+        //loadFriendMoves(tempFriends, allFriendMoves, function(allFriendMoves) {
+          loadFriendSleeps(tempFriends, allFriendSleeps, function(allFriendSleeps) {
 
             res.render('weeklyChallenges', 
                 { countdown: countdown,
                   currentChallenge: currentChallenge,
                   friends: userFriends,
                   userID: userID,
+                  allFriendSleeps: allFriendSleeps,
                   allFriendMoves: allFriendMoves
                 });
             });
@@ -1087,7 +1090,7 @@ function loadFriends(friends, allFriends, callback) {
     }
 }
 
-// loads the moves of friends of a user
+// loads the latest moves of friends of a user
 function loadFriendMoves(tempFriends, allFriendMoves, callback) {
 
     console.log("\n Begin loadFriendMoves---------------\n")
@@ -1103,9 +1106,6 @@ function loadFriendMoves(tempFriends, allFriendMoves, callback) {
             if (latestMove) {
                 allFriendMoves.push(latestMove);
             }
-            else{
-              allFriendMoves.push("error");
-            }
             loadFriendMoves(tempFriends, allFriendMoves, callback);
         });
     }
@@ -1113,6 +1113,32 @@ function loadFriendMoves(tempFriends, allFriendMoves, callback) {
         console.log(allFriendMoves);
         console.log("\nEnd loadFriendMoves------------\n")
         callback(allFriendMoves);
+    }
+}
+
+// loads the latest sleeps of friends of a user
+function loadFriendSleeps(tempFriends, allFriendSleeps, callback) {
+
+    console.log("\n Begin loadFriendSleeps---------------\n")
+    
+
+    friend = tempFriends.shift();
+
+    if (friend) {
+      friendID=friend.userID;
+      console.log("UserID: "+friendID);
+
+        queries.getLatestSleep(friendID, function(latestSleep){
+            if (latestSleep) {
+                allFriendSleeps.push(secondsToTimeString(latestSleep.duration));
+            }
+            loadFriendSleeps(tempFriends, allFriendSleeps, callback);
+        });
+    }
+    else {
+        console.log(allFriendSleeps);
+        console.log("\nEnd loadFriendSleeps------------\n")
+        callback(allFriendSleeps);
     }
 }
 
