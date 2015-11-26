@@ -674,15 +674,16 @@ app.get('/weeklyChallenges', function(req,res){
 
   var userID = req.query.user;
   var allFriends = [];
-  var allFriendSleeps = [];
-  var allFriendMoves = [];
-  //array of weekly challenges
-  challenges = new Array();
+  var allFriendSleeps = []; //array of total sleeps of each friend
+  var allFriendMoves = [];  //array of total moves of each friend
+  //var allFriendWorkouts = [];  //array of total workouts of each friend
+  
+  challenges = new Array(); //array of weekly challenges
     
   if (true){
     challenges.push("Take the most steps this week!");
     challenges.push("Log the most sleep this week!");
-    challenges.push("Log the most workouts this week!");
+    //challenges.push("Log the most workouts this week!");
   }
 
   var challengeCount=0;
