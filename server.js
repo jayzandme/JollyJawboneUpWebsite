@@ -723,8 +723,11 @@ app.get('/weeklyChallenges', function(req,res){
         tempFriends.reverse();
         console.log("\ntempFriends: "+ tempFriends + "\n\n");
 
-        //loadFriendMoves(tempFriends, allFriendMoves, function(allFriendMoves) {
-          loadFriendSleeps(tempFriends, allFriendSleeps, function(allFriendSleeps) {
+          loadFriendMoves(tempFriends, allFriendMoves, function(allFriendMoves) {
+            var tempFriends2=userFriends.slice(0);
+            tempFriends2.reverse();
+            console.log("\ntempFriends2: "+ tempFriends2 + "\n\n");
+            loadFriendSleeps(tempFriends2, allFriendSleeps, function(allFriendSleeps) {
 
             res.render('weeklyChallenges', 
                 { countdown: countdown,
@@ -735,6 +738,8 @@ app.get('/weeklyChallenges', function(req,res){
                   allFriendMoves: allFriendMoves
                 });
             });
+          });
+
 
         });
 
@@ -1105,7 +1110,7 @@ function loadFriendMoves(tempFriends, allFriendMoves, callback) {
 
         queries.getLatestMove(friendID, function(latestMove){
             if (latestMove) {
-                allFriendMoves.push(latestMove);
+                allFriendMoves.push(latestMove.steps+" steps");
             }
             loadFriendMoves(tempFriends, allFriendMoves, callback);
         });
