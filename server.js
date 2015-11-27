@@ -719,8 +719,6 @@ app.get('/weeklyChallenges', function(req,res){
       loadFriends(friends, allFriends, function(userFriends) {
         var tempFriends=userFriends.slice(0);
         tempFriends.reverse();
-        console.log("\ntempFriends: "+ tempFriends + "\n\n");
-
           loadFriendFunction(tempFriends, allFriendData, challengeCount, function(allFriendData) {
 
             res.render('weeklyChallenges', 
@@ -1089,25 +1087,18 @@ function loadFriends(friends, allFriends, callback) {
 }
 //chooses the correct friend function based on challengeCount
 function loadFriendFunction(tempFriends, allFriendData, challengeCount, callback) {
-  if (challengeCount==0){
-    //loadfriendmoves
+  if (challengeCount==0){ //loadfriendmoves
     loadFriendMoves(tempFriends, allFriendData, function(allFriendData){
-      if(friend){
-        console.log("\n--------------------------\nThis Is Move's All Friend Data: "+allFriendData+"\n-------------------------------------------\n")
-        console.log("\nfriend: "+friend);
-        console.log("\ntempFriends: "+tempFriends);
-        console.log("\nallFriendData: "+allFriendData);
-      }
-      else{
-        console.log("\ntempFriends: "+tempFriends);
+      if(!friend){
         callback(allFriendData);
       }
     });
   }
-  else{
-    //loadfriendsteps
+  else{   //loadfriendsleeps
     loadFriendSleeps(tempFriends, allFriendData, function(allFriendData){
-      console.log("\n--------------------------\nThis Is Sleep's All Friend Data: "+allFriendData+"\n-------------------------------------------\n")
+      if(!friend){
+        callback(allFriendData);
+      }
     });
   }
   //console.log("\n--------------------------\nThis Is All Friend Data: "+allFriendData+"\n-------------------------------------------\n")
@@ -1116,17 +1107,10 @@ function loadFriendFunction(tempFriends, allFriendData, challengeCount, callback
 }
 
 // loads the latest moves of friends of a user
-function loadFriendMoves(tempFriends, allFriendData, callback) {
-
-    console.log("\n Begin loadFriendMoves---------------\n")
-    
-
+function loadFriendMoves(tempFriends, allFriendData, callback) {   
     friend = tempFriends.shift();
-
     if (friend) {
       friendID=friend.userID;
-      console.log("UserID: "+friendID);
-
         queries.getLatestMove(friendID, function(latestMove){
             if (latestMove) {
                 allFriendData.push(latestMove.steps+" steps");
@@ -1134,25 +1118,14 @@ function loadFriendMoves(tempFriends, allFriendData, callback) {
             loadFriendMoves(tempFriends, allFriendData, callback);
         });
     }
-    else {
-        console.log(allFriendData);
-        console.log("\nEnd loadFriendMoves------------\n")
-    }
     callback(allFriendData);
 }
 
 // loads the latest sleeps of friends of a user
 function loadFriendSleeps(tempFriends, allFriendData, callback) {
-
-    console.log("\n Begin loadFriendSleeps---------------\n")
-    
-
     friend = tempFriends.shift();
-
     if (friend) {
       friendID=friend.userID;
-      console.log("UserID: "+friendID);
-
         queries.getLatestSleep(friendID, function(latestSleep){
             if (latestSleep) {
                 allFriendData.push(secondsToTimeString(latestSleep.duration));
@@ -1161,8 +1134,6 @@ function loadFriendSleeps(tempFriends, allFriendData, callback) {
         });
     }
     else {
-        console.log(allFriendData);
-        console.log("\nEnd loadFriendSleeps------------\n")
         callback(allFriendData);
     }
 }
