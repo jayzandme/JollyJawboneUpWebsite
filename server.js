@@ -976,12 +976,19 @@ function loadMovesData(userID, callback) {
 
     queries.getMoves(userID, function(moves) {
         for (var i = 0; i < 10; i++) {
+          var percentOfGoal;
+          if (moves[i].steps > 10000){
+            percentOfGoal = 100;
+          }
+          else{
+            percentOfGoal = (moves[i].steps/10000) * 100;
+          }
             movesData.push({
               steps: addCommas(moves[i].steps),
               active_time: secondsToTimeString(moves[i].active_time),
               distance: (metersToMiles(moves[i].distance)).toFixed(2),
               calories: addCommas((moves[i].calories).toFixed(2)),
-              percentOfGoal: (moves[i].steps / 10000) * 100
+              percentOfGoal: percentOfGoal
             });
         }
 
@@ -1025,15 +1032,23 @@ function loadWorkoutsData(userID, callback) {
 
     queries.getWorkouts(userID, function(workouts) {
         for (var i = 0; i < 10; i++){
+          var percentOfGoal;
+          var distance = metersToMiles(workouts[i].meters);
+          if (distance < 3){
+            percentOfGoal = (distance / 3) * 100;
+          }
+          else{
+            percentOfGoal = 100;
+          }
             workoutsData.push({
               title: workouts[i].title,
               steps: addCommas(workouts[i].steps),
               time: secondsToTimeString(workouts[i].time),
-              distance: metersToMiles(workouts[i].meters).toFixed(2),
+              distance: distance.toFixed(2),
               calories: workouts[i].calories,
               intensity: workouts[i].intensity,
-              date: getFormattedDate(workouts[i].date)
-
+              date: getFormattedDate(workouts[i].date),
+              percentOfGoal: percentOfGoal
             });
         }
 

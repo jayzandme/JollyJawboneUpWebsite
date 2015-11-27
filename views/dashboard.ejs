@@ -14,65 +14,74 @@
   <script>
     $(function () {
 
-      var gaugeOptions = {
+      function getGaugeOptions(data, dataText){
+        var gaugeOptions = {
 
-          'chart': {
-              'type': 'solidgauge',
-              backgroundColor: null
-          },
-          title: {
-            text: '<%= moves.steps %>',
-            verticalAlign: 'middle',
-            style: {'color': 'white'}
-          },
-          'tooltip': {
-              'enabled': false
-          },
-          credits:{
-            'enabled': false
-          },
-          'pane': {
-            'center': ['50%', '50%'],
-            'size': '100px',
-            'startAngle': 0,
-            'endAngle': 360,
-            'background': {
-              'backgroundColor': null,
-              'innerRadius': '90%',
-              'outerRadius': '100%',
-              'borderWidth': 0
-            }
-          },
-
-          'yAxis': {
-            'min': 0,
-            'max': 100,
-            'labels': {
+            'chart': {
+                'type': 'solidgauge',
+                backgroundColor: null
+            },
+            title: {
+              //text: '<%= moves.steps %>',
+              text: dataText,
+              verticalAlign: 'middle',
+              style: {'color': 'white'}
+            },
+            'tooltip': {
+                'enabled': false
+            },
+            credits:{
               'enabled': false
             },
+            'pane': {
+              'center': ['50%', '50%'],
+              'size': '100px',
+              'startAngle': 0,
+              'endAngle': 360,
+              'background': {
+                'backgroundColor': null,
+                'innerRadius': '90%',
+                'outerRadius': '100%',
+                'borderWidth': 0
+              }
+            },
+
+            'yAxis': {
+              'min': 0,
+              'max': 100,
+              'labels': {
+                'enabled': false
+              },
+        
+              'lineWidth': 0,
+              'minorTickInterval': null,
+              'tickPixelInterval': 400,
+              'tickWidth': 0
+            },
+
+            'plotOptions': {
+                'solidgauge': {
+                    'innerRadius': '90%'
+                }
+            },
+            
+            'series': [{
+                'name': 'Speed',
+                //'data': [<%= moves.percentOfGoal %>],
+                'data': [data],
+                'dataLabels': {
+                    'enabled': false
+                }
+            }]
+        };
+        return gaugeOptions;
+      }
       
-            'lineWidth': 0,
-            'minorTickInterval': null,
-            'tickPixelInterval': 400,
-            'tickWidth': 0
-          },
+      var gaugeOptionsMoves = getGaugeOptions(<%= moves.percentOfGoal %>, '<%= moves.steps %>');
+      var gaugeOptionsWorkouts = getGaugeOptions(<%= workouts.percentOfGoal %>, '<%= workouts.distance %>');
 
-          'plotOptions': {
-              'solidgauge': {
-                  'innerRadius': '90%'
-              }
-          },
-          
-          'series': [{
-              'name': 'Speed',
-              'data': [<%= moves.percentOfGoal %>],
-              'dataLabels': {
-                  'enabled': false
-              }
-          }]
-      };
-
-      $('#my-chart').highcharts(gaugeOptions);
+      $('#my-chart-move').highcharts(gaugeOptionsMoves);
+      $('#my-chart-workout').highcharts(gaugeOptionsWorkouts);
     });
   </script>
 </head>
@@ -125,7 +134,7 @@
           <div class ="circleAndTextMoves parent"> 
               <div class="sideText child" style:"float:left">Today's Steps
                 <span>  
-                  <div id="my-chart" style="width: 125px; height: 150px; float: right"> 
+                  <div id="my-chart-move" style="width: 125px; height: 150px; float: right"> 
                   </div>
                 </span>
               </div>
@@ -138,9 +147,13 @@
         </div>
         <div class="col-md-4 parent">
           <div class ="circleAndTextMoves parent"> 
-            <div class="sideText child">Miles </div>
-            <div class="circleBase text-center child"><span class="insideCircle"> <%= workouts.distance%></span></div>
-        </div>
+              <div class="sideText child" style:"float:left">Miles
+                <span>  
+                  <div id="my-chart-workout" style="width: 125px; height: 150px; float: right"> 
+                  </div>
+                </span>
+              </div>
+          </div>
           <div class="workouts img-rounded">
             <div>Most Recent Workout Completed On: <%= workouts.date %></div>
             <div>Workout Type: <%= workouts.title %></div>
