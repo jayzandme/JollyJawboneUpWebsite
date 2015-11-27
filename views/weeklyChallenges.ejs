@@ -100,6 +100,7 @@
       -->
         <thead>
           <tr>
+            <th>Rank</th>
             <th>Leaderboard</th>
             <th>Progress</th>
           </tr>
@@ -107,6 +108,7 @@
         <tbody>
           <% for(var i = 0; i < friends.length; i++) { %>
           <tr>
+            <td><%=i+1%>.</td>
             <td><%= friends[i].first %> <%=friends[i].last %></td>
             <td> <%= allFriendData[i] %></td>
           </tr>
