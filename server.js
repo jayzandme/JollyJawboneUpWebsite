@@ -911,7 +911,14 @@ function loadAggregateData(userID, callback) {
                     addCommas((metersToMiles(results[0].workoutsDistanceTotal)).toFixed(2));
 
                 // done with getting aggregations, call callback
-                callback(aggregateData);
+
+                queries.getLatestMove(userID, function(lastMove){
+                  if (lastMove != null){
+                    aggregateData.date = getFormattedDate(lastMove.date);
+                  }
+                  callback(aggregateData);
+
+                });
 
             });
         });
@@ -954,7 +961,6 @@ function loadSleepsData(userID, callback) {
           else{
             titlePrint = 'error';
           }
-          console.log(titlePrint);
 
             sleepsData.push( {
                   title: titlePrint,
