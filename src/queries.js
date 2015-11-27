@@ -212,11 +212,25 @@ insertMove = function(move, userID, callback) {
         calories: move.details.calories
    });
 
-   newMove.save(function (err, thor) {
+   var findVals = moves.find({userID: userID, date: move.date});
+   if (findVals){
+    moves.update({userID: userID, date: move.date}, {$set: {
+        time_created: move.time_created, 
+        time_updated: move.time_updated,
+        time_completed: move.time_completed,
+        steps: move.details.steps,
+        active_time: move.details.active_time,
+        distance: move.details.distance,
+        calories: move.details.calories
+    }});
+   }
+   else{
+    newMove.save(function (err, thor) {
         if (err) {
             return console.error(err);
         }
-   });
+    });
+   }
 
    callback();
 
