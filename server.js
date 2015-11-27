@@ -506,7 +506,7 @@ app.get('/newLevel', function(req, res){
         newLevelNum: null
     };
 
-    queries.levelsGetUserLevel(0, function(users){
+    queries.levelsGetUserLevel(userID, function(users){
         nextLevelData.newLevelNum = users.level;
         queries.getLevel(nextLevelData.newLevelNum, function(levels){
             nextLevelData.goal1Name = levels.firstGoal;
@@ -533,7 +533,7 @@ app.get('/viewOldLevel/:i', function(req, res){
     currentLevelNum: null
   };
 
-  queries.levelsGetUserLevel(0, function(users){
+  queries.levelsGetUserLevel(userID, function(users){
     oldLevel.currentLevelNum = users.level;
     queries.getLevel(levelNum, function(levels){
       oldLevel.goal1Name = levels.firstGoal;

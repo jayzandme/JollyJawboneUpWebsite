@@ -22,7 +22,7 @@
               <li class="active"><a href="/levels?user=<%= userID %>">Levels</a></li>
               <li><a href="/achievements?user=<% userID %>">Achievements</a></li>
               <li><a href="/teamPage?user=<%= userID %>">Team</a></li>
-              <li><a href="/weeklyChallenges?user=<%= userID >">Weekly Challenges</a></li>
+              <li><a href="/weeklyChallenges?user=<%= userID %>">Weekly Challenges</a></li>
             </ul>
         </div>
       </div>
@@ -30,7 +30,7 @@
   <div class="row text-center"><h2>Wecome to your new level!</h2></div>
     <div class="row">
       <div class="col-md-6">
-        <div class="text-center"><h3>Current Level: <%= newLevelNum %></h3></div>
+        <div class="text-center"><h3>Current Level: <%= nextLevelData.newLevelNum %></h3></div>
       </div>
       <div class="col-md-6">
         <div class="text-center"> <h3>Days on Level: 0</h3></div>
@@ -43,17 +43,17 @@
     </div>
     <div class="row">
       <div class="col-md-4">
-        <div class="text-center"><%= goal1Name %></div>
+        <div class="text-center"><%= nextLevelData.goal1Name %></div>
       </div>
     </div>
     <div class="row">
       <div class="col-md-4">
-        <div class="text-center"><%= goal2Name %></div>
+        <div class="text-center"><%= nextLevelData.goal2Name %></div>
       </div>
     </div>
     <div class="row">
       <div class="col-md-4">
-        <div class="text-center"><%= goal3Name %></div>
+        <div class="text-center"><%= nextLevelData.goal3Name %></div>
       </div>
     </div>
   </div>
