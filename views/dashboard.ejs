@@ -77,11 +77,14 @@
         return gaugeOptions;
       }
       
+      var gaugeOptionsSleeps = getGaugeOptions(<%= sleeps.percentOfGoal %>, '<%= sleeps.title %>')
       var gaugeOptionsMoves = getGaugeOptions(<%= moves.percentOfGoal %>, '<%= moves.steps %>');
       var gaugeOptionsWorkouts = getGaugeOptions(<%= workouts.percentOfGoal %>, '<%= workouts.distance %>');
 
+      $('#my-chart-sleep').highcharts(gaugeOptionsSleeps);
       $('#my-chart-move').highcharts(gaugeOptionsMoves);
       $('#my-chart-workout').highcharts(gaugeOptionsWorkouts);
+      
     });
   </script>
 </head>
@@ -118,10 +121,14 @@
     </div>
     <div class="row">
         <div class="col-md-4 parent" >
-          <div class = "circleAndTextSleeps"> 
-          <div class="sideText child">Slept </div>
-            <div class= "circleBase text-center child"><span class="insideCircle"> <%= sleeps.title %></span></div>
-        </div>
+          <div class ="circleAndTextMoves parent"> 
+              <div class="sideText child" style:"float:left">Slept
+                <span>  
+                  <div id="my-chart-sleep" style="width: 125px; height: 150px; float: right"> 
+                  </div>
+                </span>
+              </div>
+          </div>
           <div class="sleeps img-rounded">
             
             <div class="text-center">Times Awakened: <%= sleeps.awakenings %></div>
@@ -138,7 +145,7 @@
                   </div>
                 </span>
               </div>
-        </div>
+          </div>
           <div class="moves img-rounded">
             <div>Active Time: <%= moves.active_time %></div>
             <div>Distance: <%= moves.distance %> miles</div>

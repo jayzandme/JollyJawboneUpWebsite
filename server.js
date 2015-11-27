@@ -928,6 +928,15 @@ function loadSleepsData(userID, callback) {
 
     queries.getSleeps(userID, function(sleeps) {
         for (var i = 0; i < 10; i++) {
+          var percentOfGoal;
+          var difference = sleeps[i].duration - sleeps[i].awake;
+          if (difference > 28800){
+            percentOfGoal = 100;
+          }
+          else{
+            percentOfGoal = (difference/ 28800) * 100;
+          }
+
             sleepsData.push( {
                   title: sleeps[i].title,
                   awake_time: epochtoClockTime(sleeps[i].awake_time),
@@ -935,7 +944,8 @@ function loadSleepsData(userID, callback) {
                   awakenings: sleeps[i].awakenings,
                   lightSleep: secondsToTimeString(sleeps[i].light),
                   deepSleep: secondsToTimeString(sleeps[i].deep),
-                  date: getFormattedDate(sleeps[i].date)
+                  date: getFormattedDate(sleeps[i].date),
+                  percentOfGoal: percentOfGoal
             });
         }
         
