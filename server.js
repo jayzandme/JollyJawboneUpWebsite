@@ -937,8 +937,27 @@ function loadSleepsData(userID, callback) {
             percentOfGoal = (difference/ 28800) * 100;
           }
 
+          var title = sleeps[i].title;
+          var titlePrint;
+          if (title.length == 10){
+            titlePrint = title.substring(title.length - 6);
+          }
+          else if (title.length == 9){
+            titlePrint = title.substring(title.length - 5);
+          }
+          else if (title.length == 7){
+            titlePrint = title.substring(title.length - 3);
+          }
+          else if (title.length == 6){
+            titlePrint = title.substring(title.length - 2);
+          }
+          else{
+            titlePrint = 'error';
+          }
+          console.log(titlePrint);
+
             sleepsData.push( {
-                  title: sleeps[i].title,
+                  title: titlePrint,
                   awake_time: epochtoClockTime(sleeps[i].awake_time),
                   asleep_time: epochtoClockTime(sleeps[i].asleep_time),
                   awakenings: sleeps[i].awakenings,
