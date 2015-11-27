@@ -106,11 +106,16 @@
           </tr>
         </thead>
         <tbody>
-          <% for(var i = 0; i < friends.length; i++) { %>
           <tr>
-            <td><%=i+1%>.</td>
-            <td><%= friends[i].first %> <%=friends[i].last %></td>
-            <td> <%= allFriendData[i] %></td>
+            <td>1.</td>
+            <td>James Zhang</td>
+            <td> <%= 1000000 %></td>
+          </tr>
+          <% for(var i = 0; i < 2; i++) { %>
+          <tr>
+            <td><%=i+2%>.</td>
+            <td><%= arr[i].friend.first %> <%=arr[i].friend.last %> </td>
+            <td> <%= arr[i].move %></td>
           </tr>
           <% } %>
         </tbody>

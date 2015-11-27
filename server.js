@@ -717,16 +717,19 @@ app.get('/weeklyChallenges', function(req,res){
     up.getFriends(userToken, function(friends) {
 
       loadFriends(friends, allFriends, function(userFriends) {
-        var tempFriends=userFriends.slice(0);
-        tempFriends.reverse();
-          loadFriendFunction(tempFriends, allFriendData, challengeCount, function(allFriendData) {
+          var arr = [];
+          /*arr.push({
+                friend: 0,
+                move: "1200"
+            });*/
+          loadFriendFunction(userFriends, allFriendData, challengeCount, arr, function(arr) {
 
             res.render('weeklyChallenges', 
                 { countdown: countdown,
                   currentChallenge: currentChallenge,
                   friends: userFriends,
                   userID: userID,
-                  allFriendData: allFriendData
+                  arr: arr
                 });
           });
 
@@ -1086,17 +1089,43 @@ function loadFriends(friends, allFriends, callback) {
     }
 }
 //chooses the correct friend function based on challengeCount
-function loadFriendFunction(tempFriends, allFriendData, challengeCount, callback) {
+function loadFriendFunction(userFriends, allFriendData, challengeCount, arr, callback) {
+  var tempFriends=userFriends.slice(0);
+  tempFriends.reverse();
+
   if (challengeCount==0){ //loadfriendmoves
     loadFriendMoves(tempFriends, allFriendData, function(allFriendData){
       if(!friend){
-        callback(allFriendData);
+        //Sort userFriends and allFriendData
+        //probably could make this a function eventually
+        var i, l;
+
+        // creating the objects of { name, price } and pushing them into the (unsorted) array
+        for(i = 0, l = userFriends.length; i < l; i++) {
+
+            arr.push({
+                friend: userFriends[i],
+                move: allFriendData[i]
+            });
+        }
+
+        // now sorting the array by price, ascending order
+        arr.sort(function(a, b) { return b.move - a.move; });
+
+        console.log("\n end of sort. Array printout: \n"+arr)+"\n\n";
+        console.log(arr[0].friend + " --> " + arr[0].move+"\n");
+          console.log(arr[1].friend + " --> " + arr[1].move+"\n");
+          console.log("okay...");
+
+        callback(arr);
       }
     });
   }
   else{   //loadfriendsleeps
     loadFriendSleeps(tempFriends, allFriendData, function(allFriendData){
       if(!friend){
+        //Sort userFriends and allFriendData
+        //probably could make this a function eventually
         callback(allFriendData);
       }
     });
@@ -1113,7 +1142,7 @@ function loadFriendMoves(tempFriends, allFriendData, callback) {
       friendID=friend.userID;
         queries.getLatestMove(friendID, function(latestMove){
             if (latestMove) {
-                allFriendData.push(latestMove.steps+" steps");
+                allFriendData.push(latestMove.steps);
             }
             loadFriendMoves(tempFriends, allFriendData, callback);
         });
