@@ -166,20 +166,16 @@ app.get('/dashboardPrevious', function(req, res){
 
   loadAggregateData(userID, function(aggregateData){
 
-    loadOneDay(userID, day, function(oneDayMoves, oneDaySleeps){
-      console.log(oneDayMoves)
-      console.log(oneDaySleeps)
-      var data = {
+    loadOneDay(userID, day, function(oneDaySleeps, oneDayMoves){
+       res.render('dashboard', 
+        {
           sleeps: oneDaySleeps,
           moves: oneDayMoves,
           workouts: workoutsData,
           otherData: aggregateData,
           userID: userID,
           date: getFormattedDate(day)
-        }
-        console.log(data);
-       res.render('dashboard', 
-        data);
+      });
     });
   });
 });
