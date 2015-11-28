@@ -145,6 +145,41 @@ app.get('/dashboard', function(req, res){
 
 });
 
+app.get('/dashboardPrevious', function(req, res){
+  //var userID = req.query.user;
+  var userID = 0;
+  //var otherData = req.query.otherData;
+  //var day = req.query.day;
+  var day = 20151126;
+  //var workoutsData = req.query.workouts;
+  var workoutsData = {
+              title: 'Test',
+              steps: addCommas(9999),
+              time: secondsToTimeString(6540),
+              distance: 3.2,
+              calories: 418,
+              intensity: 1,
+              date: getFormattedDate(20150611),
+              percentOfGoal: 100
+            }
+
+  loadAggregateData(userID, function(aggregateData){
+
+    loadOneDay(userID, day, function(oneDayMoves, oneDaySleeps){
+      console.log(oneDayMoves)
+      console.log(oneDaySleeps)
+       res.render('dashboard', 
+        {
+          sleeps: oneDaySleeps,
+          moves: oneDayMoves,
+          workouts: workoutsData,
+          otherData: aggregateData,
+          userID: userID
+        });
+    });
+  });
+});
+
 app.get('/', function(req, res) {
     res.render('index');
 });
@@ -840,6 +875,26 @@ function getDateNumber(){
   return todayNumber
 }
 
+function getTitlePrint(title){
+  var titlePrint;
+  if (title.length == 10){
+    titlePrint = title.substring(title.length - 6);
+  }
+  else if (title.length == 9){
+    titlePrint = title.substring(title.length - 5);
+  }
+  else if (title.length == 7){
+    titlePrint = title.substring(title.length - 3);
+  }
+  else if (title.length == 6){
+    titlePrint = title.substring(title.length - 2);
+  }
+  else{
+    titlePrint = 'error';
+  }
+  return titlePrint;
+}
+
 // loads the aggregate data for the front end
 function loadAggregateData(userID, callback) {
 
@@ -945,22 +1000,7 @@ function loadSleepsData(userID, callback) {
           }
 
           var title = sleeps[i].title;
-          var titlePrint;
-          if (title.length == 10){
-            titlePrint = title.substring(title.length - 6);
-          }
-          else if (title.length == 9){
-            titlePrint = title.substring(title.length - 5);
-          }
-          else if (title.length == 7){
-            titlePrint = title.substring(title.length - 3);
-          }
-          else if (title.length == 6){
-            titlePrint = title.substring(title.length - 2);
-          }
-          else{
-            titlePrint = 'error';
-          }
+          var titlePrint = getTitlePrint(title);
 
             sleepsData.push( {
                   title: titlePrint,
@@ -1130,6 +1170,68 @@ function loadFriends(friends, allFriends, callback) {
     else {
         callback(allFriends);
     }
+}
+
+function loadOneDay(userID, date, callback){
+  var oneDaySleeps = {
+    title:null,
+    awake_time: null,
+    asleep_time: null,
+    awakenings: null,
+    lightSleep: null,
+    deepSleep: null,
+    date: null,
+    percentOfGoal: null
+  }
+
+  var oneDayMoves = {
+    steps: null,
+    active_time: null,
+    distance: null,
+    calories: null,
+    percentOfGoal: null
+  }
+
+  queries.getOneDayMoves(userID, date, function(results){
+    var percentOfGoal;
+    if (results[0].steps > 10000){
+      percentOfGoal = 100;
+    }
+    else{
+      percentOfGoal = (results[0].steps/10000) * 100;
+    }
+
+    oneDayMoves = {
+      steps: addCommas(results[0].steps),
+      active_time: secondsToTimeString(results[0].active_time),
+      distance: (metersToMiles(results[0].distance)).toFixed(2),
+      calories: addCommas((results[0].calories).toFixed(2)),
+      percentOfGoal: percentOfGoal
+    }
+    
+    queries.getOneDaySleeps(userID, date, function(results){
+      var percentOfGoal;
+      var difference = results[0].duration - results[0].awake;
+      if (difference > 28800){
+        percentOfGoal = 100;
+      }
+      else{
+        percentOfGoal = (difference/ 28800) * 100;
+      }
+
+      oneDaySleeps = {
+        title: getTitlePrint(results[0].title),
+        awake_time: epochtoClockTime(results[0].awake_time),
+        asleep_time: epochtoClockTime(results[0].asleep_time),
+        awakenings: results[0].awakenings,
+        lightSleep: secondsToTimeString(results[0].light),
+        deepSleep: secondsToTimeString(results[0].deep),
+        date: getFormattedDate(results[0].date),
+        percentOfGoal: percentOfGoal
+      }
+      callback(oneDaySleeps, oneDayMoves);
+    });
+  });
 }
 
 var sslOptions= {

@@ -163,6 +163,19 @@ getSleeps = function(userID, callback){
     });
 }
 
+getOneDaySleeps = function(userID, date, callback){
+    var queryVals = sleeps.find({userID: userID, date:date});
+
+    queryVals.exec(function (err, sleeps){
+        if(err){
+            throw err;
+        }
+        else{
+            callback(sleeps);
+        }
+    });
+}
+
 // gets the most recent sleep for a user in the database
 getLatestSleep = function(userID, callback) {
 
@@ -255,6 +268,19 @@ getMoves = function(userID, callback){
         if (err) 
             throw err;
         else {
+            callback(moves);
+        }
+    });
+}
+
+getOneDayMoves = function(userID, date, callback){
+    var queryVals = moves.find({userID: userID, date:date});
+
+    queryVals.exec(function (err, moves){
+        if(err){
+            throw err;
+        }
+        else{
             callback(moves);
         }
     });
@@ -616,8 +642,10 @@ module.exports.insertMoves = insertMoves;
 module.exports.insertWorkout = insertWorkout;
 module.exports.insertWorkouts = insertWorkouts;
 module.exports.getSleeps = getSleeps;
+module.exports.getOneDaySleeps = getOneDaySleeps;
 module.exports.getLatestSleep = getLatestSleep;
 module.exports.getMoves = getMoves;
+module.exports.getOneDayMoves = getOneDayMoves;
 module.exports.getLatestMove = getLatestMove;
 module.exports.getWorkouts = getWorkouts;
 module.exports.getLatestWorkout = getLatestWorkout;
