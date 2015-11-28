@@ -133,7 +133,8 @@ app.get('/dashboard', function(req, res){
                                           moves: movesData[0],
                                           workouts: workoutsData[0],
                                           otherData: aggregateData,
-                                          userID: userID
+                                          userID: userID,
+                                          date: aggregateData.date
                                         });
                         });
                     });
@@ -168,14 +169,17 @@ app.get('/dashboardPrevious', function(req, res){
     loadOneDay(userID, day, function(oneDayMoves, oneDaySleeps){
       console.log(oneDayMoves)
       console.log(oneDaySleeps)
-       res.render('dashboard', 
-        {
+      var data = {
           sleeps: oneDaySleeps,
           moves: oneDayMoves,
           workouts: workoutsData,
           otherData: aggregateData,
-          userID: userID
-        });
+          userID: userID,
+          date: getFormattedDate(day)
+        }
+        console.log(data);
+       res.render('dashboard', 
+        data);
     });
   });
 });
