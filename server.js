@@ -691,7 +691,7 @@ app.get('/weeklyChallenges', function(req,res){
 
     //set a starting Sunday to build from
     var month = 'Nov'; 
-    var date = '22';
+    var date = '15';
     var year = '2015';
 
     var theDate = month + ' ' + date + ' ' + year;
@@ -1118,6 +1118,11 @@ function loadFriendFunction(userFriends, allFriendData, challengeCount, arr, cal
         // now sorting the array by price, ascending order
         arr.sort(function(a, b) { return b.stat - a.stat; });
 
+        //Reformat Strings to be more readable
+        for(i = 0, l = userFriends.length; i < l; i++) {
+          arr[i].stat=arr[i].stat+" steps";
+        }
+
         callback(arr);
       }
     });
@@ -1141,6 +1146,10 @@ function loadFriendFunction(userFriends, allFriendData, challengeCount, arr, cal
         // now sorting the array by price, ascending order
         arr.sort(function(a, b) { return b.stat - a.stat; });
 
+        //Reformat Strings to be more readable
+        for(i = 0, l = userFriends.length; i < l; i++) {
+          arr[i].stat=secondsToTimeString(arr[i].stat);
+        }
         callback(arr);
       }
     });
