@@ -205,19 +205,47 @@ app.get('/dashboardNext', function(req, res){
             }
 
   loadAggregateData(userID, function(aggregateData){
+    if (day == getNumberFromFormatted(aggregateData.date)){
+      loadSleepsData(userID, function (sleepsData, 
+                                       sleepsMax, 
+                                       consecutiveSleepMax) {
+          loadMovesData(userID, function (movesData, 
+                                          totalSteps, 
+                                          consecutiveStepCount, 
+                                          movesMax) {
+              loadWorkoutsData(userID, function(workoutsData,
+                                                consecutiveWorkoutCount,
+                                                workoutsMax) {
+                  loadAggregateData(userID, function (aggregateData) {
 
-    loadOneDay(userID, day, function(oneDaySleeps, oneDayMoves){
-       res.render('dashboard', 
-        {
-          sleeps: oneDaySleeps,
-          moves: oneDayMoves,
-          workouts: workoutsData,
-          otherData: aggregateData,
-          userID: userID,
-          date: getFormattedDate(day),
-          showNextDayButton: true
+                      res.render('dashboard', 
+                                  { sleeps: sleepsData[0],
+                                    moves: movesData[0],
+                                    workouts: workoutsData[0],
+                                    otherData: aggregateData,
+                                    userID: userID,
+                                    date: aggregateData.date,
+                                    showNextDayButton: false
+                                  });
+                  });
+              });
+          });
       });
-    });
+    }
+    else{
+      loadOneDay(userID, day, function(oneDaySleeps, oneDayMoves){    
+         res.render('dashboard', 
+          {
+            sleeps: oneDaySleeps,
+            moves: oneDayMoves,
+            workouts: workoutsData,
+            otherData: aggregateData,
+            userID: userID,
+            date: getFormattedDate(day),
+            showNextDayButton: true
+        });
+      });
+    }
   });
 });
 
