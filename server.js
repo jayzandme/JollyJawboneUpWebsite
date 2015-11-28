@@ -149,7 +149,14 @@ app.get('/dashboard', function(req, res){
 app.get('/dashboardPrevious', function(req, res){
   var userID = req.query.user;
   var dayFormatted = req.query.day;
-  var day = getNumberFromFormatted(dayFormatted) - 1;
+  var dayTest = getNumberFromFormatted(dayFormatted);
+  var date = Date.parse(dayFormatted);
+  var previousDate = new Date(date - 1000*60*60*24);
+  var numberPreviousDate = getNumberFromFormatted(previousDate);
+  console.log(previousDate);
+  console.log(numberPreviousDate);
+
+  var day = numberPreviousDate;
   //var workoutsData = req.query.workouts;
   var workoutsData = {
               title: 'Test',
