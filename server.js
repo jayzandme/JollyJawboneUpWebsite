@@ -150,12 +150,48 @@ app.get('/dashboard', function(req, res){
 app.get('/dashboardPrevious', function(req, res){
   var userID = req.query.user;
   var dayFormatted = req.query.day;
-  var dayTest = getNumberFromFormatted(dayFormatted);
   var date = Date.parse(dayFormatted);
   var previousDate = new Date(date - 1000*60*60*24);
   var numberPreviousDate = getNumberFromFormatted(previousDate);
 
   var day = numberPreviousDate;
+  //var workoutsData = req.query.workouts;
+  var workoutsData = {
+              title: 'Test',
+              steps: addCommas(9999),
+              time: secondsToTimeString(6540),
+              distance: 3.2,
+              calories: 418,
+              intensity: 1,
+              date: getFormattedDate(20150611),
+              percentOfGoal: 100
+            }
+
+  loadAggregateData(userID, function(aggregateData){
+
+    loadOneDay(userID, day, function(oneDaySleeps, oneDayMoves){
+       res.render('dashboard', 
+        {
+          sleeps: oneDaySleeps,
+          moves: oneDayMoves,
+          workouts: workoutsData,
+          otherData: aggregateData,
+          userID: userID,
+          date: getFormattedDate(day),
+          showNextDayButton: true
+      });
+    });
+  });
+});
+
+app.get('/dashboardNext', function(req, res){
+  var userID = req.query.user;
+  var dayFormatted = req.query.day;
+  var date = Date.parse(dayFormatted);
+  var nextDate = new Date(date + 1000*60*60*24);
+  var numberNextDate = getNumberFromFormatted(nextDate);
+
+  var day = numberNextDate;
   //var workoutsData = req.query.workouts;
   var workoutsData = {
               title: 'Test',
