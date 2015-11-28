@@ -1218,41 +1218,45 @@ function loadOneDay(userID, date, callback){
 
   queries.getOneDayMoves(userID, date, function(results){
     //what to do when results are null
-    var percentOfGoal;
-    if (results[0].steps > 10000){
-      percentOfGoal = 100;
-    }
-    else{
-      percentOfGoal = (results[0].steps/10000) * 100;
-    }
-
-    oneDayMoves = {
-      steps: addCommas(results[0].steps),
-      active_time: secondsToTimeString(results[0].active_time),
-      distance: (metersToMiles(results[0].distance)).toFixed(2),
-      calories: addCommas((results[0].calories).toFixed(2)),
-      percentOfGoal: percentOfGoal
-    }
-    
-    queries.getOneDaySleeps(userID, date, function(results){
+    if (results[0] != null){
       var percentOfGoal;
-      var difference = results[0].duration - results[0].awake;
-      if (difference > 28800){
+      if (results[0].steps > 10000){
         percentOfGoal = 100;
       }
       else{
-        percentOfGoal = (difference/ 28800) * 100;
+        percentOfGoal = (results[0].steps/10000) * 100;
       }
 
-      oneDaySleeps = {
-        title: getTitlePrint(results[0].title),
-        awake_time: epochtoClockTime(results[0].awake_time),
-        asleep_time: epochtoClockTime(results[0].asleep_time),
-        awakenings: results[0].awakenings,
-        lightSleep: secondsToTimeString(results[0].light),
-        deepSleep: secondsToTimeString(results[0].deep),
-        date: getFormattedDate(results[0].date),
+      oneDayMoves = {
+        steps: addCommas(results[0].steps),
+        active_time: secondsToTimeString(results[0].active_time),
+        distance: (metersToMiles(results[0].distance)).toFixed(2),
+        calories: addCommas((results[0].calories).toFixed(2)),
         percentOfGoal: percentOfGoal
+      }
+    }
+    
+    queries.getOneDaySleeps(userID, date, function(results){
+      if(results[0] != null){
+        var percentOfGoal;
+        var difference = results[0].duration - results[0].awake;
+        if (difference > 28800){
+          percentOfGoal = 100;
+        }
+        else{
+          percentOfGoal = (difference/ 28800) * 100;
+        }
+
+        oneDaySleeps = {
+          title: getTitlePrint(results[0].title),
+          awake_time: epochtoClockTime(results[0].awake_time),
+          asleep_time: epochtoClockTime(results[0].asleep_time),
+          awakenings: results[0].awakenings,
+          lightSleep: secondsToTimeString(results[0].light),
+          deepSleep: secondsToTimeString(results[0].deep),
+          date: getFormattedDate(results[0].date),
+          percentOfGoal: percentOfGoal
+        }
       }
       callback(oneDaySleeps, oneDayMoves);
     });
