@@ -105,7 +105,17 @@
     		</div>
   		</div>
 	</nav>
-	<div class = "text-center addBorder"> <h1>Dashboard Data for <%= otherData.date %></h1> </div>
+  <div class="row addBorder">
+    <div class = "col-md-4 text-center"> 
+      <div class = "btn btn-primary"> Previous Day </div>
+    </div>
+    <div class="col-md-4">
+      <div class = "text-center"> <h1>Dashboard Data for <%= otherData.date %></h1> </div>
+    </div>
+    <div class="col-md-4 text-center">
+      <div class = "btn btn-primary"> Next Day </div>
+    </div>
+  </div>
 
   <div class="container">
     <div class="row">
