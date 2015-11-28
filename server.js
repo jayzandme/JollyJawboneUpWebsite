@@ -134,7 +134,7 @@ app.get('/dashboard', function(req, res){
                                           workouts: workoutsData[0],
                                           otherData: aggregateData,
                                           userID: userID,
-                                          date: aggregateData.date
+                                          date: aggregateData.date,
                                         });
                         });
                     });
@@ -147,11 +147,9 @@ app.get('/dashboard', function(req, res){
 });
 
 app.get('/dashboardPrevious', function(req, res){
-  //var userID = req.query.user;
-  var userID = 0;
-  //var otherData = req.query.otherData;
-  //var day = req.query.day;
-  var day = 20151126;
+  var userID = req.query.user;
+  var dayFormatted = req.query.day;
+  var day = getNumberFromFormatted(dayFormatted) - 1;
   //var workoutsData = req.query.workouts;
   var workoutsData = {
               title: 'Test',
@@ -174,7 +172,7 @@ app.get('/dashboardPrevious', function(req, res){
           workouts: workoutsData,
           otherData: aggregateData,
           userID: userID,
-          date: getFormattedDate(day)
+          date: getFormattedDate(day),
       });
     });
   });
@@ -817,6 +815,25 @@ function getFormattedDate(dateString) {
   var day = dateString.substring(6, 8);
   var formattedDate = month + "/" + day + "/" + year;
   return formattedDate
+}
+
+function getNumberFromFormatted(formattedDate){
+  var today = new Date(formattedDate);
+  var todayDay = today.getDate();
+  var todayMonth = today.getMonth()+1; //January is 0
+  var todayYear = today.getFullYear();
+
+  if(todayDay<10) {
+      todayDay='0'+todayDay
+  } 
+
+  if(todayMonth<10) {
+      todayMonth='0'+todayMonth
+  } 
+
+
+  var todayNumber = parseInt(todayYear, 10) * 10000 + parseInt(todayMonth, 10) * 100 + parseInt(todayDay, 10);
+  return todayNumber
 }
 
 function secondsToTimeString(secondsTotal){
