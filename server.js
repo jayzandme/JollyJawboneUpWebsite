@@ -135,6 +135,7 @@ app.get('/dashboard', function(req, res){
                                           otherData: aggregateData,
                                           userID: userID,
                                           date: aggregateData.date,
+                                          showNextDayButton: false
                                         });
                         });
                     });
@@ -153,8 +154,6 @@ app.get('/dashboardPrevious', function(req, res){
   var date = Date.parse(dayFormatted);
   var previousDate = new Date(date - 1000*60*60*24);
   var numberPreviousDate = getNumberFromFormatted(previousDate);
-  console.log(previousDate);
-  console.log(numberPreviousDate);
 
   var day = numberPreviousDate;
   //var workoutsData = req.query.workouts;
@@ -180,6 +179,7 @@ app.get('/dashboardPrevious', function(req, res){
           otherData: aggregateData,
           userID: userID,
           date: getFormattedDate(day),
+          showNextDayButton: true
       });
     });
   });
@@ -1217,6 +1217,7 @@ function loadOneDay(userID, date, callback){
   }
 
   queries.getOneDayMoves(userID, date, function(results){
+    //what to do when results are null
     var percentOfGoal;
     if (results[0].steps > 10000){
       percentOfGoal = 100;

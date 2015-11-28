@@ -84,6 +84,10 @@
       $('#my-chart-sleep').highcharts(gaugeOptionsSleeps);
       $('#my-chart-move').highcharts(gaugeOptionsMoves);
       $('#my-chart-workout').highcharts(gaugeOptionsWorkouts);
+
+      if (!<%= showNextDayButton %>){
+        $('#nextDayButton').hide();
+      }
       
     });
   </script>
@@ -113,7 +117,7 @@
       <div class = "text-center"> <h1>Dashboard Data for <%= date %></h1> </div>
     </div>
     <div class="col-md-4 text-center">
-      <div class = "btn btn-primary"> Next Day </div>
+      <div class = "btn btn-primary" id="nextDayButton"> Next Day </div>
     </div>
   </div>
 
