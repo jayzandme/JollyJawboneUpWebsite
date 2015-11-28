@@ -691,7 +691,7 @@ app.get('/weeklyChallenges', function(req,res){
 
     //set a starting Sunday to build from
     var month = 'Nov'; 
-    var date = '15';
+    var date = '22';
     var year = '2015';
 
     var theDate = month + ' ' + date + ' ' + year;
@@ -721,20 +721,11 @@ app.get('/weeklyChallenges', function(req,res){
       up.getFriends(userToken, function(friends) {
         
         friends.push(user); //add user to end of list of friends
-        console.log("friends"+friends);
-        console.log("\n-------------\nprint friends before load1:"+friends[0].xid+"\n---------\n");
-        console.log("\n-------------\nprint friends before load2:"+friends[1].xid+"\n---------\n");
-        console.log("\n-------------\nprint friends before load3:"+friends[2].xid+"\n---------\n");
-
-        console.log("\n-------------\nprint user.xid:"+user.xid+"\n---------\n");
+        
         loadFriends(friends, allFriends, function(userFriends) {
 
             var arr = [];
-            /*arr.push({
-                  friend: user,
-                  move: "1200"
-              });*/
-            console.log("\n-------------\nprint friends after push:"+allFriends+"\n---------\n");            
+            
             loadFriendFunction(userFriends, allFriendData, challengeCount, arr, function(arr) {
 
               res.render('weeklyChallenges', 
@@ -1107,9 +1098,6 @@ function loadFriendFunction(userFriends, allFriendData, challengeCount, arr, cal
   
   var tempFriends=userFriends.slice(0);
   //tempFriends.reverse();
-  
-  console.log("\n-----------\nuserfriends pre sort: "+userFriends+"\n-----------\n"); //Sophie, Sonny, James
-  console.log("\n-----------\ntempfriends pre sort: "+tempFriends+"\n-----------\n"); //James, Sonny, Sophie
 
   if (challengeCount==0){ //loadfriendmoves
     loadFriendMoves(tempFriends, allFriendData, function(allFriendData){
@@ -1123,18 +1111,12 @@ function loadFriendFunction(userFriends, allFriendData, challengeCount, arr, cal
 
             arr.push({
                 friend: userFriends[i],
-                move: allFriendData[i]
+                stat: allFriendData[i]
             });
         }
 
         // now sorting the array by price, ascending order
-        arr.sort(function(a, b) { return b.move - a.move; });
-
-        console.log("\n end of sort. Array printout: \n"+arr)+"\n\n";
-        console.log(arr[0].friend + " --> " + arr[0].move+"\n");
-          console.log(arr[1].friend + " --> " + arr[1].move+"\n");
-          //console.log(arr[2].friend + " --> " + arr[2].move+"\n");
-          console.log("okay...");
+        arr.sort(function(a, b) { return b.stat - a.stat; });
 
         callback(arr);
       }
@@ -1145,7 +1127,21 @@ function loadFriendFunction(userFriends, allFriendData, challengeCount, arr, cal
       if(!friend){
         //Sort userFriends and allFriendData
         //probably could make this a function eventually
-        callback(allFriendData);
+        var i, l;
+
+        // creating the objects of { name, price } and pushing them into the (unsorted) array
+        for(i = 0, l = userFriends.length; i < l; i++) {
+
+            arr.push({
+                friend: userFriends[i],
+                stat: allFriendData[i]
+            });
+        }
+
+        // now sorting the array by price, ascending order
+        arr.sort(function(a, b) { return b.stat - a.stat; });
+
+        callback(arr);
       }
     });
   }
@@ -1176,7 +1172,7 @@ function loadFriendSleeps(tempFriends, allFriendData, callback) {
       friendID=friend.userID;
         queries.getLatestSleep(friendID, function(latestSleep){
             if (latestSleep) {
-                allFriendData.push(secondsToTimeString(latestSleep.duration));
+                allFriendData.push(latestSleep.duration);
             }
             loadFriendSleeps(tempFriends, allFriendData, callback);
         });
