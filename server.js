@@ -156,7 +156,7 @@ app.get('/dashboardPrevious', function(req, res){
 
   var day = numberPreviousDate;
   //var workoutsData = req.query.workouts;
-  var workoutsData = {
+  /*var workoutsData = {
               title: 'Test',
               steps: addCommas(9999),
               time: secondsToTimeString(6540),
@@ -165,20 +165,23 @@ app.get('/dashboardPrevious', function(req, res){
               intensity: 1,
               date: getFormattedDate(20150611),
               percentOfGoal: 100
-            }
+            }*/
 
   loadAggregateData(userID, function(aggregateData){
-
-    loadOneDay(userID, day, function(oneDaySleeps, oneDayMoves){
-       res.render('dashboard', 
-        {
-          sleeps: oneDaySleeps,
-          moves: oneDayMoves,
-          workouts: workoutsData,
-          otherData: aggregateData,
-          userID: userID,
-          date: getFormattedDate(day),
-          showNextDayButton: true
+    loadWorkoutsData(userID, function(workoutsData,
+                                      consecutiveWorkoutCount,
+                                      workoutsMax) {
+      loadOneDay(userID, day, function(oneDaySleeps, oneDayMoves){
+         res.render('dashboard', 
+          {
+            sleeps: oneDaySleeps,
+            moves: oneDayMoves,
+            workouts: workoutsData[0],
+            otherData: aggregateData,
+            userID: userID,
+            date: getFormattedDate(day),
+            showNextDayButton: true
+        });
       });
     });
   });
@@ -193,7 +196,7 @@ app.get('/dashboardNext', function(req, res){
 
   var day = numberNextDate;
   //var workoutsData = req.query.workouts;
-  var workoutsData = {
+  /*var workoutsData = {
               title: 'Test',
               steps: addCommas(9999),
               time: secondsToTimeString(6540),
@@ -202,7 +205,7 @@ app.get('/dashboardNext', function(req, res){
               intensity: 1,
               date: getFormattedDate(20150611),
               percentOfGoal: 100
-            }
+            }*/
 
   loadAggregateData(userID, function(aggregateData){
     if (day == getNumberFromFormatted(aggregateData.date)){
@@ -233,16 +236,20 @@ app.get('/dashboardNext', function(req, res){
       });
     }
     else{
-      loadOneDay(userID, day, function(oneDaySleeps, oneDayMoves){    
-         res.render('dashboard', 
-          {
-            sleeps: oneDaySleeps,
-            moves: oneDayMoves,
-            workouts: workoutsData,
-            otherData: aggregateData,
-            userID: userID,
-            date: getFormattedDate(day),
-            showNextDayButton: true
+      loadWorkoutsData(userID, function(workoutsData,
+                                                consecutiveWorkoutCount,
+                                                workoutsMax) {
+        loadOneDay(userID, day, function(oneDaySleeps, oneDayMoves){    
+           res.render('dashboard', 
+            {
+              sleeps: oneDaySleeps,
+              moves: oneDayMoves,
+              workouts: workoutsData[0],
+              otherData: aggregateData,
+              userID: userID,
+              date: getFormattedDate(day),
+              showNextDayButton: true
+          });
         });
       });
     }
