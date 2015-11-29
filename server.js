@@ -162,6 +162,8 @@ app.get('/levels', function(req, res){
     var progressNames = [];
     var showNextLevelButton = false;
 
+    console.log("\startedLevelDate start\n"+startedLevelDate+"\startedLevelDate end\n");
+
     //find that level in levels database
     queries.getLevel(currentLevel, function(levels) {
 
@@ -691,26 +693,35 @@ app.get('/weeklyChallenges', function(req,res){
 
     //set a starting Sunday to build from
     var month = 'Nov'; 
-    var date = '15';
+    var date = '22';
     var year = '2015';
 
     var theDate = month + ' ' + date + ' ' + year;
     var setdate = new Date(theDate);
     var now = new Date();
-    
 
-    var now = new Date();
-    var midnight = new Date();
-    midnight.setHours(24,0,0,0); //midnignt
+    //var midnight = new Date();
+    //midnight.setHours(24,0,0,0); //midnignt
     while (setdate-now<=0){
     //if (now.getDay()==0 && midnight.getTime() ==Date.now() ){ //is Sunday at midnight
       
       challengeCount++; //iterate challenge
       challengeCount=challengeCount%challenges.length;
       currentChallenge=challenges[challengeCount];
-      
+
+
       setdate.setHours(setdate.getHours() + 7*24);  //iterate setdate
     }
+    console.log("\nsetdate start\n"+setdate+"\nsetdate end\n");
+    
+    var challengeStart = new Date(setdate);
+    challengeStart.setDate(challengeStart.getDate()-7);
+
+    console.log("\nchallengestart start\n"+challengeStart+"\nchallengestart end\n");
+
+    var startDate= challengeStart.getFullYear()+""+(1+challengeStart.getMonth())+""+challengeStart.getDate();
+
+    console.log("\nstartDate start\n"+startDate+"\nstartDate end\n");
     
     var countdown = (setdate - now)/1000;
     countdown = Math.floor(countdown);
@@ -726,7 +737,7 @@ app.get('/weeklyChallenges', function(req,res){
 
             var arr = [];
             
-            loadFriendFunction(userFriends, allFriendData, challengeCount, arr, function(arr) {
+            loadFriendFunction(userFriends, allFriendData, challengeCount, startDate, arr, function(arr) {
 
               res.render('weeklyChallenges', 
                   { countdown: countdown,
@@ -1094,13 +1105,13 @@ function loadFriends(friends, allFriends, callback) {
     }
 }
 //chooses the correct friend function based on challengeCount
-function loadFriendFunction(userFriends, allFriendData, challengeCount, arr, callback) {
+function loadFriendFunction(userFriends, allFriendData, challengeCount, startDate, arr, callback) {
   
   var tempFriends=userFriends.slice(0);
   //tempFriends.reverse();
 
   if (challengeCount==0){ //loadfriendmoves
-    loadFriendMoves(tempFriends, allFriendData, function(allFriendData){
+    loadFriendMoves(tempFriends, allFriendData, startDate, function(allFriendData){
       if(!friend){
         //Sort userFriends and allFriendData
         //probably could make this a function eventually
@@ -1128,7 +1139,7 @@ function loadFriendFunction(userFriends, allFriendData, challengeCount, arr, cal
     });
   }
   else{   //loadfriendsleeps
-    loadFriendSleeps(tempFriends, allFriendData, function(allFriendData){
+    loadFriendSleeps(tempFriends, allFriendData, startDate, function(allFriendData){
       if(!friend){
         //Sort userFriends and allFriendData
         //probably could make this a function eventually
@@ -1160,30 +1171,32 @@ function loadFriendFunction(userFriends, allFriendData, challengeCount, arr, cal
 }
 
 // loads the latest moves of friends of a user
-function loadFriendMoves(tempFriends, allFriendData, callback) {   
+function loadFriendMoves(tempFriends, allFriendData, startDate, callback) {   
     friend = tempFriends.shift();
     if (friend) {
       friendID=friend.userID;
-        queries.getLatestMove(friendID, function(latestMove){
+        queries.weeklyGetMoves(friendID, startDate, function(latestMove){
             if (latestMove) {
-                allFriendData.push(latestMove.steps);
+                console.log("\nLatestMove Start: \n"+latestMove+"\nLatestMove End \n")
+
+                allFriendData=allFriendData+latestMove;
             }
-            loadFriendMoves(tempFriends, allFriendData, callback);
+            loadFriendMoves(tempFriends, allFriendData, startDate, callback);
         });
     }
     callback(allFriendData);
 }
 
 // loads the latest sleeps of friends of a user
-function loadFriendSleeps(tempFriends, allFriendData, callback) {
+function loadFriendSleeps(tempFriends, allFriendData, startDate, callback) {
     friend = tempFriends.shift();
     if (friend) {
       friendID=friend.userID;
-        queries.getLatestSleep(friendID, function(latestSleep){
+        queries.weeklyGetSleeps(friendID, startDate, function(latestSleep){
             if (latestSleep) {
                 allFriendData.push(latestSleep.duration);
             }
-            loadFriendSleeps(tempFriends, allFriendData, callback);
+            loadFriendSleeps(tempFriends, allFriendData, startDate, callback);
         });
     }
     else {
