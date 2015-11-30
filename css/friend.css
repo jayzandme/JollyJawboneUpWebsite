@@ -36,23 +36,25 @@ body{
     box-shadow: inset 0 1px 1px rgba(0,0,0,0.075),0 0 8px rgba(100,100,100,0.6);
 }
 
-.titleTeam h2{
+.text-center h1 {
     color:white;
 }
 
-.table tbody td {
+.text-center h3 {
     color:white;
 }
 
-.table thead {
+.text-center {
     color:white;
 }
 
-.friendname {
-    font-size:20px !important;
+.sleeps {
+    background-color: #5a9bfc;
+    margin-right: 10px;
+    padding: 20px;
+    font-size: 15px;
 }
 
-.friendheader {
-    font-size:24px;
+.addBorder {
+    border-bottom:2px solid white;
 }
-

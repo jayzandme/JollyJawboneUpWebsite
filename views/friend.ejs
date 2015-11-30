@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Jolly Up Website</title>
+    <meta charset="utf8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="/friend.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+    <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="bower_components/highcharts/highcharts.js"></script>
+</head>
+
+<body>
+    <nav class="navbar navbar-trans">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">Jawbone Data Website</a>
+            </div>
+            <div>
+                <ul class="nav navbar-nav">
+                    <li><a href="/dashboard?user=<%= userID %>">Dashboard</a></li>
+                    <li><a href="/levels?user=<%= userID %>">Levels</a></li>
+                    <li><a href="/achievements?user=<%= userID %>">Achievements</a></li>
+                    <li class="active"><a href="/teamPage?user=<%= userID %>">Team</a></li>
+                    <li><a href="/weeklyChallenges?user=<%= userID %>">Weekly Challeneges</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="row addBorder">
+        <div class="col-md-4">
+            <div class="text-center"> <h1><%= friend.first %> <%= friend.last %> </h1> </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="text-center"><h3>Sleep</h3></div>
+                </div>
+                <div class="col-md-4">
+                    <div class= "text-center">
+                        <div><h3>Average sleep: <%= aggregate.sleepsAverage %></h3></div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class= "text-center">
+                        <div><h3>Total sleep: <%= aggregate.sleepsTotal %><h3></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="text-center"><h3>Moves</h3></div>
+                </div>
+                <div class="col-md-4">
+                    <div class= "text-center">
+                        <div><h3>Average steps: <%= aggregate.stepsAverage %></h3></div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class= "text-center">
+                        <div><h3>Total steps: <%= aggregate.stepsTotal %><h3></div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="text-center"><h3>Workout Steps</h3></div>
+                </div>
+                <div class="col-md-4">
+                    <div class= "text-center">
+                        <div><h3>Workout average steps: <%= aggregate.workoutsStepsAverage %></h3></div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class= "text-center">
+                        <div><h3>Workouts total steps: <%= aggregate.workoutsStepsTotal %><h3></div>
+                    </div>
+                </div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="text-center"><h3>Workout distance</h3></div>
+                </div>
+                <div class="col-md-4">
+                    <div class= "text-center">
+                        <div><h3>Workout average distance: <%= aggregate.workoutsDistanceAverage %>m</h3></div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class= "text-center">
+                        <div><h3>Workouts total distance: <%= aggregate.workoutsDistanceTotal %>m<h3></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="text-center"><h3>Workout time</h3></div>
+                </div>
+                <div class="col-md-4">
+                    <div class= "text-center">
+                        <div><h3>Workout average time: <%= aggregate.workoutsTimeAverage %></h3></div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class= "text-center">
+                        <div><h3>Workouts total time: <%= aggregate.workoutsTimeTotal %><h3></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="text-center"><h3>Workout calories</h3></div>
+                </div>
+                <div class="col-md-4">
+                    <div class= "text-center">
+                        <div><h3>Workout average calories: <%= aggregate.workoutsCaloriesAverage %></h3></div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class= "text-center">
+                        <div><h3>Workouts total calories: <%= aggregate.workoutsCaloriesTotal %><h3></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</body>
