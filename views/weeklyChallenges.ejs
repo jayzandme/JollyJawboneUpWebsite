@@ -26,11 +26,10 @@
       </div>
   </nav>
 
-  <button class="btn btn-default btn-lg" onclick="toggle_visibility('friends')" type="Friends">Friends</button>
-  <button class="btn btn-default btn-lg" onclick="toggle_visibility('global')" type="Global">Global</button>
-  <button class="btn btn-default btn-lg" onclick="toggle_visibility('past_friends_leaderboard')" type="Past Friends Leaderboard">Past Friends Leaderboard</button>
-  <button class="btn btn-default btn-lg" onclick="toggle_visibility('past_global_leaderboard')" type="Past Global Leaderboard">Past Global Leaderboard</button>
-  
+  <button class="btn btn-default btn-lg" onclick="toggle_visibility('friends')" style ="display:none" type="Friends">Friends</button>
+  <button class="btn btn-default btn-lg" onclick="toggle_visibility('global')" style ="display:none" type="Global">Global</button>
+  <button class="btn btn-default btn-lg" onclick="toggle_visibility('past_friends_leaderboard')" style ="display:none" type="Past Friends Leaderboard">Past Friends Leaderboard</button>
+  <button class="btn btn-default btn-lg" onclick="toggle_visibility('past_global_leaderboard')" style ="display:none" type="Past Global Leaderboard">Past Global Leaderboard</button>
   
 
   <body onload="timer()">
@@ -68,8 +67,8 @@
             /*if (remainingSeconds < 10) { //for digital clock style countdown
                 remainingSeconds = "0" + remainingSeconds; 
             }*/
-            document.getElementById('timer_div1').innerHTML = days + " Days " + hours + " Hours " + minutes + " Minutes " + remainingSeconds + " Seconds " ;
-            document.getElementById('timer_div2').innerHTML = days + " Days " + hours + " Hours " + minutes + " Minutes " + remainingSeconds + " Seconds " ;
+            document.getElementById('timer_div1').innerHTML = days + " Days " + hours + " Hours " + minutes + " Minutes " + remainingSeconds + " Seconds Remaining" ;
+            document.getElementById('timer_div2').innerHTML = days + " Days " + hours + " Hours " + minutes + " Minutes " + remainingSeconds + " Seconds Remaining" ;
             if (seconds == 0) {
                 clearInterval(countdownTimer);
                 document.getElementById('timer_div1').innerHTML = "Weekly Challenge Expired! Refresh to see the new Challenge!";
