@@ -42,14 +42,14 @@ clearDatabase = function(callback) {
 }
 
 // gets aggregate data for the Moves in the database 
-getMovesAggregation = function(callback){ 
+getMovesAggregation = function(userID, callback){ 
     moves.aggregate([ 
         { $group: 
             { _id: '$userID', 
               movesAvg: { $avg: '$steps'},
               stepsTotal: {$sum: '$steps'}
             }
-        } ], function(err, results)  {
+        }, { $sort: {_id: 1}} ], function(err, results)  {
             if (err){
                 throw err
             }
@@ -61,7 +61,7 @@ getMovesAggregation = function(callback){
 }
 
 // gets aggregate data for the Sleeps in the database
-getSleepsAggregation = function(callback){
+getSleepsAggregation = function(userID, callback){
     sleeps.aggregate([
         { $group:
             {_id: '$userID',
@@ -69,7 +69,7 @@ getSleepsAggregation = function(callback){
              sleepsTotal: {$sum: '$duration'}
             }
 
-        }], function (err, results){
+        }, { $sort: {_id: 1}}], function (err, results){
             if (err){
                 throw err
             }
@@ -81,7 +81,7 @@ getSleepsAggregation = function(callback){
 }
 
 // gets aggregate data for the Workouts in the database
-getWorkoutsAggregation = function(callback) {
+getWorkoutsAggregation = function(userID, callback) {
     workouts.aggregate([
         { $group:
             {_id: '$userID',
@@ -95,7 +95,7 @@ getWorkoutsAggregation = function(callback) {
              workoutsDistanceTotal: {$sum: '$meters'}
             }
 
-        }], function (err, results){
+        }, { $sort: {_id: 1}}], function (err, results){
             if (err){
                 throw err
             }
