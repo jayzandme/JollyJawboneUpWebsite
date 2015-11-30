@@ -791,8 +791,7 @@ app.get('/friend', function(req, res) {
 
     var userID = req.query.user;
     var friend = req.query.friend;
-    console.log("made it here!");
-    console.log(friend)
+    console.log(userID)
 
     loadMovesData(friend, function (movesData, 
                                     totalSteps, 
@@ -806,11 +805,17 @@ app.get('/friend', function(req, res) {
                                               consecutiveWorkoutCount,
                                               workoutsMax,
                                               consecutiveWorkoutsMax) {
-                {
-                    workouts: workoutsData,
-                    sleeps: sleepsData,
-                    moves: movesData,
-                    userID: userID
+                queries.findUserByID(friend, function (friendInfo) {
+
+                    res.render('friend',
+                    {
+                        friend: friendInfo,
+                        workouts: workoutsData,
+                        sleeps: sleepsData,
+                        moves: movesData,
+                        userID: userID
+                    });
+
                 });
             });
         });

@@ -18,14 +18,19 @@
             </div>
             <div>
                 <ul class="nav navbar-nav">
-                    <li><a href="/dashboard?user=<% userID %>">Dashboard</a></li>
-                    <li><a href="/levels?user=<% userID %>">Levels</a></li>
-                    <li><a href="/achievements?user=<% userID %>">Achievements</a></li>
-                    <li class="active"><a href="/teamPage?user=<% userID %>">Team</a></li>
-                    <li><a href="/weeklyChallenges?user=<% userID %>">Weekly Challeneges</a></li>
+                    <li><a href="/dashboard?user=<%= userID %>">Dashboard</a></li>
+                    <li><a href="/levels?user=<%= userID %>">Levels</a></li>
+                    <li><a href="/achievements?user=<%= userID %>">Achievements</a></li>
+                    <li class="active"><a href="/teamPage?user=<%= userID %>">Team</a></li>
+                    <li><a href="/weeklyChallenges?user=<%= userID %>">Weekly Challeneges</a></li>
                 </ul>
             </div>
         </div>
     </nav>
+    <div class="row addBorder">
+        <div class="col-md-4">
+            <div class="text-center"> <h1><%= friend.first %> <%= friend.last %> </h1> </div>
+        </div>
+    </div>
 
 </body>
