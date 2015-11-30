@@ -766,32 +766,47 @@ app.get('/achievements', function(req,res){
 app.get('/teamPage', function(req, res){
 
     var userID = req.query.user;
-    var friend = req.query.friend;
     var allFriends = [];
     var friendStats = [];
 
-    // if we are looking at a friend
-    if (friend) {
-        console.log(friend);
-    } else {
-        up.getFriends(userToken, function(friends) {
-            
-            loadFriends(friends, allFriends, function(allFriends) {
-                res.render('teamPage', 
-                { 
-                    friends: allFriends,
+    up.getFriends(userToken, function(friends) {
+        
+        loadFriends(friends, allFriends, function(allFriends) {
+            res.render('teamPage', 
+            { 
+                friends: allFriends,
+                userID: userID
+            });
+        });
+    });
+
+});
+
+app.get('/friend', function(req, res) {
+
+    var userID = req.query.user;
+    var friend = req.query.friend;
+    console.log("made it here!");
+
+    loadMovesData(userID, function (movesData, 
+                                    totalSteps, 
+                                    consecutiveStepCount, 
+                                    movesMax,
+                                    consecutiveStepMax) {
+        loadSleepsData(userID, function (sleepsData, 
+                                         sleepsMax, 
+                                         consecutiveSleepMax) {
+            loadWorkoutsData(userID, function(workoutsData,
+                                              consecutiveWorkoutCount,
+                                              workoutsMax,
+                                              consecutiveWorkoutsMax) {
+                res.render('friend',
+                {
                     userID: userID
                 });
             });
         });
-    }
-
-});
-
-app.get('/teamPage', function(req, res) {
-
-    var userID = req.query.user;
-    console.log("made it here!");
+    });
 
 });
 
