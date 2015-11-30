@@ -772,6 +772,11 @@ app.get('/teamPage', function(req, res){
     up.getFriends(userToken, function(friends) {
         
         loadFriends(friends, allFriends, function(allFriends) {
+
+            for (var i = 0; i < allFriends.length; i++) {
+                console.log(allFriends[i]);
+            }
+
             res.render('teamPage', 
             { 
                 friends: allFriends,
@@ -787,6 +792,7 @@ app.get('/friend', function(req, res) {
     var userID = req.query.user;
     var friend = req.query.friend;
     console.log("made it here!");
+    console.log(friend)
 
     loadMovesData(userID, function (movesData, 
                                     totalSteps, 
