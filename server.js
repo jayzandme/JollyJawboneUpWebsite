@@ -774,7 +774,7 @@ app.get('/weeklyChallenges', function(req,res){
     
   if (true){
     challenges.push("Take the most steps this week!");
-    challenges.push("Log the most sleep this week!");
+    //challenges.push("Log the most sleep this week!");
     //challenges.push("Log the most workouts this week!");
   }
 
