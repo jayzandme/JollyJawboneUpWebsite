@@ -794,20 +794,22 @@ app.get('/friend', function(req, res) {
     console.log("made it here!");
     console.log(friend)
 
-    loadMovesData(userID, function (movesData, 
+    loadMovesData(friend, function (movesData, 
                                     totalSteps, 
                                     consecutiveStepCount, 
                                     movesMax,
                                     consecutiveStepMax) {
-        loadSleepsData(userID, function (sleepsData, 
+        loadSleepsData(friend, function (sleepsData, 
                                          sleepsMax, 
                                          consecutiveSleepMax) {
-            loadWorkoutsData(userID, function(workoutsData,
+            loadWorkoutsData(friend, function(workoutsData,
                                               consecutiveWorkoutCount,
                                               workoutsMax,
                                               consecutiveWorkoutsMax) {
-                res.render('friend',
                 {
+                    workouts: workoutsData,
+                    sleeps: sleepsData,
+                    moves: movesData,
                     userID: userID
                 });
             });
