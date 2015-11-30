@@ -586,18 +586,27 @@ updateUserToken = function(userID, newToken, callback) {
 
 // gets the total steps this week for a user in the database
 weeklyGetMoves = function(userID, weekStartDate, callback) {
-
-    var queryVals = moves.find({$and: [{userID: userID}, {date: {$gt: weekStartDate}}]});
-
-    queryVals.exec(function (err, moves) {
-        if (err) {
-            console.log(err);
-            throw err;
+    var queryVals = moves.aggregate([ 
+        {
+            $match:
+                {userID: userID, date: {$gt: 20151023}} 
+        } 
+        ,
+        { $group: 
+            { _id: '$userID', 
+              stepsTotal: {$sum: '$steps'}
+            }
+        } ], function(err, results)  {
+            if (err){
+                throw err
+            }
+            else {
+                console.log(results)
+                callback(results);
+            }
         }
-        else {
-            callback(moves);
-        }
-    });
+    ); 
+
 }
 
 

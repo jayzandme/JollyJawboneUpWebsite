@@ -693,7 +693,7 @@ app.get('/weeklyChallenges', function(req,res){
 
     //set a starting Sunday to build from
     var month = 'Nov'; 
-    var date = '22';
+    var date = '16';
     var year = '2015';
 
     var theDate = month + ' ' + date + ' ' + year;
@@ -1177,14 +1177,16 @@ function loadFriendMoves(tempFriends, allFriendData, startDate, callback) {
       friendID=friend.userID;
         queries.weeklyGetMoves(friendID, startDate, function(latestMove){
             if (latestMove) {
-                console.log("\nLatestMove Start: \n"+latestMove+"\nLatestMove End \n")
-
-                allFriendData=allFriendData+latestMove;
+                console.log("\nLatestMove Start: \n"+latestMove[0].stepsTotal+"\nLatestMove End \n")
+                allFriendData.push(latestMove[0].stepsTotal);
+                //allFriendData=allFriendData+latestMove;
             }
             loadFriendMoves(tempFriends, allFriendData, startDate, callback);
         });
     }
-    callback(allFriendData);
+    else{
+      callback(allFriendData);
+    }
 }
 
 // loads the latest sleeps of friends of a user
