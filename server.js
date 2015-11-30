@@ -766,19 +766,33 @@ app.get('/achievements', function(req,res){
 app.get('/teamPage', function(req, res){
 
     var userID = req.query.user;
+    var friend = req.query.friend;
     var allFriends = [];
     var friendStats = [];
 
-    up.getFriends(userToken, function(friends) {
-        
-        loadFriends(friends, allFriends, function(allFriends) {
-            res.render('teamPage', 
-            { 
-                friends: allFriends,
-                userID: userID
+    // if we are looking at a friend
+    if (friend) {
+        console.log(friend);
+    } else {
+        up.getFriends(userToken, function(friends) {
+            
+            loadFriends(friends, allFriends, function(allFriends) {
+                res.render('teamPage', 
+                { 
+                    friends: allFriends,
+                    userID: userID
+                });
             });
         });
-    });
+    }
+
+});
+
+app.get('/teamPage', function(req, res) {
+
+    var userID = req.query.user;
+    console.log("made it here!");
+
 });
 
 app.get('/weeklyChallenges', function(req,res){
@@ -1251,7 +1265,6 @@ function loadWorkoutsData(userID, callback) {
 function loadFriends(friends, allFriends, callback) {
 
     friend = friends.shift();
-    console.log(allFriends);
 
     if (friend) {
 
