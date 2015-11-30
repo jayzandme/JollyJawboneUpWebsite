@@ -33,15 +33,13 @@
     <table class="table table-bordered">
         <thead>
             <tr>
-                <th>Friend</th>
-                <th>Stats</th>
+                <th class="friendheader">Friends</th>
             </tr>
         </thead>
         <tbody>
             <% for(var i = 0; i < friends.length; i++) { %>
             <tr>
-                <td><a href="/friend?user=<%= userID %>&friend=<%= friends[i].userID %>"><%= friends[i].first %> <%=friends[i].last %></td>
-                <td></td>
+                <td class="friendname"><a href="/friend?user=<%= userID %>&friend=<%= friends[i].userID %>"><%= friends[i].first %> <%=friends[i].last %></a></td>
             </tr>
 
             <% } %>
