@@ -155,17 +155,6 @@ app.get('/dashboardPrevious', function(req, res){
   var numberPreviousDate = getNumberFromFormatted(previousDate);
 
   var day = numberPreviousDate;
-  //var workoutsData = req.query.workouts;
-  /*var workoutsData = {
-              title: 'Test',
-              steps: addCommas(9999),
-              time: secondsToTimeString(6540),
-              distance: 3.2,
-              calories: 418,
-              intensity: 1,
-              date: getFormattedDate(20150611),
-              percentOfGoal: 100
-            }*/
 
   loadAggregateData(userID, function(aggregateData){
     loadWorkoutsData(userID, function(workoutsData,
@@ -195,17 +184,6 @@ app.get('/dashboardNext', function(req, res){
   var numberNextDate = getNumberFromFormatted(nextDate);
 
   var day = numberNextDate;
-  //var workoutsData = req.query.workouts;
-  /*var workoutsData = {
-              title: 'Test',
-              steps: addCommas(9999),
-              time: secondsToTimeString(6540),
-              distance: 3.2,
-              calories: 418,
-              intensity: 1,
-              date: getFormattedDate(20150611),
-              percentOfGoal: 100
-            }*/
 
   loadAggregateData(userID, function(aggregateData){
     if (day == getNumberFromFormatted(aggregateData.date)){
@@ -1043,43 +1021,43 @@ function loadAggregateData(userID, callback) {
                     };
 
     // get the moves aggregations
-    queries.getMovesAggregation(function (results) {
-        aggregateData.stepsAverage = addCommas((results[0].movesAvg).toFixed(2));
-        aggregateData.stepsTotal = addCommas(results[0].stepsTotal);
+    queries.getMovesAggregation(userID, function (results) {
+        aggregateData.stepsAverage = addCommas((results[userID].movesAvg).toFixed(2));
+        aggregateData.stepsTotal = addCommas(results[userID].stepsTotal);
 
         // get the sleeps aggregations
-        queries.getSleepsAggregation(function (results) {
-            var totalSecondsAve = results[0].sleepsAvg;
-            var totalSeconds = results[0].sleepsTotal;
+        queries.getSleepsAggregation(userID, function (results) {
+            var totalSecondsAve = results[userID].sleepsAvg;
+            var totalSeconds = results[userID].sleepsTotal;
             aggregateData.sleepsTotal = secondsToTimeString(totalSeconds);
             aggregateData.sleepsAverage = secondsToTimeString(totalSecondsAve);
 
             // get the workouts agregations 
-            queries.getWorkoutsAggregation(function (results){
+            queries.getWorkoutsAggregation(userID, function (results){
 
                 aggregateData.workoutsStepsAverage = 
-                    addCommas((results[0].workoutsStepsAvg).toFixed(2));
+                    addCommas((results[userID].workoutsStepsAvg).toFixed(2));
 
                 aggregateData.workoutsStepsTotal = 
-                    addCommas(results[0].workoutsStepsTotal);
+                    addCommas(results[userID].workoutsStepsTotal);
 
                 aggregateData.workoutsCaloriesAverage = 
-                    addCommas((results[0].workoutsCaloriesAvg).toFixed(2));
+                    addCommas((results[userID].workoutsCaloriesAvg).toFixed(2));
 
                 aggregateData.workoutsCaloriesTotal = 
-                    addCommas((results[0].workoutsCaloriesTotal).toFixed(2));
+                    addCommas((results[userID].workoutsCaloriesTotal).toFixed(2));
 
                 aggregateData.workoutsTimeAverage = 
-                    secondsToTimeString(results[0].workoutsTimeAvg);
+                    secondsToTimeString(results[userID].workoutsTimeAvg);
 
                 aggregateData.workoutsTimeTotal = 
-                    secondsToTimeString(results[0].workoutsTimeTotal);
+                    secondsToTimeString(results[userID].workoutsTimeTotal);
 
                 aggregateData.workoutsDistanceAverage = 
-                    (metersToMiles(results[0].workoutsDistanceAvg)).toFixed(2);
+                    (metersToMiles(results[userID].workoutsDistanceAvg)).toFixed(2);
 
                 aggregateData.workoutsDistanceTotal = 
-                    addCommas((metersToMiles(results[0].workoutsDistanceTotal)).toFixed(2));
+                    addCommas((metersToMiles(results[userID].workoutsDistanceTotal)).toFixed(2));
 
                 // done with getting aggregations, call callback
 
