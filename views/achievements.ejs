@@ -27,54 +27,60 @@
       </div>
   </nav>
 
-  <table class="achievementsTable table table-bordered col-md-4">
-    <thead>
-      <tr>
-        <th>Achievement</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% for(var i=0; i < normalArray.length; i++) { %>
-      <tr>
-        <td> <%= normalArray[i] %> </td>
-        <td><%= normalArrayData[i] %></td>
-      </tr>
-      <% } %>
-    </tbody>
-  </table>
-  <table class="achievementsTable table table-bordered col-md-4">
-    <thead>
-      <tr>
-        <th>Achievement</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% for(var i=0; i < consecArray.length; i++) { %>
-      <tr>
-        <td> <%= consecArray[i] %> </td>
-        <td><%= consecArrayData[i] %></td>
-      </tr>
-      <% } %>
-    </tbody>
-  </table>
-  <table class="achievementsTable table table-bordered col-md-4">
-    <thead>
-      <tr>
-        <th>Achievement</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% for(var i=0; i < totalArray.length; i++) { %>
-      <tr>
-        <td> <%= totalArray[i] %> </td>
-        <td><%= totalArrayData[i] %></td>
-      </tr>
-      <% } %>
-    </tbody>
-  </table>
+  <div class="col-md-4">
+    <table class="achievementsTable table table-bordered">
+      <thead>
+        <tr>
+          <th>Achievement</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for(var i=0; i < normalArray.length; i++) { %>
+        <tr>
+          <td> <%= normalArray[i] %> </td>
+          <td><%= normalArrayData[i] %></td>
+        </tr>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+  <div class = "col-md-4">
+    <table class="achievementsTable table table-bordered">
+      <thead>
+        <tr>
+          <th>Achievement</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for(var i=0; i < consecArray.length; i++) { %>
+        <tr>
+          <td> <%= consecArray[i] %> </td>
+          <td><%= consecArrayData[i] %></td>
+        </tr>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
+  <div class = "col-md-4">
+    <table class="achievementsTable table table-bordered">
+      <thead>
+        <tr>
+          <th>Achievement</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for(var i=0; i < totalArray.length; i++) { %>
+        <tr>
+          <td> <%= totalArray[i] %> </td>
+          <td><%= totalArrayData[i] %></td>
+        </tr>
+        <% } %>
+      </tbody>
+    </table>
+  </div>
 
   </div>
 </body>
