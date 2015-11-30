@@ -753,9 +753,36 @@ app.get('/achievements', function(req,res){
                   ];
                   achievements(totalSteps, allTimeMovesRequirements, "Total Steps", allTimeMovesDescription);
 
+                  var consecArray = [];
+                  var consecArrayData = [];
+                  var totalArray = [];
+                  var totalArrayData = [];
+                  var normalArray = [];
+                  var normalArrayData = [];
+                  for(var i = 0; i < earnedAchievements.length; i+=2){
+                    if (earnedAchievements[i].substring(0,4) == "Cons"){
+                      consecArray.push(earnedAchievements[i]);
+                      consecArrayData.push(earnedAchievements[i+1]);
+                    }
+                    else if (earnedAchievements[i].substring(0,4) == "Tota"){
+                      totalArray.push(earnedAchievements[i]);
+                      totalArrayData.push(earnedAchievements[i+1]);
+                    }
+                    else {
+                      normalArray.push(earnedAchievements[i]);
+                      normalArrayData.push(earnedAchievements[i+1]);
+                    }
+                  }
+
                 res.render('achievements', 
                            { 
                              earnedAchievements: earnedAchievements,
+                             consecArray: consecArray,
+                             consecArrayData: consecArrayData,
+                             totalArray: totalArray,
+                             totalArrayData: totalArrayData,
+                             normalArray: normalArray,
+                             normalArrayData: normalArrayData,
                              userID: userID
                            });
             });
