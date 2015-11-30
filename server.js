@@ -850,16 +850,16 @@ app.get('/weeklyChallenges', function(req,res){
 
       setdate.setHours(setdate.getHours() + 7*24);  //iterate setdate
     }
-    console.log("\nsetdate start\n"+setdate+"\nsetdate end\n");
+    //console.log("\nsetdate start\n"+setdate+"\nsetdate end\n");
     
     var challengeStart = new Date(setdate);
     challengeStart.setDate(challengeStart.getDate()-7);
 
-    console.log("\nchallengestart start\n"+challengeStart+"\nchallengestart end\n");
+    //console.log("\nchallengestart start\n"+challengeStart+"\nchallengestart end\n");
 
     var startDate= challengeStart.getFullYear()+""+(1+challengeStart.getMonth())+""+challengeStart.getDate();
 
-    console.log("\nstartDate start\n"+startDate+"\nstartDate end\n");
+    //console.log("\nstartDate start\n"+startDate+"\nstartDate end\n");
     
     var countdown = (setdate - now)/1000;
     countdown = Math.floor(countdown);
@@ -877,9 +877,6 @@ app.get('/weeklyChallenges', function(req,res){
             
             loadFriendFunction(userFriends, allFriendData, challengeCount, startDate, arr, function(arr) {
 
-                console.log('arrr mateys');
-                console.log(arr[0]);
-                console.log(arr);
               res.render('weeklyChallenges', 
                   { countdown: countdown,
                     currentChallenge: currentChallenge,
