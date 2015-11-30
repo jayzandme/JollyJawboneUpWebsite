@@ -773,10 +773,6 @@ app.get('/teamPage', function(req, res){
         
         loadFriends(friends, allFriends, function(allFriends) {
 
-            for (var i = 0; i < allFriends.length; i++) {
-                console.log(allFriends[i]);
-            }
-
             res.render('teamPage', 
             { 
                 friends: allFriends,
@@ -791,33 +787,16 @@ app.get('/friend', function(req, res) {
 
     var userID = req.query.user;
     var friend = req.query.friend;
-    console.log(userID)
 
-    loadMovesData(friend, function (movesData, 
-                                    totalSteps, 
-                                    consecutiveStepCount, 
-                                    movesMax,
-                                    consecutiveStepMax) {
-        loadSleepsData(friend, function (sleepsData, 
-                                         sleepsMax, 
-                                         consecutiveSleepMax) {
-            loadWorkoutsData(friend, function(workoutsData,
-                                              consecutiveWorkoutCount,
-                                              workoutsMax,
-                                              consecutiveWorkoutsMax) {
-                queries.findUserByID(friend, function (friendInfo) {
-
-                    res.render('friend',
-                    {
-                        friend: friendInfo,
-                        workouts: workoutsData,
-                        sleeps: sleepsData,
-                        moves: movesData,
-                        userID: userID
-                    });
-
-                });
+    loadAggregateData(friend, function (aggregate) {
+        queries.findUserByID(friend, function (friendInfo) { 
+            res.render('friend',
+            {
+                friend: friendInfo,
+                aggregate: aggregate,
+                userID: userID
             });
+
         });
     });
 
