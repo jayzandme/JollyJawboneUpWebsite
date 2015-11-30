@@ -155,17 +155,6 @@ app.get('/dashboardPrevious', function(req, res){
   var numberPreviousDate = getNumberFromFormatted(previousDate);
 
   var day = numberPreviousDate;
-  //var workoutsData = req.query.workouts;
-  /*var workoutsData = {
-              title: 'Test',
-              steps: addCommas(9999),
-              time: secondsToTimeString(6540),
-              distance: 3.2,
-              calories: 418,
-              intensity: 1,
-              date: getFormattedDate(20150611),
-              percentOfGoal: 100
-            }*/
 
   loadAggregateData(userID, function(aggregateData){
     loadWorkoutsData(userID, function(workoutsData,
@@ -195,17 +184,6 @@ app.get('/dashboardNext', function(req, res){
   var numberNextDate = getNumberFromFormatted(nextDate);
 
   var day = numberNextDate;
-  //var workoutsData = req.query.workouts;
-  /*var workoutsData = {
-              title: 'Test',
-              steps: addCommas(9999),
-              time: secondsToTimeString(6540),
-              distance: 3.2,
-              calories: 418,
-              intensity: 1,
-              date: getFormattedDate(20150611),
-              percentOfGoal: 100
-            }*/
 
   loadAggregateData(userID, function(aggregateData){
     if (day == getNumberFromFormatted(aggregateData.date)){
