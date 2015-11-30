@@ -26,6 +26,12 @@
       </div>
   </nav>
 
+  <button class="btn btn-default btn-lg" onclick="toggle_visibility('friends')" style ="display:none" type="Friends">Friends</button>
+  <button class="btn btn-default btn-lg" onclick="toggle_visibility('global')" style ="display:none" type="Global">Global</button>
+  <button class="btn btn-default btn-lg" onclick="toggle_visibility('past_friends_leaderboard')" style ="display:none" type="Past Friends Leaderboard">Past Friends Leaderboard</button>
+  <button class="btn btn-default btn-lg" onclick="toggle_visibility('past_global_leaderboard')" style ="display:none" type="Past Global Leaderboard">Past Global Leaderboard</button>
+  
+
   <body onload="timer()">
 
   <div class="titleChallenges"> <h2> Weekly Challenges Page </h2>
@@ -33,6 +39,22 @@
 
   <head>
       <script type="text/javascript">
+      function toggle_visibility(id) {
+          var selected = document.getElementById(id);
+
+          var a = document.getElementById("past_friends_leaderboard");
+          var b = document.getElementById("past_global_leaderboard");
+          var c = document.getElementById("global");
+          var d = document.getElementById("friends");
+          a.style.display = 'none';
+          b.style.display = 'none';
+          c.style.display = 'none';
+          d.style.display = 'none';
+          selected.style.display = 'block';
+          
+
+      }
+
       var seconds = <%= countdown %>;
  
         function timer() {
@@ -45,10 +67,12 @@
             /*if (remainingSeconds < 10) { //for digital clock style countdown
                 remainingSeconds = "0" + remainingSeconds; 
             }*/
-            document.getElementById('timer_div').innerHTML = days + " Days " + hours + " Hours " + minutes + " Minutes " + remainingSeconds + " Seconds " ;
+            document.getElementById('timer_div1').innerHTML = days + " Days " + hours + " Hours " + minutes + " Minutes " + remainingSeconds + " Seconds Remaining" ;
+            document.getElementById('timer_div2').innerHTML = days + " Days " + hours + " Hours " + minutes + " Minutes " + remainingSeconds + " Seconds Remaining" ;
             if (seconds == 0) {
                 clearInterval(countdownTimer);
-                document.getElementById('timer_div').innerHTML = "Weekly Challenge Expired! Refresh to see the new Challenge!";
+                document.getElementById('timer_div1').innerHTML = "Weekly Challenge Expired! Refresh to see the new Challenge!";
+                document.getElementById('timer_div2').innerHTML = "Weekly Challenge Expired! Refresh to see the new Challenge!";
             } else {
                 seconds--;
             }
@@ -60,37 +84,122 @@
    </head>
    
    
+  <body>
+    <div id= "friends">
+      
+      <body>   
+        <h4 id="challenges1"><%= currentChallenge %> </h4> 
+        <div id="timer_div1"></div>
+      </body>
 
-  <body>   
-    <h4 id="challenges"><%= currentChallenge %> </h4> 
-    <div id="timer_div"></div>
+
+      <table class="table table-bordered">
+        <!-- Display challenge progress of each friend 
+              Order by who is further
+      -->
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>Leaderboard</th>
+            <th>Progress</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% for(var i = 0; i < arr.length; i++) { %>
+          <tr>
+            <td><%=i+1%>.</td>
+            <td><%= arr[i].friend.first %> <%=arr[i].friend.last %> </td>
+            <td> <%= arr[i].stat %></td>
+          </tr>
+          <% } %>
+        </tbody>
+      </table>
+
+    </div>
   </body>
 
 
-  <table class="table table-bordered">
-    <thead>
-      <tr>
-        <th>Leaderboard</th>
-        <th>Progress</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% for(var i = 0; i < friends.length; i++) { %>
-      <tr>
-        <td><%= friends[i].first %> <%=friends[i].last %></td>
-        <td> Progress</td>
-      </tr>
-      <% } %>
-    </tbody>
-  </table>
+   <body>   
+    <div id="global" style="display:none">
+      <!-- Compare User to Global Leaderboard
+            display 5 users below and 5 above
+        -->
+      <body>   
+        <h4 id="challenges2"><%= currentChallenge %> </h4> 
+        <div id="timer_div2"></div>
+      </body>
 
 
-<button class="btn btn-default btn-lg" type="Past Friends">Past Friends</button>
-<button class="btn btn-default btn-lg" type="Past Leaders">Past Leaders</button>
-<button class="btn btn-default btn-lg" type="Me">Me</button>
-<button class="btn btn-default btn-lg" type="Overall">Overall</button>
-<button class="btn btn-default btn-lg" type="Friends">Friends</button>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Leaderboard</th>
+          <th>Progress</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% for(var i = 0; i < 10; i++) { %>
+        <tr>
+          <td> Global User <%=i%></td>
+          <td> User Progress</td>
+        </tr>
+        <% } %>
+      </tbody>
+    </table>
+
+    </div>
+  </body>
 
 
+  <body>   
+    <div id="past_friends_leaderboard" style="display:none"> <h2> Past Friends Leaderboard Page </h2>
+      <!-- Display challenge results from each past challenge -->
+
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>Challenge</th>
+            <th>Leader</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% for(var i = 0; i < 10; i++) { %>
+          <tr>
+            <td> Challenge <%=i%> </td>
+            <td> Friend <%=i%></td>
+          </tr>
+          <% } %>
+        </tbody>
+      </table>
+
+    </div>
+  </body>
+
+  <body>   
+    <div id="past_global_leaderboard" style="display:none"> <h2> Past Global Leaderboard Page </h2>
+      <!-- Display past Global Winners for each challenge -->
+
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>Challenge</th>
+            <th>Leader</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% for(var i = 0; i < 10; i++) { %>
+          <tr>
+            <td> Challenge <%=i%> </td>
+            <td> Global User <%=i%></td>
+          </tr>
+          <% } %>
+        </tbody>
+      </table>
+
+
+    </div>
+  </body>
+
+ 
 
 </body>

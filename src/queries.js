@@ -635,6 +635,48 @@ updateUserToken = function(userID, newToken, callback) {
         });
 }
 
+// gets the total steps this week for a user in the database
+weeklyGetMoves = function(userID, weekStartDate, callback) {
+    var queryVals = moves.aggregate([ 
+        {
+            $match:
+                {userID: userID, date: {$gt: 20151023}} 
+        } 
+        ,
+        { $group: 
+            { _id: '$userID', 
+              stepsTotal: {$sum: '$steps'}
+            }
+        } ], function(err, results)  {
+            if (err){
+                throw err
+            }
+            else {
+                console.log(results)
+                callback(results);
+            }
+        }
+    ); 
+
+}
+
+
+// gets the total sleep this week for a user in the database
+weeklyGetSleeps = function(userID, callback) {
+
+    var queryVals = sleeps.find({$and: [{userID: userID}, {date: {$gt: weekStartDate}}]});
+
+    queryVals.exec(function (err, sleeps) {
+        if (err) {
+            console.log(err);
+            throw err;
+        }
+        else {
+            callback(sleeps);
+        }
+    });
+}
+
 module.exports.insertSleep = insertSleep;
 module.exports.insertSleeps = insertSleeps;
 module.exports.insertMove = insertMove;
@@ -669,3 +711,5 @@ module.exports.findUser = findUser;
 module.exports.findUserByID = findUserByID;
 module.exports.clearDatabase = clearDatabase;
 module.exports.updateUserToken = updateUserToken;
+module.exports.weeklyGetMoves = weeklyGetMoves;
+module.exports.weeklyGetSleeps = weeklyGetSleeps;

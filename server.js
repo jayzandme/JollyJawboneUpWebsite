@@ -252,6 +252,8 @@ app.get('/levels', function(req, res){
     var progressNames = [];
     var showNextLevelButton = false;
 
+    console.log("\startedLevelDate start\n"+startedLevelDate+"\startedLevelDate end\n");
+
     //find that level in levels database
     queries.getLevel(currentLevel, function(levels) {
 
@@ -747,6 +749,7 @@ app.get('/teamPage', function(req, res){
     var allFriends = [];
     var friendStats = [];
 
+
     up.getFriends(userToken, function(friends) {
         
         loadFriends(friends, allFriends, function(allFriends) {
@@ -784,13 +787,16 @@ app.get('/weeklyChallenges', function(req,res){
 
   var userID = req.query.user;
   var allFriends = [];
-  //array of weekly challenges
-  challenges = new Array();
+  var allFriendData = []; //fills this array with relevant data
+  var userFriends = []; //fills this array with relevant data
+  //var allFriendWorkouts = [];  //array of total workouts of each friend
+  
+  challenges = new Array(); //array of weekly challenges
     
   if (true){
     challenges.push("Take the most steps this week!");
-    challenges.push("Log the most sleep this week!");
-    challenges.push("Log the most workouts this week!");
+    //challenges.push("Log the most sleep this week!");
+    //challenges.push("Log the most workouts this week!");
   }
 
   var challengeCount=0;
@@ -798,53 +804,74 @@ app.get('/weeklyChallenges', function(req,res){
 
     //set a starting Sunday to build from
     var month = 'Nov'; 
-    var date = '15';
+    var date = '16';
     var year = '2015';
 
     var theDate = month + ' ' + date + ' ' + year;
     var setdate = new Date(theDate);
     var now = new Date();
-    
 
-    var now = new Date();
-    var midnight = new Date();
-    midnight.setHours(24,0,0,0); //midnignt
+    //var midnight = new Date();
+    //midnight.setHours(24,0,0,0); //midnignt
     while (setdate-now<=0){
     //if (now.getDay()==0 && midnight.getTime() ==Date.now() ){ //is Sunday at midnight
-      //iterate challenge
-      challengeCount++;
+      
+      challengeCount++; //iterate challenge
       challengeCount=challengeCount%challenges.length;
       currentChallenge=challenges[challengeCount];
-      //iterate setdate
-      setdate.setHours(setdate.getHours() + 7*24);
+
+
+      setdate.setHours(setdate.getHours() + 7*24);  //iterate setdate
     }
+    console.log("\nsetdate start\n"+setdate+"\nsetdate end\n");
+    
+    var challengeStart = new Date(setdate);
+    challengeStart.setDate(challengeStart.getDate()-7);
+
+    console.log("\nchallengestart start\n"+challengeStart+"\nchallengestart end\n");
+
+    var startDate= challengeStart.getFullYear()+""+(1+challengeStart.getMonth())+""+challengeStart.getDate();
+
+    console.log("\nstartDate start\n"+startDate+"\nstartDate end\n");
     
     var countdown = (setdate - now)/1000;
     countdown = Math.floor(countdown);
+    
 
-    up.getFriends(userToken, function(friends) {
-    friendsXID = new Array();   
-    friendsUserID = new Array(); 
-    userProgress = new Array(); 
-    for (var i = 0; i < friends.length; i++) {
-        friendsXID.push(friends[i].xid);
-        userProgress.push('Friend ' + i);
-        userProgress.push(friends[i].xid);
-      }
-  
-        up.getFriends(userToken, function(friends) {
+    findUserByID(userID, function(user) {
+      
+      up.getFriends(userToken, function(friends) {
+        
+        friends.push(user); //add user to end of list of friends
+        
+        loadFriends(friends, allFriends, function(userFriends) {
+
+            var arr = [];
             
-            loadFriends(friends, allFriends, function(userFriends) {
-                res.render('weeklyChallenges', 
-                            { countdown: countdown,
-                              currentChallenge: currentChallenge,
-                              friends: userFriends,
-                              userID: userID
-                            });
+            loadFriendFunction(userFriends, allFriendData, challengeCount, startDate, arr, function(arr) {
+
+                console.log('arrr mateys');
+                console.log(arr[0]);
+                console.log(arr);
+              res.render('weeklyChallenges', 
+                  { countdown: countdown,
+                    currentChallenge: currentChallenge,
+                    friends: userFriends,
+                    userID: userID,
+                    arr: arr
+                  });
             });
-        });
-    });
+
+
+          });
+
+
+      });
+
+      
+  });
 });
+
 
 function achievements(count, requirements, achievement, description){
   for (i = 1; i<= requirements.length+1; i++){
@@ -1262,6 +1289,107 @@ function loadFriends(friends, allFriends, callback) {
     }
     else {
         callback(allFriends);
+    }
+}
+//chooses the correct friend function based on challengeCount
+function loadFriendFunction(userFriends, allFriendData, challengeCount, startDate, arr, callback) {
+  
+  var tempFriends=userFriends.slice(0);
+  //tempFriends.reverse();
+
+  if (challengeCount==0){ //loadfriendmoves
+    loadFriendMoves(tempFriends, allFriendData, startDate, function(allFriendData){
+      if(!friend){
+        //Sort userFriends and allFriendData
+        //probably could make this a function eventually
+        var i, l;
+
+        // creating the objects of { name, price } and pushing them into the (unsorted) array
+        for(i = 0, l = userFriends.length; i < l; i++) {
+
+            arr.push({
+                friend: userFriends[i],
+                stat: allFriendData[i]
+            });
+        }
+
+        // now sorting the array by price, ascending order
+        arr.sort(function(a, b) { return b.stat - a.stat; });
+
+        //Reformat Strings to be more readable
+        for(i = 0, l = userFriends.length; i < l; i++) {
+          arr[i].stat=arr[i].stat+" steps";
+        }
+
+        callback(arr);
+      }
+    });
+  }
+  else{   //loadfriendsleeps
+    loadFriendSleeps(tempFriends, allFriendData, startDate, function(allFriendData){
+      if(!friend){
+        //Sort userFriends and allFriendData
+        //probably could make this a function eventually
+        var i, l;
+
+        // creating the objects of { name, price } and pushing them into the (unsorted) array
+        for(i = 0, l = userFriends.length; i < l; i++) {
+
+            arr.push({
+                friend: userFriends[i],
+                stat: allFriendData[i]
+            });
+        }
+
+        // now sorting the array by price, ascending order
+        arr.sort(function(a, b) { return b.stat - a.stat; });
+
+        //Reformat Strings to be more readable
+        for(i = 0, l = userFriends.length; i < l; i++) {
+          arr[i].stat=secondsToTimeString(arr[i].stat);
+        }
+        callback(arr);
+      }
+    });
+  }
+  //console.log("\n--------------------------\nThis Is All Friend Data: "+allFriendData+"\n-------------------------------------------\n")
+  //callback(allFriendData);
+  
+}
+
+// loads the latest moves of friends of a user
+function loadFriendMoves(tempFriends, allFriendData, startDate, callback) {   
+    friend = tempFriends.shift();
+    if (friend) {
+      friendID=friend.userID;
+        queries.weeklyGetMoves(friendID, startDate, function(latestMove){
+            if (latestMove) {
+                console.log("\nLatestMove Start: \n"+latestMove[0].stepsTotal+"\nLatestMove End \n")
+                allFriendData.push(latestMove[0].stepsTotal);
+                //allFriendData=allFriendData+latestMove;
+            }
+            loadFriendMoves(tempFriends, allFriendData, startDate, callback);
+        });
+    }
+    else{
+      callback(allFriendData);
+    }
+}
+
+// loads the latest sleeps of friends of a user
+function loadFriendSleeps(tempFriends, allFriendData, startDate, callback) {
+    friend = tempFriends.shift();
+    if (friend) {
+      friendID=friend.userID;
+        queries.weeklyGetSleeps(friendID, startDate, function(latestSleep){
+            if (latestSleep) {
+                allFriendData.push(latestSleep.duration);
+            }
+            loadFriendSleeps(tempFriends, allFriendData, startDate, callback);
+        });
+    }
+    else {
+        callback(allFriendData);
     }
 }
 
