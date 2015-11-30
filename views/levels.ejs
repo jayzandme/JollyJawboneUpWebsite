@@ -204,13 +204,13 @@
           <span class="caret"></span></button>
           <ul class="dropdown-menu">
             <% for(var i=1; i<currentLevel; i++) {%>
-               <li><a href="/viewOldLevel/<%= i %>"><%= i %></a></li>
+               <li><a href="/viewOldLevel/<%= i %>?user=<%= userID %>"><%= i %></a></li>
             <% } %> 
           </ul>
         </div>
       </div>
       <div class="col-md-4">
-        <a href="/newLevel" class="btn btn-primary" id="nextLevelButton">View Next Level!</a>
+        <a href="/newLevel?user=<%= userID %>" class="btn btn-primary" id="nextLevelButton">View Next Level!</a>
       </div>
     </div>
   </div>

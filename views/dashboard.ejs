@@ -14,65 +14,81 @@
   <script>
     $(function () {
 
-      var gaugeOptions = {
+      function getGaugeOptions(data, dataText){
+        var gaugeOptions = {
 
-          'chart': {
-              'type': 'solidgauge',
-              backgroundColor: null
-          },
-          title: {
-            text: '<%= moves.steps %>',
-            verticalAlign: 'middle',
-            style: {'color': 'white'}
-          },
-          'tooltip': {
-              'enabled': false
-          },
-          credits:{
-            'enabled': false
-          },
-          'pane': {
-            'center': ['50%', '50%'],
-            'size': '100px',
-            'startAngle': 0,
-            'endAngle': 360,
-            'background': {
-              'backgroundColor': null,
-              'innerRadius': '90%',
-              'outerRadius': '100%',
-              'borderWidth': 0
-            }
-          },
-
-          'yAxis': {
-            'min': 0,
-            'max': 100,
-            'labels': {
+            'chart': {
+                'type': 'solidgauge',
+                backgroundColor: null
+            },
+            title: {
+              //text: '<%= moves.steps %>',
+              text: dataText,
+              verticalAlign: 'middle',
+              style: {'color': 'white'}
+            },
+            'tooltip': {
+                'enabled': false
+            },
+            credits:{
               'enabled': false
             },
+            'pane': {
+              'center': ['50%', '50%'],
+              'size': '100px',
+              'startAngle': 0,
+              'endAngle': 360,
+              'background': {
+                'backgroundColor': null,
+                'innerRadius': '90%',
+                'outerRadius': '100%',
+                'borderWidth': 0
+              }
+            },
+
+            'yAxis': {
+              'min': 0,
+              'max': 100,
+              'labels': {
+                'enabled': false
+              },
+        
+              'lineWidth': 0,
+              'minorTickInterval': null,
+              'tickPixelInterval': 400,
+              'tickWidth': 0
+            },
+
+            'plotOptions': {
+                'solidgauge': {
+                    'innerRadius': '90%'
+                }
+            },
+            
+            'series': [{
+                'name': 'Speed',
+                //'data': [<%= moves.percentOfGoal %>],
+                'data': [data],
+                'dataLabels': {
+                    'enabled': false
+                }
+            }]
+        };
+        return gaugeOptions;
+      }
       
-            'lineWidth': 0,
-            'minorTickInterval': null,
-            'tickPixelInterval': 400,
-            'tickWidth': 0
-          },
+      var gaugeOptionsSleeps = getGaugeOptions(<%= sleeps.percentOfGoal %>, '<%= sleeps.title %>')
+      var gaugeOptionsMoves = getGaugeOptions(<%= moves.percentOfGoal %>, '<%= moves.steps %>');
+      var gaugeOptionsWorkouts = getGaugeOptions(<%= workouts.percentOfGoal %>, '<%= workouts.distance %>');
 
-          'plotOptions': {
-              'solidgauge': {
-                  'innerRadius': '90%'
-              }
-          },
-          
-          'series': [{
-              'name': 'Speed',
-              'data': [<%= moves.percentOfGoal %>],
-              'dataLabels': {
-                  'enabled': false
-              }
-          }]
-      };
+      $('#my-chart-sleep').highcharts(gaugeOptionsSleeps);
+      $('#my-chart-move').highcharts(gaugeOptionsMoves);
+      $('#my-chart-workout').highcharts(gaugeOptionsWorkouts);
 
-      $('#my-chart').highcharts(gaugeOptions);
+      if (!<%= showNextDayButton %>){
+        $('#nextDayButton').hide();
+      }
+      
     });
   </script>
 </head>
@@ -93,7 +109,17 @@
     		</div>
   		</div>
 	</nav>
-	<div class = "text-center addBorder"> <h1>Dashboard Data for <%= otherData.date %></h1> </div>
+  <div class="row addBorder">
+    <div class = "col-md-4 text-center"> 
+      <a href="/dashboardPrevious?user=<%= userID %>&day=<%= date%>" class = "btn btn-primary"> Previous Day </a>
+    </div>
+    <div class="col-md-4">
+      <div class = "text-center"> <h1>Dashboard Data for <%= date %></h1> </div>
+    </div>
+    <div class="col-md-4 text-center">
+      <a href="/dashboardNext?user=<%= userID %>&day=<%= date%>" class = "btn btn-primary" id="nextDayButton"> Next Day </a>
+    </div>
+  </div>
 
   <div class="container">
     <div class="row">
@@ -109,10 +135,14 @@
     </div>
     <div class="row">
         <div class="col-md-4 parent" >
-          <div class = "circleAndTextSleeps"> 
-          <div class="sideText child">Slept </div>
-            <div class= "circleBase text-center child"><span class="insideCircle"> <%= sleeps.title %></span></div>
-        </div>
+          <div class ="circleAndTextMoves parent"> 
+              <div class="sideText child" style:"float:left">Slept for
+                <span>  
+                  <div id="my-chart-sleep" style="width: 125px; height: 150px; float: right"> 
+                  </div>
+                </span>
+              </div>
+          </div>
           <div class="sleeps img-rounded">
             
             <div class="text-center">Times Awakened: <%= sleeps.awakenings %></div>
@@ -125,11 +155,11 @@
           <div class ="circleAndTextMoves parent"> 
               <div class="sideText child" style:"float:left">Today's Steps
                 <span>  
-                  <div id="my-chart" style="width: 125px; height: 150px; float: right"> 
+                  <div id="my-chart-move" style="width: 125px; height: 150px; float: right"> 
                   </div>
                 </span>
               </div>
-        </div>
+          </div>
           <div class="moves img-rounded">
             <div>Active Time: <%= moves.active_time %></div>
             <div>Distance: <%= moves.distance %> miles</div>
@@ -138,9 +168,13 @@
         </div>
         <div class="col-md-4 parent">
           <div class ="circleAndTextMoves parent"> 
-            <div class="sideText child">Miles </div>
-            <div class="circleBase text-center child"><span class="insideCircle"> <%= workouts.distance%></span></div>
-        </div>
+              <div class="sideText child" style:"float:left">Miles
+                <span>  
+                  <div id="my-chart-workout" style="width: 125px; height: 150px; float: right"> 
+                  </div>
+                </span>
+              </div>
+          </div>
           <div class="workouts img-rounded">
             <div>Most Recent Workout Completed On: <%= workouts.date %></div>
             <div>Workout Type: <%= workouts.title %></div>

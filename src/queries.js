@@ -42,14 +42,14 @@ clearDatabase = function(callback) {
 }
 
 // gets aggregate data for the Moves in the database 
-getMovesAggregation = function(callback){ 
+getMovesAggregation = function(userID, callback){ 
     moves.aggregate([ 
         { $group: 
             { _id: '$userID', 
               movesAvg: { $avg: '$steps'},
               stepsTotal: {$sum: '$steps'}
             }
-        } ], function(err, results)  {
+        }, { $sort: {_id: 1}} ], function(err, results)  {
             if (err){
                 throw err
             }
@@ -61,7 +61,7 @@ getMovesAggregation = function(callback){
 }
 
 // gets aggregate data for the Sleeps in the database
-getSleepsAggregation = function(callback){
+getSleepsAggregation = function(userID, callback){
     sleeps.aggregate([
         { $group:
             {_id: '$userID',
@@ -69,7 +69,7 @@ getSleepsAggregation = function(callback){
              sleepsTotal: {$sum: '$duration'}
             }
 
-        }], function (err, results){
+        }, { $sort: {_id: 1}}], function (err, results){
             if (err){
                 throw err
             }
@@ -81,7 +81,7 @@ getSleepsAggregation = function(callback){
 }
 
 // gets aggregate data for the Workouts in the database
-getWorkoutsAggregation = function(callback) {
+getWorkoutsAggregation = function(userID, callback) {
     workouts.aggregate([
         { $group:
             {_id: '$userID',
@@ -95,7 +95,7 @@ getWorkoutsAggregation = function(callback) {
              workoutsDistanceTotal: {$sum: '$meters'}
             }
 
-        }], function (err, results){
+        }, { $sort: {_id: 1}}], function (err, results){
             if (err){
                 throw err
             }
@@ -163,6 +163,19 @@ getSleeps = function(userID, callback){
     });
 }
 
+getOneDaySleeps = function(userID, date, callback){
+    var queryVals = sleeps.find({userID: userID, date:date});
+
+    queryVals.exec(function (err, sleeps){
+        if(err){
+            throw err;
+        }
+        else{
+            callback(sleeps);
+        }
+    });
+}
+
 // gets the most recent sleep for a user in the database
 getLatestSleep = function(userID, callback) {
 
@@ -212,13 +225,38 @@ insertMove = function(move, userID, callback) {
         calories: move.details.calories
    });
 
-   newMove.save(function (err, thor) {
-        if (err) {
-            return console.error(err);
-        }
-   });
 
-   callback();
+   var queryVals = moves.find({userID: userID, date: move.date});
+
+    queryVals.exec(function (err, moves1) {
+        if (err) 
+            throw err;
+        else {
+            if (moves1[0] != null){
+                moves.update({userID: userID, date: move.date}, {$set: {
+                time_created: move.time_created, 
+                time_updated: move.time_updated,
+                time_completed: move.time_completed,
+                steps: move.details.steps,
+                active_time: move.details.active_time,
+                distance: move.details.distance,
+                calories: move.details.calories
+            }}, function(err, results){
+                callback();
+            });
+           }
+           else{
+            newMove.save(function (err, thor) {
+                if (err) {
+                    return console.error(err);
+                }
+                else{
+                    callback();
+                }
+            });
+           }
+        }
+    });
 
 };
 
@@ -230,6 +268,19 @@ getMoves = function(userID, callback){
         if (err) 
             throw err;
         else {
+            callback(moves);
+        }
+    });
+}
+
+getOneDayMoves = function(userID, date, callback){
+    var queryVals = moves.find({userID: userID, date:date});
+
+    queryVals.exec(function (err, moves){
+        if(err){
+            throw err;
+        }
+        else{
             callback(moves);
         }
     });
@@ -633,8 +684,10 @@ module.exports.insertMoves = insertMoves;
 module.exports.insertWorkout = insertWorkout;
 module.exports.insertWorkouts = insertWorkouts;
 module.exports.getSleeps = getSleeps;
+module.exports.getOneDaySleeps = getOneDaySleeps;
 module.exports.getLatestSleep = getLatestSleep;
 module.exports.getMoves = getMoves;
+module.exports.getOneDayMoves = getOneDayMoves;
 module.exports.getLatestMove = getLatestMove;
 module.exports.getWorkouts = getWorkouts;
 module.exports.getLatestWorkout = getLatestWorkout;

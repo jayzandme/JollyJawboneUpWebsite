@@ -201,7 +201,7 @@
           <ul class="dropdown-menu">
             <% for(var i=1; i<currentLevelNum; i++) {
               if (i != levelNum){%>
-               <li><a href="/viewOldLevel"><%= i %></a></li>
+               <li><a href="/viewOldLevel/<%= i %>?user=<%= userID %>"><%= i %></a></li>
             <% }} %> 
           </ul>
         </div>

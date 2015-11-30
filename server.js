@@ -19,6 +19,7 @@ var app = express()
 // frontend rendering 
 app.use(bodyParser.json());
 app.use(express.static(__dirname + '/css'));
+app.use(express.static(__dirname + '/img'));
 app.use('/bower_components',  express.static(__dirname + '/bower_components'));
 app.set('view engine', 'ejs');
 app.set('views', __dirname + '/views');
@@ -132,7 +133,9 @@ app.get('/dashboard', function(req, res){
                                           moves: movesData[0],
                                           workouts: workoutsData[0],
                                           otherData: aggregateData,
-                                          userID: userID
+                                          userID: userID,
+                                          date: aggregateData.date,
+                                          showNextDayButton: false
                                         });
                         });
                     });
@@ -142,6 +145,93 @@ app.get('/dashboard', function(req, res){
 
     });
 
+});
+
+app.get('/dashboardPrevious', function(req, res){
+  var userID = req.query.user;
+  var dayFormatted = req.query.day;
+  var date = Date.parse(dayFormatted);
+  var previousDate = new Date(date - 1000*60*60*24);
+  var numberPreviousDate = getNumberFromFormatted(previousDate);
+
+  var day = numberPreviousDate;
+
+  loadAggregateData(userID, function(aggregateData){
+    loadWorkoutsData(userID, function(workoutsData,
+                                      consecutiveWorkoutCount,
+                                      workoutsMax) {
+      loadOneDay(userID, day, function(oneDaySleeps, oneDayMoves){
+         res.render('dashboard', 
+          {
+            sleeps: oneDaySleeps,
+            moves: oneDayMoves,
+            workouts: workoutsData[0],
+            otherData: aggregateData,
+            userID: userID,
+            date: getFormattedDate(day),
+            showNextDayButton: true
+        });
+      });
+    });
+  });
+});
+
+app.get('/dashboardNext', function(req, res){
+  var userID = req.query.user;
+  var dayFormatted = req.query.day;
+  var date = Date.parse(dayFormatted);
+  var nextDate = new Date(date + 1000*60*60*24);
+  var numberNextDate = getNumberFromFormatted(nextDate);
+
+  var day = numberNextDate;
+
+  loadAggregateData(userID, function(aggregateData){
+    if (day == getNumberFromFormatted(aggregateData.date)){
+      loadSleepsData(userID, function (sleepsData, 
+                                       sleepsMax, 
+                                       consecutiveSleepMax) {
+          loadMovesData(userID, function (movesData, 
+                                          totalSteps, 
+                                          consecutiveStepCount, 
+                                          movesMax) {
+              loadWorkoutsData(userID, function(workoutsData,
+                                                consecutiveWorkoutCount,
+                                                workoutsMax) {
+                  loadAggregateData(userID, function (aggregateData) {
+
+                      res.render('dashboard', 
+                                  { sleeps: sleepsData[0],
+                                    moves: movesData[0],
+                                    workouts: workoutsData[0],
+                                    otherData: aggregateData,
+                                    userID: userID,
+                                    date: aggregateData.date,
+                                    showNextDayButton: false
+                                  });
+                  });
+              });
+          });
+      });
+    }
+    else{
+      loadWorkoutsData(userID, function(workoutsData,
+                                                consecutiveWorkoutCount,
+                                                workoutsMax) {
+        loadOneDay(userID, day, function(oneDaySleeps, oneDayMoves){    
+           res.render('dashboard', 
+            {
+              sleeps: oneDaySleeps,
+              moves: oneDayMoves,
+              workouts: workoutsData[0],
+              otherData: aggregateData,
+              userID: userID,
+              date: getFormattedDate(day),
+              showNextDayButton: true
+          });
+        });
+      });
+    }
+  });
 });
 
 app.get('/', function(req, res) {
@@ -507,7 +597,7 @@ app.get('/newLevel', function(req, res){
         newLevelNum: null
     };
 
-    queries.levelsGetUserLevel(0, function(users){
+    queries.levelsGetUserLevel(userID, function(users){
         nextLevelData.newLevelNum = users.level;
         queries.getLevel(nextLevelData.newLevelNum, function(levels){
             nextLevelData.goal1Name = levels.firstGoal;
@@ -534,7 +624,7 @@ app.get('/viewOldLevel/:i', function(req, res){
     currentLevelNum: null
   };
 
-  queries.levelsGetUserLevel(0, function(users){
+  queries.levelsGetUserLevel(userID, function(users){
     oldLevel.currentLevelNum = users.level;
     queries.getLevel(levelNum, function(levels){
       oldLevel.goal1Name = levels.firstGoal;
@@ -807,6 +897,25 @@ function getFormattedDate(dateString) {
   return formattedDate
 }
 
+function getNumberFromFormatted(formattedDate){
+  var today = new Date(formattedDate);
+  var todayDay = today.getDate();
+  var todayMonth = today.getMonth()+1; //January is 0
+  var todayYear = today.getFullYear();
+
+  if(todayDay<10) {
+      todayDay='0'+todayDay
+  } 
+
+  if(todayMonth<10) {
+      todayMonth='0'+todayMonth
+  } 
+
+
+  var todayNumber = parseInt(todayYear, 10) * 10000 + parseInt(todayMonth, 10) * 100 + parseInt(todayDay, 10);
+  return todayNumber
+}
+
 function secondsToTimeString(secondsTotal){
   hours = Math.floor(secondsTotal / 3600);
   secondsTotal %= 3600;
@@ -863,6 +972,26 @@ function getDateNumber(){
   return todayNumber
 }
 
+function getTitlePrint(title){
+  var titlePrint;
+  if (title.length == 10){
+    titlePrint = title.substring(title.length - 6);
+  }
+  else if (title.length == 9){
+    titlePrint = title.substring(title.length - 5);
+  }
+  else if (title.length == 7){
+    titlePrint = title.substring(title.length - 3);
+  }
+  else if (title.length == 6){
+    titlePrint = title.substring(title.length - 2);
+  }
+  else{
+    titlePrint = 'error';
+  }
+  return titlePrint;
+}
+
 // loads the aggregate data for the front end
 function loadAggregateData(userID, callback) {
 
@@ -895,46 +1024,53 @@ function loadAggregateData(userID, callback) {
                     };
 
     // get the moves aggregations
-    queries.getMovesAggregation(function (results) {
-        aggregateData.stepsAverage = addCommas((results[0].movesAvg).toFixed(2));
-        aggregateData.stepsTotal = addCommas(results[0].stepsTotal);
+    queries.getMovesAggregation(userID, function (results) {
+        aggregateData.stepsAverage = addCommas((results[userID].movesAvg).toFixed(2));
+        aggregateData.stepsTotal = addCommas(results[userID].stepsTotal);
 
         // get the sleeps aggregations
-        queries.getSleepsAggregation(function (results) {
-            var totalSecondsAve = results[0].sleepsAvg;
-            var totalSeconds = results[0].sleepsTotal;
+        queries.getSleepsAggregation(userID, function (results) {
+            var totalSecondsAve = results[userID].sleepsAvg;
+            var totalSeconds = results[userID].sleepsTotal;
             aggregateData.sleepsTotal = secondsToTimeString(totalSeconds);
             aggregateData.sleepsAverage = secondsToTimeString(totalSecondsAve);
 
             // get the workouts agregations 
-            queries.getWorkoutsAggregation(function (results){
+            queries.getWorkoutsAggregation(userID, function (results){
 
                 aggregateData.workoutsStepsAverage = 
-                    addCommas((results[0].workoutsStepsAvg).toFixed(2));
+                    addCommas((results[userID].workoutsStepsAvg).toFixed(2));
 
                 aggregateData.workoutsStepsTotal = 
-                    addCommas(results[0].workoutsStepsTotal);
+                    addCommas(results[userID].workoutsStepsTotal);
 
                 aggregateData.workoutsCaloriesAverage = 
-                    addCommas((results[0].workoutsCaloriesAvg).toFixed(2));
+                    addCommas((results[userID].workoutsCaloriesAvg).toFixed(2));
 
                 aggregateData.workoutsCaloriesTotal = 
-                    addCommas((results[0].workoutsCaloriesTotal).toFixed(2));
+                    addCommas((results[userID].workoutsCaloriesTotal).toFixed(2));
 
                 aggregateData.workoutsTimeAverage = 
-                    secondsToTimeString(results[0].workoutsTimeAvg);
+                    secondsToTimeString(results[userID].workoutsTimeAvg);
 
                 aggregateData.workoutsTimeTotal = 
-                    secondsToTimeString(results[0].workoutsTimeTotal);
+                    secondsToTimeString(results[userID].workoutsTimeTotal);
 
                 aggregateData.workoutsDistanceAverage = 
-                    (metersToMiles(results[0].workoutsDistanceAvg)).toFixed(2);
+                    (metersToMiles(results[userID].workoutsDistanceAvg)).toFixed(2);
 
                 aggregateData.workoutsDistanceTotal = 
-                    addCommas((metersToMiles(results[0].workoutsDistanceTotal)).toFixed(2));
+                    addCommas((metersToMiles(results[userID].workoutsDistanceTotal)).toFixed(2));
 
                 // done with getting aggregations, call callback
-                callback(aggregateData);
+
+                queries.getLatestMove(userID, function(lastMove){
+                  if (lastMove != null){
+                    aggregateData.date = getFormattedDate(lastMove.date);
+                  }
+                  callback(aggregateData);
+
+                });
 
             });
         });
@@ -951,14 +1087,27 @@ function loadSleepsData(userID, callback) {
 
     queries.getSleeps(userID, function(sleeps) {
         for (var i = 0; i < 10; i++) {
+          var percentOfGoal;
+          var difference = sleeps[i].duration - sleeps[i].awake;
+          if (difference > 28800){
+            percentOfGoal = 100;
+          }
+          else{
+            percentOfGoal = (difference/ 28800) * 100;
+          }
+
+          var title = sleeps[i].title;
+          var titlePrint = getTitlePrint(title);
+
             sleepsData.push( {
-                  title: sleeps[i].title,
+                  title: titlePrint,
                   awake_time: epochtoClockTime(sleeps[i].awake_time),
                   asleep_time: epochtoClockTime(sleeps[i].asleep_time),
                   awakenings: sleeps[i].awakenings,
                   lightSleep: secondsToTimeString(sleeps[i].light),
                   deepSleep: secondsToTimeString(sleeps[i].deep),
-                  date: getFormattedDate(sleeps[i].date)
+                  date: getFormattedDate(sleeps[i].date),
+                  percentOfGoal: percentOfGoal
             });
         }
         
@@ -999,12 +1148,19 @@ function loadMovesData(userID, callback) {
 
     queries.getMoves(userID, function(moves) {
         for (var i = 0; i < 10; i++) {
+          var percentOfGoal;
+          if (moves[i].steps > 10000){
+            percentOfGoal = 100;
+          }
+          else{
+            percentOfGoal = (moves[i].steps/10000) * 100;
+          }
             movesData.push({
               steps: addCommas(moves[i].steps),
               active_time: secondsToTimeString(moves[i].active_time),
               distance: (metersToMiles(moves[i].distance)).toFixed(2),
               calories: addCommas((moves[i].calories).toFixed(2)),
-              percentOfGoal: (moves[i].steps / 10000) * 100
+              percentOfGoal: percentOfGoal
             });
         }
 
@@ -1048,15 +1204,23 @@ function loadWorkoutsData(userID, callback) {
 
     queries.getWorkouts(userID, function(workouts) {
         for (var i = 0; i < 10; i++){
+          var percentOfGoal;
+          var distance = metersToMiles(workouts[i].meters);
+          if (distance < 3){
+            percentOfGoal = (distance / 3) * 100;
+          }
+          else{
+            percentOfGoal = 100;
+          }
             workoutsData.push({
               title: workouts[i].title,
               steps: addCommas(workouts[i].steps),
               time: secondsToTimeString(workouts[i].time),
-              distance: metersToMiles(workouts[i].meters).toFixed(2),
+              distance: distance.toFixed(2),
               calories: workouts[i].calories,
               intensity: workouts[i].intensity,
-              date: getFormattedDate(workouts[i].date)
-
+              date: getFormattedDate(workouts[i].date),
+              percentOfGoal: percentOfGoal
             });
         }
 
@@ -1204,6 +1368,73 @@ function loadFriendSleeps(tempFriends, allFriendData, startDate, callback) {
     else {
         callback(allFriendData);
     }
+}
+
+function loadOneDay(userID, date, callback){
+  var oneDaySleeps = {
+    title:null,
+    awake_time: null,
+    asleep_time: null,
+    awakenings: null,
+    lightSleep: null,
+    deepSleep: null,
+    date: null,
+    percentOfGoal: null
+  }
+
+  var oneDayMoves = {
+    steps: null,
+    active_time: null,
+    distance: null,
+    calories: null,
+    percentOfGoal: null
+  }
+
+  queries.getOneDayMoves(userID, date, function(results){
+    //what to do when results are null
+    if (results[0] != null){
+      var percentOfGoal;
+      if (results[0].steps > 10000){
+        percentOfGoal = 100;
+      }
+      else{
+        percentOfGoal = (results[0].steps/10000) * 100;
+      }
+
+      oneDayMoves = {
+        steps: addCommas(results[0].steps),
+        active_time: secondsToTimeString(results[0].active_time),
+        distance: (metersToMiles(results[0].distance)).toFixed(2),
+        calories: addCommas((results[0].calories).toFixed(2)),
+        percentOfGoal: percentOfGoal
+      }
+    }
+    
+    queries.getOneDaySleeps(userID, date, function(results){
+      if(results[0] != null){
+        var percentOfGoal;
+        var difference = results[0].duration - results[0].awake;
+        if (difference > 28800){
+          percentOfGoal = 100;
+        }
+        else{
+          percentOfGoal = (difference/ 28800) * 100;
+        }
+
+        oneDaySleeps = {
+          title: getTitlePrint(results[0].title),
+          awake_time: epochtoClockTime(results[0].awake_time),
+          asleep_time: epochtoClockTime(results[0].asleep_time),
+          awakenings: results[0].awakenings,
+          lightSleep: secondsToTimeString(results[0].light),
+          deepSleep: secondsToTimeString(results[0].deep),
+          date: getFormattedDate(results[0].date),
+          percentOfGoal: percentOfGoal
+        }
+      }
+      callback(oneDaySleeps, oneDayMoves);
+    });
+  });
 }
 
 var sslOptions= {
