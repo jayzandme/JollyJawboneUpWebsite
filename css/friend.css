@@ -40,3 +40,21 @@ body{
     color:white;
 }
 
+.text-center h3 {
+    color:white;
+}
+
+.text-center {
+    color:white;
+}
+
+.sleeps {
+    background-color: #5a9bfc;
+    margin-right: 10px;
+    padding: 20px;
+    font-size: 15px;
+}
+
+.addBorder {
+    border-bottom:2px solid white;
+}
