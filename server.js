@@ -243,7 +243,7 @@ app.get('/levels', function(req, res){
   var userID = req.query.user;
 
   //get user's current level from database and when the user started this level
-  queries.levelsGetUserLevel(0, function(users){
+  queries.levelsGetUserLevel(userID, function(users){
     var currentLevel = users.level;
     var startedLevelDate = users.dateStartedLevel;
     var daysOnLevel = computeDaysOnLevel(startedLevelDate);
@@ -1388,7 +1388,7 @@ function loadFriendMoves(tempFriends, allFriendData, startDate, callback) {
       friendID=friend.userID;
         queries.weeklyGetMoves(friendID, startDate, function(latestMove){
             if (latestMove) {
-                console.log("\nLatestMove Start: \n"+latestMove[0].stepsTotal+"\nLatestMove End \n")
+                //console.log("\nLatestMove Start: \n"+latestMove[0].stepsTotal+"\nLatestMove End \n")
                 allFriendData.push(latestMove[0].stepsTotal);
                 //allFriendData=allFriendData+latestMove;
             }
