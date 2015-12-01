@@ -251,12 +251,13 @@ app.get('/levels', function(req, res){
     var progress = [];
     var progressNames = [];
     var showNextLevelButton = false;
-
-    console.log("\startedLevelDate start\n"+startedLevelDate+"\startedLevelDate end\n");
+    var showViewCompletedButton = true;
 
     //find that level in levels database
     queries.getLevel(currentLevel, function(levels) {
-
+      if (currentLevel == 1){
+        showViewCompletedButton = false;
+      }
       var goalInfo = [{
         name: levels.firstGoal,
         value: levels.firstGoalNum,
@@ -579,6 +580,7 @@ app.get('/levels', function(req, res){
               leftToGo: progress[2].leftToGoString
             },
             showNextLevelButton: showNextLevelButton,
+            showViewCompletedButton: showViewCompletedButton,
             userID: userID
           });
       }, 500);      
