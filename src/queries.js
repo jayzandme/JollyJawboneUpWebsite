@@ -662,19 +662,28 @@ weeklyGetMoves = function(userID, weekStartDate, callback) {
 
 
 // gets the total sleep this week for a user in the database
-weeklyGetSleeps = function(userID, callback) {
-
-    var queryVals = sleeps.find({$and: [{userID: userID}, {date: {$gt: weekStartDate}}]});
-
-    queryVals.exec(function (err, sleeps) {
-        if (err) {
-            console.log(err);
-            throw err;
+weeklyGetSleeps = function(userID, weekStartDate, callback) {
+var queryVals = sleeps.aggregate([ 
+        {
+            $match:
+                {userID: userID, date: {$gt: 20151023}} 
+        } 
+        ,
+        { $group: 
+            { _id: '$userID', 
+              sleepsTotal: {$sum: '$duration'}
+            }
+        } ], function(err, results)  {
+            if (err){
+                throw err
+            }
+            else {
+                console.log(results)
+                callback(results);
+            }
         }
-        else {
-            callback(sleeps);
-        }
-    });
+    ); 
+
 }
 
 module.exports.insertSleep = insertSleep;

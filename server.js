@@ -824,7 +824,7 @@ app.get('/weeklyChallenges', function(req,res){
     
   if (true){
     challenges.push("Take the most steps this week!");
-    //challenges.push("Log the most sleep this week!");
+    challenges.push("Log the most sleep this week!");
     //challenges.push("Log the most workouts this week!");
   }
 
@@ -1409,7 +1409,8 @@ function loadFriendSleeps(tempFriends, allFriendData, startDate, callback) {
       friendID=friend.userID;
         queries.weeklyGetSleeps(friendID, startDate, function(latestSleep){
             if (latestSleep) {
-                allFriendData.push(latestSleep.duration);
+                
+                allFriendData.push(latestSleep[0].sleepsTotal);
             }
             loadFriendSleeps(tempFriends, allFriendData, startDate, callback);
         });
