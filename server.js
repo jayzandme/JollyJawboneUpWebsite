@@ -470,7 +470,7 @@ app.get('/levels', function(req, res){
                   progress.push({
                     name: name,
                     goalCompleted: false,
-                    percentCompleted: ((sleepTimeValue - sleepTimeRemaining)/sleepTimeValue) * 100,
+                    percentCompleted: (((sleepTimeValue - sleepTimeRemaining)/sleepTimeValue) * 100).toFixed(2),
                     leftToGoString: remaining + " more minutes of sleep to complete this goal!"
                   });
                 }
@@ -537,7 +537,7 @@ app.get('/levels', function(req, res){
                   progress.push({
                     name: name,
                     goalCompleted: false,
-                    percentCompleted: (3600 - sleepAwakeningsOver) / 36,
+                    percentCompleted: ((3600 - sleepAwakeningsOver) / 36).toFixed(2),
                     leftToGoString: "You were awake for " + sleepTimeOver % 60 + " minutes over the goal value!"
                   });
                 }
