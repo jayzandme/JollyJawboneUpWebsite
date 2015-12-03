@@ -396,12 +396,12 @@ app.get('/levels', function(req, res){
                   });
                 }
                 else{
-                  var remaining = workoutTimeRemaining % 60;
+                  var remaining = workoutStepsRemaining;
                   progress.push({
                     name: name,
                     goalCompleted: false,
                     percentCompleted: (((workoutStepsValue - workoutStepsRemaining)/workoutStepsValue) * 100).toFixed(2),
-                    leftToGoString: "Moves " + remaining + "more steps during a workout!"
+                    leftToGoString: "Moves " + remaining + " more steps during a workout!"
                   });
                 }
               }
@@ -1051,7 +1051,7 @@ function loadAggregateData(userID, callback) {
     var year = today.getFullYear();
 
     if (day < 10) {
-        day = '0' + Day;
+        day = '0' + day;
     }
 
     if (month < 10 ) {
