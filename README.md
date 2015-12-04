@@ -3,7 +3,7 @@ The JollyJawboneUpWebsite is a website that displays a user's Jawbone UP data as
 data in the form of challenges, achievements, and teammates.
 
 ## Installation
-You need node, mongo, and bower installed to run this project.
+You need Node.js, MongoDB, and bower installed to run this project.
 Once downloaded, in the node console, first run:
 `npm install`
 Then run:
