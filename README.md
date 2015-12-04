@@ -12,7 +12,7 @@ In order to initialize the database with levels you will need to run (you must s
 `node init.js`
 
 ## Usage
-To run the website, first start the mongo database, then, in the node the console, run
+To run the website, first start the mongo database, then, in the node console, run
 `node server`
 Then visit localhost:5000, login, and view the data!
 
