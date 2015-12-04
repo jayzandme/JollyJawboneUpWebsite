@@ -632,10 +632,31 @@ app.get('/viewOldLevel/:i', function(req, res){
       oldLevel.goal1Name = levels.firstGoal;
       oldLevel.goal2Name = levels.secondGoal;
       oldLevel.goal3Name = levels.thirdGoal;
+
+      res.render('viewOldLevel', 
+        { levelNum: levelNum,
+        currentLevelNum: oldLevel.currentLevelNum,
+        userID: userID,
+        goal1: {
+          name: oldLevel.goal1Name,
+          percentComplete: 100,
+          leftToGo: "Complete!"
+        },
+        goal2: {
+          name: oldLevel.goal2Name,
+          percentComplete: 100,
+          leftToGo: "Complete!"
+        },
+        goal3: {
+          name: oldLevel.goal3Name,
+          percentComplete: 100,
+          leftToGo: "Complete"
+        },
+      });
     }); 
   });
 
-  setTimeout(function(){
+  /*setTimeout(function(){
     res.render('viewOldLevel', 
       { levelNum: levelNum,
       currentLevelNum: oldLevel.currentLevelNum,
@@ -656,7 +677,7 @@ app.get('/viewOldLevel/:i', function(req, res){
         leftToGo: "Complete"
       },
     });
-  }, 500);
+  }, 500);*/
 });
 
 app.get('/achievements', function(req,res){
