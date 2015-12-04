@@ -367,7 +367,7 @@ app.get('/levels', function(req, res){
                     name: name,
                     goalCompleted: false,
                     percentCompleted: ((workoutTimeValue - workoutTimeRemaining)/workoutTimeValue) * 100,
-                    leftToGoString: "Workout for " + remaining + "more minutes"
+                    leftToGoString: "Workout for " + remaining + " more minutes"
                   });
                 }
               }
@@ -401,7 +401,7 @@ app.get('/levels', function(req, res){
                     name: name,
                     goalCompleted: false,
                     percentCompleted: (((workoutStepsValue - workoutStepsRemaining)/workoutStepsValue) * 100).toFixed(2),
-                    leftToGoString: "Moves " + remaining + " more steps during a workout!"
+                    leftToGoString: "Move " + remaining + " more steps during a workout!"
                   });
                 }
               }
@@ -434,7 +434,7 @@ app.get('/levels', function(req, res){
                     name: name,
                     goalCompleted: false,
                     percentCompleted: ((workoutCaloriesValue - workoutCaloriesRemaining)/workoutCaloriesValue) * 100,
-                    leftToGoString: "Burn " + workoutCaloriesRemaining + "more calories during a workout!"
+                    leftToGoString: "Burn " + workoutCaloriesRemaining + " more calories during a workout!"
                   });
                 }
               }
@@ -558,7 +558,7 @@ app.get('/levels', function(req, res){
       setTimeout(function(){
         if (progress[0].goalCompleted && progress[1].goalCompleted && progress[2].goalCompleted){
           showNextLevelButton = true;
-          var finishedLevelDate = getDateNumber();
+          var finishedLevelDate = getNumberFromFormatted(null);
           queries.updateUserLevelInfo(userID, currentLevel + 1, finishedLevelDate); 
         }
         res.render('levels', 
@@ -948,7 +948,13 @@ function getFormattedDate(dateString) {
 }
 
 function getNumberFromFormatted(formattedDate){
-  var today = new Date(formattedDate);
+  if (formattedDate != null){
+    var today = new Date(formattedDate);
+  }
+  else{
+    var today = new Date();
+  }
+  //var today = new Date(formattedDate);
   var todayDay = today.getDate();
   var todayMonth = today.getMonth()+1; //January is 0
   var todayYear = today.getFullYear();
@@ -1001,25 +1007,6 @@ function computeDaysOnLevel(startedLevelDate){
   var diff =  Math.floor(( Date.parse(today) - Date.parse(formattedStartedLevelDate) ) / 86400000);
   
   return diff;
-}
-
-function getDateNumber(){
-  var today = new Date();
-  var todayDay = today.getDate();
-  var todayMonth = today.getMonth()+1; //January is 0
-  var todayYear = today.getFullYear();
-
-  if(todayDay<10) {
-      todayDay='0'+todayDay
-  } 
-
-  if(todayMonth<10) {
-      todayMonth='0'+todayMonth
-  } 
-
-
-  var todayNumber = parseInt(todayYear, 10) * 10000 + parseInt(todayMonth, 10) * 100 + parseInt(todayDay, 10);
-  return todayNumber
 }
 
 function getTitlePrint(title){
