@@ -1,5 +1,5 @@
 # JollyJawboneUpWebsite
-The JollyJawboneUpWebsite is a website that displays a users Jawbone UP data as well as allows users to interact with their 
+The JollyJawboneUpWebsite is a website that displays a user's Jawbone UP data as well as allows users to interact with their 
 data in the form of challenges, achievements, and teammates.
 
 ## Installation
