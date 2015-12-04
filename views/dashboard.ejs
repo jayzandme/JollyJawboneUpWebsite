@@ -85,14 +85,20 @@
         $('#my-chart-sleep').text("No Sleep for this day")
       }
 
-      if (<%= moves.percentOfGoal %> != 'N/A'){
+      if ('<%= moves.percentOfGoal %>' != 'N/A'){
         var gaugeOptionsMoves = getGaugeOptions(<%= moves.percentOfGoal %>, '<%= moves.steps %>');
         $('#my-chart-move').highcharts(gaugeOptionsMoves);
       }
+      else{
+        $('#my-chart-move').text("No Moves logged for this day")
+      }
 
-      if (<%= workouts.percentOfGoal %> != 'N/A'){
+      if ('<%= workouts.percentOfGoal %>' != 'N/A'){
         var gaugeOptionsWorkouts = getGaugeOptions(<%= workouts.percentOfGoal %>, '<%= workouts.distance %>');
         $('#my-chart-workout').highcharts(gaugeOptionsWorkouts);
+      }
+      else{
+        $('#my-chart-workout').text("No Workouts logged")
       }
 
       if (!<%= showNextDayButton %>){

@@ -128,6 +128,14 @@ app.get('/dashboard', function(req, res){
                                                       workoutsMax) {
                         loadAggregateData(userID, function (aggregateData) {
 
+                          if (sleepsData[0].percentOfGoal == null){
+                            sleepsData.percentOfGoal = 'N/A';
+                          }
+
+                          if(movesData[0].percentOfGoal == null){
+                            movesData.percentOfGoal = 'NA';
+                          }
+
                             res.render('dashboard', 
                                         { sleeps: sleepsData[0],
                                           moves: movesData[0],
@@ -162,16 +170,11 @@ app.get('/dashboardPrevious', function(req, res){
                                       workoutsMax) {
       loadOneDay(userID, day, function(oneDaySleeps, oneDayMoves){
         if (oneDaySleeps.percentOfGoal == null){
-          var oneDaySleeps = {
-            title: "No Sleep for this day",
-            awake_time: null,
-            asleep_time: null,
-            awakenings: null,
-            lightSleep: null,
-            deepSleep: null,
-            date: null,
-            percentOfGoal: "N/A"
-          }
+          oneDaySleeps.percentOfGoal = 'N/A'
+        }
+
+        if(oneDayMoves.percentOfGoal == null){
+          oneDayMoves.percentOfGoal = 'N/A'
         }
          res.render('dashboard', 
           {
@@ -231,17 +234,12 @@ app.get('/dashboardNext', function(req, res){
                                                 workoutsMax) {
         loadOneDay(userID, day, function(oneDaySleeps, oneDayMoves){  
             if (oneDaySleeps.percentOfGoal == null){
-              var oneDaySleeps = {
-                title: "No Sleep for this day",
-                awake_time: null,
-                asleep_time: null,
-                awakenings: null,
-                lightSleep: null,
-                deepSleep: null,
-                date: null,
-                percentOfGoal: "N/A"
-              }
+              oneDaySleeps.percentOfGoal = 'N/A'
             }  
+
+            if(oneDayMoves.percentOfGoal == null){
+              oneDayMoves.percentOfGoal = 'N/A'
+            }
            res.render('dashboard', 
             {
               sleeps: oneDaySleeps,
