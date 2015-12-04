@@ -653,20 +653,14 @@ weeklyGetMoves = function(userID, weekStartDate, callback) {
                 throw err
             }
             else if (typeof results[0]==='undefined'){
-                console.log("\nundefined");
                 var newResults = [];
                 newResults.push ({
                     _id: userID,
                     stepsTotal: '0'
                 });
-
-                console.log("\nNew Results: "+newResults);
-                console.log("\nNew Results ID: "+newResults._id);
-                console.log("\nNew Results sleeps total: "+newResults.stepsTotal);
                 callback(newResults);
             }
             else {
-                console.log(results)
                 callback(results);
             }
         }
@@ -698,16 +692,9 @@ var queryVals = sleeps.aggregate([
                     _id: userID,
                     sleepsTotal: '0'
                 });
-
-                console.log("\nNew Results: "+newResults);
-                console.log("\nNew Results ID: "+newResults._id);
-                console.log("\nNew Results sleeps total: "+newResults.sleepsTotal);
                 callback(newResults);
             }
             else {
-                console.log("\nresults: "+results[0])
-                console.log("\nresults sleeptotal: "+results[0].sleepsTotal)
-                //callback(results);
                 callback(results);
             }
         }

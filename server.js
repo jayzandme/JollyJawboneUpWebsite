@@ -564,13 +564,9 @@ app.get('/weeklyChallenges', function(req,res){
 
       setdate.setHours(setdate.getHours() + 7*24);  //iterate setdate
     }
-    //console.log("\nsetdate start\n"+setdate+"\nsetdate end\n");
     
     var challengeStart = new Date(setdate);
     challengeStart.setDate(challengeStart.getDate()-7);
-
-    console.log("\nchallengestart start\n"+challengeStart+"\nchallengestart end\n");
-    console.log("\nchallengestart month start\n"+challengeStart.getMonth()+"\nchallengestart end\n");
     
     if (challengeStart.getMonth()==11){
       var startDate= challengeStart.getFullYear()+"0"+challengeStart.getDate();  
@@ -578,9 +574,6 @@ app.get('/weeklyChallenges', function(req,res){
     else{
       var startDate= challengeStart.getFullYear()+""+(1+challengeStart.getMonth())+""+challengeStart.getDate();  
     }
-    
-
-    //console.log("\nstartDate start\n"+startDate+"\nstartDate end\n");
     
     var countdown = (setdate - now)/1000;
     countdown = Math.floor(countdown);
