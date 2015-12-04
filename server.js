@@ -655,29 +655,6 @@ app.get('/viewOldLevel/:i', function(req, res){
       });
     }); 
   });
-
-  /*setTimeout(function(){
-    res.render('viewOldLevel', 
-      { levelNum: levelNum,
-      currentLevelNum: oldLevel.currentLevelNum,
-      userID: userID,
-      goal1: {
-        name: oldLevel.goal1Name,
-        percentComplete: 100,
-        leftToGo: "Complete!"
-      },
-      goal2: {
-        name: oldLevel.goal2Name,
-        percentComplete: 100,
-        leftToGo: "Complete!"
-      },
-      goal3: {
-        name: oldLevel.goal3Name,
-        percentComplete: 100,
-        leftToGo: "Complete"
-      },
-    });
-  }, 500);*/
 });
 
 app.get('/achievements', function(req,res){
