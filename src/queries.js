@@ -637,10 +637,11 @@ updateUserToken = function(userID, newToken, callback) {
 
 // gets the total steps this week for a user in the database
 weeklyGetMoves = function(userID, weekStartDate, callback) {
+    
     var queryVals = moves.aggregate([ 
         {
             $match:
-                {userID: userID, date: {$gt: 20151023}} 
+                {userID: userID, date: {$gt: parseInt(weekStartDate)}} 
         } 
         ,
         { $group: 
@@ -650,6 +651,19 @@ weeklyGetMoves = function(userID, weekStartDate, callback) {
         } ], function(err, results)  {
             if (err){
                 throw err
+            }
+            else if (typeof results[0]==='undefined'){
+                console.log("\nundefined");
+                var newResults = [];
+                newResults.push ({
+                    _id: userID,
+                    stepsTotal: '0'
+                });
+
+                console.log("\nNew Results: "+newResults);
+                console.log("\nNew Results ID: "+newResults._id);
+                console.log("\nNew Results sleeps total: "+newResults.stepsTotal);
+                callback(newResults);
             }
             else {
                 console.log(results)
@@ -666,7 +680,7 @@ weeklyGetSleeps = function(userID, weekStartDate, callback) {
 var queryVals = sleeps.aggregate([ 
         {
             $match:
-                {userID: userID, date: {$gt: 20151023}} 
+                {userID: userID, date: {$gt: parseInt(weekStartDate)}} 
         } 
         ,
         { $group: 
@@ -677,8 +691,23 @@ var queryVals = sleeps.aggregate([
             if (err){
                 throw err
             }
+            else if (typeof results[0]==='undefined'){
+                console.log("\nundefined");
+                var newResults = [];
+                newResults.push ({
+                    _id: userID,
+                    sleepsTotal: '0'
+                });
+
+                console.log("\nNew Results: "+newResults);
+                console.log("\nNew Results ID: "+newResults._id);
+                console.log("\nNew Results sleeps total: "+newResults.sleepsTotal);
+                callback(newResults);
+            }
             else {
-                console.log(results)
+                console.log("\nresults: "+results[0])
+                console.log("\nresults sleeptotal: "+results[0].sleepsTotal)
+                //callback(results);
                 callback(results);
             }
         }

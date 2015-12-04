@@ -857,9 +857,16 @@ app.get('/weeklyChallenges', function(req,res){
     var challengeStart = new Date(setdate);
     challengeStart.setDate(challengeStart.getDate()-7);
 
-    //console.log("\nchallengestart start\n"+challengeStart+"\nchallengestart end\n");
-
-    var startDate= challengeStart.getFullYear()+""+(1+challengeStart.getMonth())+""+challengeStart.getDate();
+    console.log("\nchallengestart start\n"+challengeStart+"\nchallengestart end\n");
+    console.log("\nchallengestart month start\n"+challengeStart.getMonth()+"\nchallengestart end\n");
+    
+    if (challengeStart.getMonth()==11){
+      var startDate= challengeStart.getFullYear()+"0"+challengeStart.getDate();  
+    }
+    else{
+      var startDate= challengeStart.getFullYear()+""+(1+challengeStart.getMonth())+""+challengeStart.getDate();  
+    }
+    
 
     //console.log("\nstartDate start\n"+startDate+"\nstartDate end\n");
     
