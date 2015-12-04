@@ -8,11 +8,11 @@ In the node console, first run:
 `npm install`
 Then run:
 `bower install`
-In order to initialize the database with levels you will need to run:
+In order to initialize the database with levels you will need to run (you must start the mongo database before running this):
 `node init.js`
 
 ## Usage
-To run the website, in the node the console, run
+To run the website, first start the mongo database, then, in the node the console, run
 `node server`
 Then visit localhost:5000, login, and view the data!
 
