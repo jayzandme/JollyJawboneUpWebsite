@@ -37,7 +37,7 @@ level2 = {
 level3 = {
       levelNum: 3,
       levelName: "Third Level!",          
-      firstGoal: "Take 15000 in a day",    //description of goal
+      firstGoal: "Take 15000 steps in a day",    //description of goal
       firstGoalNum: 15000, //how to quantify the goal
       firstGoalType: "moves",  //sleeps, moves, or workouts
       firstGoalDescriptor: "steps", //for example - steps or active_time (use this when referencing moves object)

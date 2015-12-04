@@ -637,10 +637,11 @@ updateUserToken = function(userID, newToken, callback) {
 
 // gets the total steps this week for a user in the database
 weeklyGetMoves = function(userID, weekStartDate, callback) {
+    
     var queryVals = moves.aggregate([ 
         {
             $match:
-                {userID: userID, date: {$gt: 20151023}} 
+                {userID: userID, date: {$gt: parseInt(weekStartDate)}} 
         } 
         ,
         { $group: 
@@ -651,8 +652,15 @@ weeklyGetMoves = function(userID, weekStartDate, callback) {
             if (err){
                 throw err
             }
+            else if (typeof results[0]==='undefined'){
+                var newResults = [];
+                newResults.push ({
+                    _id: userID,
+                    stepsTotal: '0'
+                });
+                callback(newResults);
+            }
             else {
-                console.log(results)
                 callback(results);
             }
         }
@@ -662,19 +670,36 @@ weeklyGetMoves = function(userID, weekStartDate, callback) {
 
 
 // gets the total sleep this week for a user in the database
-weeklyGetSleeps = function(userID, callback) {
-
-    var queryVals = sleeps.find({$and: [{userID: userID}, {date: {$gt: weekStartDate}}]});
-
-    queryVals.exec(function (err, sleeps) {
-        if (err) {
-            console.log(err);
-            throw err;
+weeklyGetSleeps = function(userID, weekStartDate, callback) {
+var queryVals = sleeps.aggregate([ 
+        {
+            $match:
+                {userID: userID, date: {$gt: parseInt(weekStartDate)}} 
+        } 
+        ,
+        { $group: 
+            { _id: '$userID', 
+              sleepsTotal: {$sum: '$duration'}
+            }
+        } ], function(err, results)  {
+            if (err){
+                throw err
+            }
+            else if (typeof results[0]==='undefined'){
+                console.log("\nundefined");
+                var newResults = [];
+                newResults.push ({
+                    _id: userID,
+                    sleepsTotal: '0'
+                });
+                callback(newResults);
+            }
+            else {
+                callback(results);
+            }
         }
-        else {
-            callback(sleeps);
-        }
-    });
+    ); 
+
 }
 
 module.exports.insertSleep = insertSleep;

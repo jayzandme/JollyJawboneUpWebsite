@@ -126,6 +126,10 @@
       if (!<%= showNextLevelButton %>){
         $('#nextLevelButton').hide();
       }
+
+      if (!<%= showViewCompletedButton %>){
+        $('#viewCompletedButton').hide();
+      }
   });
   </script>
 </head>
@@ -200,7 +204,7 @@
       </div>
       <div class = "col-md-2">
         <div class="dropdown">
-          <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">View Completed Level
+          <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown" id="viewCompletedButton">View Completed Level
           <span class="caret"></span></button>
           <ul class="dropdown-menu">
             <% for(var i=1; i<currentLevel; i++) {%>
