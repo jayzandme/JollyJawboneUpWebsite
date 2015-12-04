@@ -74,7 +74,7 @@ app.get('/dashboard', function(req, res){
     // user data
     var userID = req.query.user;
 
-    findUserByID(userID, function(user) {
+    queries.findUserByID(userID, function(user) {
 
         // var token = req.query.token;
         var token = user.token;
@@ -778,6 +778,8 @@ app.get('/teamPage', function(req, res){
 
 
     up.getFriends(userToken, function(friends) {
+
+        console.log(friends)
         
         loadFriends(friends, allFriends, function(allFriends) {
 
@@ -1049,7 +1051,7 @@ function loadAggregateData(userID, callback) {
     var year = today.getFullYear();
 
     if (day < 10) {
-        day = '0' + Day;
+        day = '0' + day;
     }
 
     if (month < 10 ) {

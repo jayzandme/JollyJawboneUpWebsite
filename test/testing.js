@@ -109,7 +109,7 @@ describe('Testing queries', function() {
         describe('#getMovesAggregation()', function() {
 
             it('Should have no data', function(done) {
-                queries.getMovesAggregation(function(aggregate) {
+                queries.getMovesAggregation(0, function(aggregate) {
                     assert.equal(aggregate.length, 0, 'got data somehow');
                     done();
                 });
@@ -119,7 +119,7 @@ describe('Testing queries', function() {
         describe('#getSleepsAggregation()', function() {
 
             it('Should have no data', function(done) {
-                queries.getSleepsAggregation(function(aggregate) {
+                queries.getSleepsAggregation(0, function(aggregate) {
                     assert.equal(aggregate.length, 0, 'got data somehow');
                     done();
                 });
@@ -129,7 +129,7 @@ describe('Testing queries', function() {
         describe('#getWorkoutsAggregation()', function() {
 
             it('Should have no data', function(done) {
-                queries.getWorkoutsAggregation(function(aggregate) {
+                queries.getWorkoutsAggregation(0, function(aggregate) {
                     assert.equal(aggregate.length, 0, 'got data somehow');
                     done();
                 });
@@ -456,10 +456,13 @@ describe('Testing queries', function() {
         describe('#getMovesAggregation()', function() {
 
             it('should get proper data', function(done) {
-                queries.getMovesAggregation(function(aggregation) {
+                queries.getMovesAggregation(1, function(aggregation) {
                     assert.equal(aggregation[0].movesAvg, 
                                  totalStepsMove / 100, 
-                                 'wrong average'
+                                 'wrong average: '  + 
+                                 aggregation[0].movesAvg + 
+                                 ' != ' +
+                                 totalStepsMove / 100
                                 );
                     assert.equal(aggregation[0].stepsTotal, 
                                  totalStepsMove, 
@@ -473,7 +476,7 @@ describe('Testing queries', function() {
         describe('#getSleepsAggregation()', function() {
 
             it('should get proper data', function(done) {
-                queries.getSleepsAggregation(function(aggregation) {
+                queries.getSleepsAggregation(1, function(aggregation) {
                     assert.equal(aggregation[0].sleepsAvg,
                                  totalTimeSlept / 100,
                                  'wrong average'
@@ -490,7 +493,7 @@ describe('Testing queries', function() {
         describe('#getWorkoutsAggregation()', function() {
 
             it('should get proper data', function(done) {
-                queries.getWorkoutsAggregation(function(aggregation) {
+                queries.getWorkoutsAggregation(1, function(aggregation) {
                     assert.equal(aggregation[0].workoutsStepsAvg,
                                  totalStepsWorkout / 100,
                                  'wrong steps average'

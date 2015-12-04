@@ -357,6 +357,7 @@ getFriends = function(token, callback) {
         });
 
         response.on('end', function() {
+            console.log(body);
             var parsedJSON = JSON.parse(body).data;
             callback(parsedJSON.items);
         });
