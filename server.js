@@ -161,6 +161,18 @@ app.get('/dashboardPrevious', function(req, res){
                                       consecutiveWorkoutCount,
                                       workoutsMax) {
       loadOneDay(userID, day, function(oneDaySleeps, oneDayMoves){
+        if (oneDaySleeps.percentOfGoal == null){
+          var oneDaySleeps = {
+            title: "No Sleep for this day",
+            awake_time: null,
+            asleep_time: null,
+            awakenings: null,
+            lightSleep: null,
+            deepSleep: null,
+            date: null,
+            percentOfGoal: "N/A"
+          }
+        }
          res.render('dashboard', 
           {
             sleeps: oneDaySleeps,
@@ -217,7 +229,19 @@ app.get('/dashboardNext', function(req, res){
       loadWorkoutsData(userID, function(workoutsData,
                                                 consecutiveWorkoutCount,
                                                 workoutsMax) {
-        loadOneDay(userID, day, function(oneDaySleeps, oneDayMoves){    
+        loadOneDay(userID, day, function(oneDaySleeps, oneDayMoves){  
+            if (oneDaySleeps.percentOfGoal == null){
+              var oneDaySleeps = {
+                title: "No Sleep for this day",
+                awake_time: null,
+                asleep_time: null,
+                awakenings: null,
+                lightSleep: null,
+                deepSleep: null,
+                date: null,
+                percentOfGoal: "N/A"
+              }
+            }  
            res.render('dashboard', 
             {
               sleeps: oneDaySleeps,

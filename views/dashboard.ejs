@@ -77,13 +77,23 @@
         return gaugeOptions;
       }
       
-      var gaugeOptionsSleeps = getGaugeOptions(<%= sleeps.percentOfGoal %>, '<%= sleeps.title %>')
-      var gaugeOptionsMoves = getGaugeOptions(<%= moves.percentOfGoal %>, '<%= moves.steps %>');
-      var gaugeOptionsWorkouts = getGaugeOptions(<%= workouts.percentOfGoal %>, '<%= workouts.distance %>');
+      if ('<%= sleeps.percentOfGoal %>' != 'N/A'){
+        var gaugeOptionsSleeps = getGaugeOptions(<%= sleeps.percentOfGoal %>, '<%= sleeps.title %>')
+        $('#my-chart-sleep').highcharts(gaugeOptionsSleeps);
+      }
+      else{
+        $('#my-chart-sleep').text("No Sleep for this day")
+      }
 
-      $('#my-chart-sleep').highcharts(gaugeOptionsSleeps);
-      $('#my-chart-move').highcharts(gaugeOptionsMoves);
-      $('#my-chart-workout').highcharts(gaugeOptionsWorkouts);
+      if (<%= moves.percentOfGoal %> != 'N/A'){
+        var gaugeOptionsMoves = getGaugeOptions(<%= moves.percentOfGoal %>, '<%= moves.steps %>');
+        $('#my-chart-move').highcharts(gaugeOptionsMoves);
+      }
+
+      if (<%= workouts.percentOfGoal %> != 'N/A'){
+        var gaugeOptionsWorkouts = getGaugeOptions(<%= workouts.percentOfGoal %>, '<%= workouts.distance %>');
+        $('#my-chart-workout').highcharts(gaugeOptionsWorkouts);
+      }
 
       if (!<%= showNextDayButton %>){
         $('#nextDayButton').hide();
