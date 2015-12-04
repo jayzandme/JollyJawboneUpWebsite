@@ -986,25 +986,10 @@ function metersToMiles(meters){
 
 function computeDaysOnLevel(startedLevelDate){
   var formattedStartedLevelDate = getFormattedDate(startedLevelDate);
+  var todayDateNumber = getNumberFromFormatted(null);
+  var todayFormatted = getFormattedDate(todayDateNumber);
 
-  var daysOnLevel = 0;
-
-  var today = new Date();
-  var todayDay = today.getDate();
-  var todayMonth = today.getMonth()+1; //January is 0
-  var todayYear = today.getFullYear();
-
-  if(todayDay<10) {
-      todayDay='0'+todayDay
-  } 
-
-  if(todayMonth<10) {
-      todayMonth='0'+todayMonth
-  } 
-  
-  today = todayMonth+'/'+todayDay+'/'+todayYear;
-
-  var diff =  Math.floor(( Date.parse(today) - Date.parse(formattedStartedLevelDate) ) / 86400000);
+  var diff =  Math.floor(( Date.parse(todayFormatted) - Date.parse(formattedStartedLevelDate) ) / 86400000);
   
   return diff;
 }
